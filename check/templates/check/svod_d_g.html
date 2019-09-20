@@ -1,0 +1,109 @@
+{% extends "main_tabl.html" %}
+{% block title %}
+ОТЧЁТ ПО ВОДИТЕЛЮ
+{% endblock %}
+{% block content %}
+{% include "include/include_logout.html"%}   
+<form action="{% url 'svod_d_g_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div  style="width:80%; top: 0%;height:30px ;margin-top: 0%;">
+<span style="width:25%; top: 0%;height:30px ;margin-top: 0%;" id="driver_id">Введите driver_id :</span><input type="text" style="width:25%; top: 0%;height:30px ;margin-top: 0%;" id="driver_id"  name="driver_id"/><input type="week" style="width:25%; top: 0%;height:30px ;margin-top: 0%;" name = "time_week" value="{{now}}"/><button type="submit" style="width:25%; top: 0%;height:30px ;margin-top: 0%;">Загрузить</button>
+    </div> 
+</form> 
+
+<br>
+<input type="text" class="form-control"  value="driver_id : {{driver_id}}" disabled="disabled" />
+<div class="tabs" style="width:96%;height:auto; margin-top: 1%; background:  rgb(202, 216, 237);">
+    <input type="radio" name="inset" value="" id="tab_1"  checked  >
+    <label for="tab_1" style="width:32%;margin-left: 2%;">График и данные</label>
+
+    <input type="radio" name="inset" value="" id="tab_2">
+    <label for="tab_2" style="width:32%;">Список поездок отмеченных как фрод за {{time_b}} неделю </label>
+
+    <input type="radio" name="inset" value="" id="tab_3"  >
+    <label for="tab_3" style="width:32%;" >Список поездок отмеченных как НЕ фрод за {{time_b}} неделю</label>
+
+
+
+    <div id="txt_1">
+        <img src="{{image_url}}" id="image_id" style="width:45%; height:480;"> 
+        <img src="{{image_url1}}" id="image_id" style="width:45%; height:480;">     
+         
+    </div>
+    
+    <div id="txt_2">
+
+            <div class="pricelist" id="pricetable">
+                <table id="pricetable-q1" class="table-autosort:2">
+
+                
+                    <thead>
+                        {% for i in head_4 %}
+                
+                            <th class=" filterable sortable table-sortable:numeric" style="width: 150px;padding: 3px;border: 2px solid black; ">{{i}}</th>
+                
+                        {% endfor %}
+                    </thead>
+                    
+                    {% for i in data4 %}
+                    <tr  >
+                        {% for q in i %}
+            
+                        <td class="nowrap" style="background-color: #ffffff71;width: 150px;padding: 3px;border: 2px solid black;font-family:'Times New Roman';font-size:10pt; " >{{q}}</td>
+             
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+               
+                </table>
+
+            </div>
+    </div>
+                <script>
+                        $(document).ready( function () {
+                        $('#pricetable-q1').DataTable();
+                        } );</script>  
+    <div id="txt_3">
+           
+            <div class="pricelist" id="pricetable">
+                <table id="pricetable-q2" class="table-autosort:2">
+
+                
+                    <thead>
+                        {% for i in head_1 %}
+                
+                            <th class=" filterable sortable table-sortable:numeric" style="width: 150px;padding: 3px;border: 2px solid black; ">{{i}}</th>
+                
+                        {% endfor %}
+                    </thead>
+                    
+                    {% for i in data1 %}
+                    <tr  >
+                        {% for q in i %}
+            
+                        <td class="nowrap" style="background-color: #ffffff71;width: 150px;padding: 3px;border: 2px solid black;font-family:'Times New Roman';font-size:10pt; " >{{q}}</td>
+             
+                        {% endfor %}
+                    </tr>
+        
+                    {% endfor %}
+       
+                </table>
+            </div>          
+             
+
+
+    </div>
+
+   
+</div>
+       
+<script>
+        $(document).ready( function () {
+        $('#pricetable-q2').DataTable();
+        } )
+</script>    
+
+
+
+{% endblock %}    

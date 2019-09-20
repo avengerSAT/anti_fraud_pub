@@ -1,0 +1,50 @@
+{% extends "base_main.html" %}
+ 
+{% block content %}
+ 
+{% include "include/poisk.html"%}  {% include "include/include_logout.html"%} 
+
+
+<div style="width:100%;height:auto; margin-top: 1%; background:  rgb(202, 216, 237);" >
+    <div class="table" >
+        <div class="block-left" style=" width:50%;height:auto;overflow:auto;float:left;">{{drv|safe}}</div>
+        <div class="block-right" style=" width:50%;height:auto;overflow:auto;">{{cus|safe}}</div>
+    </div>
+</div>
+
+
+<div class="pricelist" id="pricelist" >
+
+   
+    <table id="pricetable" class="table-autosort:2"style="font-size=8;">
+        <colgroup>
+        <col class="name" class="name"></col>
+
+        <col class="last_col "></col>
+        </colgroup>
+
+        {% for i in   drv_tit %} 
+            <th><input onkeyup="Table.filter(this,this)" size="8" name="filter"></th>
+        {% endfor %}
+
+        <thead><tr>
+            {% for i in   drv_tit %} 
+            <th class=" filterable sortable table-sortable:numeric">{{i}}</th>
+            {% endfor %}
+        </tr></thead>
+
+        {% for j in drv_svod %}
+                <tr>{% for q in j %}
+                        <td class="nowrap" style="background-color: #ffffff83;">{{q}}</td>
+                {% endfor %}</tr>
+            
+        {% endfor %}
+    </table>
+</div>          
+     
+
+
+
+
+
+{% endblock %}

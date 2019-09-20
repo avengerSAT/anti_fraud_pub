@@ -1,0 +1,18 @@
+{% extends "main_tabl.html" %}
+{% block title %}
+ОТЧЁТ ПО ВОДИТЕЛЮ
+{% endblock %}
+{% block content %}
+{% include "include/include_logout.html"%}   
+<form action="{% url 'svod_d_g_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div  style="width:80%; top: 0%;height:30px ;margin-top: 0%;">
+<span style="width:25%; top: 0%;height:30px ;margin-top: 0%;" id="driver_id">Введите driver_id :</span><input type="text" style="width:25%; top: 0%;height:30px ;margin-top: 0%;" id="driver_id"  name="driver_id"/><input type="week" style="width:25%; top: 0%;height:30px ;margin-top: 0%;" name = "time_week" value="{{now}}"/><button type="submit" style="width:25%; top: 0%;height:30px ;margin-top: 0%;">Загрузить</button>
+    </div> 
+</form> 
+
+
+
+
+
+    {% endblock %}    

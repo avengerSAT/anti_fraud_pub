@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+            {% block title %}
+            заголовок
+            {% endblock %}
+        
+
+    </title>
+   {% load static%} 
+    <link rel="stylesheet" href="{% static 'css/1.css' %}" type="text/css">
+</head>
+<body>
+
+
+
+
+<div class="block-left"style="width:50%;height:auto;overflow:auto;float:left;"> 
+<form action="{% url 'prover' %}" >
+<input type="submit" value="Данные по треку поездки" style=" font-family: 'Times New Roman', Times, serif; font-size: 250%; width:99%;height:100Px" />
+</form>   
+<form action="/antifraud/driver/" >
+<input type="submit" value="Данные по водителю " style="font-family: 'Times New Roman', Times, serif; font-size: 250%; width:99%;height:100Px"/>
+</form> 
+
+
+
+<form action="/antifraud/stat/" >
+<input type="submit" value="Cтатистика" style="font-family: 'Times New Roman', Times, serif; font-size: 250%; width:99%;height:100Px"/>
+</form> 
+
+
+
+</div>
+
+<div class="block-right" style="width:50%;height:auto;overflow:auto;">
+<form action="/antifraud/promo/" >
+<input type="submit" value="Данные по промокоду" style="font-family: 'Times New Roman', Times, serif; font-size: 250%; width:99%;height:100Px"/>
+</form>  
+<form action="/antifraud/customer/" >
+<input type="submit" value="Данные по клиенту" style="font-family: 'Times New Roman', Times, serif; font-size: 250%; width:99%;height:100Px"/>
+</form>  
+</div> 
+
+
+                
+
+</body>
+</html>

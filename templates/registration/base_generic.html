@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% block title %}<title>Local Library</title>{% endblock %}
+</head>
+
+<body>
+  {% block sidebar %}
+  <ul class="sidebar-nav">
+
+   
+
+   {% if user.is_authenticated %}
+     <li>User: {{ user.get_username }}</li>
+     <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
+   {% else %}
+   {% block content %}{% endblock %}
+   {% endif %} 
+  </ul>
+  {% endblock %}
+ 
+</body>
+</html>

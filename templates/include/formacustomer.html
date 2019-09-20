@@ -1,0 +1,39 @@
+
+{% block content %}
+
+    {%for i in cus %}
+
+
+<div class="form-row" style="margin:1%">
+    <div style="margin-top: 0%;width: 25%; top: 1%;">
+        <label for="validationCustom01" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;">Имя клиента</label>
+        <input type="text"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;" class="form-control" id="validationCustom01" placeholder="Имя клиента" disabled="disabled" value="{{i.0}}" required>
+    </div>
+    <div style="margin-top: 0%;width: 25%; top: 0%;">
+        <label for="validationCustom02" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;" >Почта клиента</label>
+        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;" id="validationCustom02" placeholder="Почта клиента"  disabled="disabled" value="{{i.2}}" required>
+
+    </div>
+    <div style="margin-top: 0%;width: 25%; top: 0%;">
+        <label for="validationCustomUsername" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;">Телефон клиента</label>
+        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;" id="validationCustomUsername" value="{{i.3}}" placeholder="Телефон клиента" disabled="disabled" aria-describedby="inputGroupPrepend" required>
+    </div>
+    <div style="margin-top: 0%;width: 25%; top: 0%;">      
+        <label for="validationCustom03"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;" >ИД клиента</label>
+        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;" id="validationCustom03" placeholder="ИД клиента"value="{{i.1}}" disabled="disabled" required>
+    </div>
+    <div style="margin-top: 0%;width: 25%; top: 0%;">
+        <label for="validationCustom04"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;" >Кол поездок клиента</label>
+        <input type="text" class="form-control"   style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;" id="validationCustom04" disabled="disabled" placeholder="Кол поездок клиента"value="{{i.4}}" required>
+    </div>
+    <div style="margin-top: 0%;width: 25%; top: 0%;">
+        <label for="validationCustom04" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;" >Стасус</label>
+        <input type="text" class="form-control" style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;" id="validationCustom04" disabled="disabled" placeholder="Стасус"value="{{i.5}}" required>
+
+    </div>
+</div> 
+
+    {%endfor%}
+  
+{% endblock %}
+

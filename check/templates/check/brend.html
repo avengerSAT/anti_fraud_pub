@@ -1,0 +1,60 @@
+{% extends "main_tabl.html" %}
+{% block title %}
+Информация о движении денежных средств
+{% endblock %}
+{% block content %}
+{% include "include/include_logout.html"%}   
+<div style="width: 50%;margin-top:0%; top:0%">
+    <form action="{% url 'brend_url' %}"  method="POST" >
+                    {% csrf_token %}
+        <div class="input-group mb-3"  >
+            
+            <input type="text" disabled='disabled' style="width:15%;background-color: rgb(255, 255, 255) " value="Введите driver_id :">
+            <input type="text" class="form-control" id="driver_id"  name="driver_id"/>
+            <input type="text" disabled='disabled' style="width:8%;background-color: rgb(255, 255, 255) " value="Период с">
+            <input type="date" id="start_date" name="start_date" value="{{start_date}}">
+            <input type="text" disabled='disabled'  style="width:3%; background-color: rgb(250, 250, 250)" value="по">
+            <input type="date" id="end_date" name="end_date" value="{{end_date}}">
+            <button  type="submit" >ОТПРАВИТЬ</button>
+        </div>
+    </form>
+    <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="driver_id:{{drv_id}}   Период:{{start_date}} - {{end_date}}">    
+</div> 
+
+<div class="pricelist" id="pricelist">
+        <table id="pricetable-drv" class="table-autosort:2"> 
+            <colgroup>
+                <col class="name" class="name"></col>
+    
+                <col class="last_col "></col>
+            </colgroup>
+    
+            <thead>
+                {% for j in head %}
+    
+                    <th class=" filterable sortable table-sortable:numeric" style="padding: 3px;border: 1px solid black;">{{j}}</th>
+    
+                {% endfor %}
+            </thead>
+    
+    
+    
+            {% for i in data %}
+                <tr  >
+                    {% for q in i %}
+    
+                    <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;"" >{{q}}</td>
+        
+                    {% endfor %}
+                </tr>
+    
+            {% endfor %}
+    
+        </table>
+    </div>
+    <script>
+        $(document).ready( function () {
+        $('#pricetable-drv').DataTable();
+        } );
+    </script> 
+{% endblock %}    

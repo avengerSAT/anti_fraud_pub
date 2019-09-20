@@ -1,0 +1,27 @@
+{% extends "main_tabl.html" %}
+{% block title %}
+Информация о проверки
+{% endblock %}
+{% block content %}
+{% include "include/include_logout.html"%}   
+
+<form action="{% url 'rez_prover_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+        <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
+            {% for i in сity %}
+                {% if i.Код_Города == gorod %}
+                    <input type="submit" selected value="{{i.Код_Города}}" >{{i.Город}}</option>
+                {% else %}
+                    <option value="{{i.Код_Города}}" >{{i.Город}}</option>
+                {% endif %} 
+            {% endfor %}
+        </select><input type="submit" value="Отправить"></p> 
+    </div> 
+</form> 
+<form>
+        <input type="datetime-local" ><input type="time" >
+        <input type="datetime-local" ><input type="time" >
+</form>
+
+{% endblock %} 

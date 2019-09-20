@@ -1,0 +1,76 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+QWE
+{% endblock %}
+ 
+{% block content %}
+
+{% include "include/include_logout.html"%}   
+
+<form action="{% url 'vigr_url' %}"  method="POST" >
+    {% csrf_token %}
+
+
+<div class="input-group">
+    <div class="input-group-prepend">
+            <span class="input-group-text" id="">Записать информацию на гугл диск?</span>
+            <span class="input-group-text" id="">ДА</span>
+      <div class="input-group-text">
+            
+        <input type="radio" name ="save" value="YES" aria-label="Radio button for following text input">
+    </div>
+    <span class="input-group-text" id="">НЕТ</span>
+    <div class="input-group-text">
+        <input type="radio" name ="save" value="NO" checked aria-label="Radio button for following text input">
+      </div>
+      <input type="date" id="start" name="date" value="">
+      <button  type="submit" >ОТПРАВИТЬ</button>
+    </div>
+
+  </div>
+
+
+<br><br>
+{{date|safe}}
+
+<div class="pricelist" id="pricelist">
+    <table id="pricetable" class="table-autosort:2">
+        <colgroup>
+            <col class="name" class="name"></col>
+
+            <col class="last_col "></col>
+        </colgroup>
+
+    <thead>
+        {% for j in a %}
+
+            <th class=" filterable sortable table-sortable:numeric" style="padding: 3px;border: 1px solid black;">{{j}}</th>
+
+        {% endfor %}
+    </thead>
+
+
+
+    {% for i in b %}
+        <tr  >
+            {% for q in i %}
+
+            <td class="nowrap" style="background-color: #ffffff83;padding: 3px;border: 1px solid black;"" >{{q}}</td>
+ 
+            {% endfor %}
+        </tr>
+
+    {% endfor %}
+
+
+    </table>
+</div>          
+<script>
+$(document).ready( function () {
+$('#pricetable').DataTable();
+} );</script>    
+
+
+
+{% endblock %}

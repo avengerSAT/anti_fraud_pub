@@ -1,0 +1,124 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+Driver OLD
+{% endblock %}
+ 
+{% block content %}
+
+{% include "include/include_logout.html"%}  
+
+
+ 
+<div style=" position: fixed;width: 30%;margin-top:0%; top:0%">  
+             
+    <form action="{% url 'Driver_url' %}" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3"  >
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="background-color:rgb(179, 179, 179);font-size: 10pt;" id="trip_id">Введите trip_id :</span>
+            </div>
+            <input type="text" class="form-control" id="trip_id"  name="trip_id"/>
+
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" style="background-color:rgb(179, 179, 179);font-size: 10pt;" type="submit">ОТПРАВИТЬ</button>
+        </div>            </div>
+        </form>
+    </div> 
+
+    <div style="    position: fixed;    left: 32%;   top: 0%;     margin-top:0%;width: 30%;      ">  
+        <form action="{% url 'DRV_URL' %}"  method="POST" >
+                    {% csrf_token %}
+            <div class="input-group mb-3"  >
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="background-color:rgb(179, 179, 179);font-size: 10pt;" id="sort_id"> Поиск:</span>
+                </div>
+                    <input type="text" class="form-control" id="sort_id"  name="sort_id"/>
+    
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" style="background-color:rgb(179, 179, 179);font-size: 10pt;" type="submit">ОТПРАВИТЬ</button>
+                </div>
+            </div>
+        </form>
+    </div>  
+    
+    
+    <br>
+    <br>
+
+     
+     
+
+                            
+<div class="block-left"style="width:40%;height:auto;overflow:auto;float:left;">
+        <div class="pricelist" id="pricelist">
+                <table id="pricetable-qw123" class="table-autosort:2">
+                        {% for i in data1 %}
+                        <tr  >
+                            {% for q in i %}
+                
+                            <td class="nowrap" style="background-color:rgb(179, 179, 179);padding: 3px;border: 1px solid black;"" >{{q}}</td>
+                
+                            {% endfor %}
+                        </tr>
+                
+                    {% endfor %}
+                </table>
+        </div>   
+</div>
+<div class="block-right" style="width:50%;height:auto;overflow:auto;">
+    <div class="pricelist" id="pricelist">
+            <table id="pricetable-qw123" class="table-autosort:2">
+                    {% for i in data2 %}
+                    <tr  >
+                        {% for q in i %}
+            
+                        <td class="nowrap" style="background-color:rgb(179, 179, 179);padding: 3px;border: 1px solid black;"" >{{q}}</td>
+            
+                        {% endfor %}
+                    </tr>
+            
+                {% endfor %}
+            </table>
+    </div>                                               
+</div>
+                            <br><br>
+<div class="pricelist" id="pricelist">
+    <table id="pricetable-qw12" class="table-autosort:2">
+
+<thead>
+        <tr>
+        {% for j in de %}
+
+        <th class=" filterable sortable table-sortable:numeric" style="font-size: 10pt;padding: 3px;border: 1px solid black;text-align:left; vertical-align:top;">{{j}}</th>
+
+        {% endfor %}
+    </tr>
+</thead>
+
+
+
+    {% for i in dee %}
+        <tr  >
+            {% for q in i %}
+
+            <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >{{q}}</td>
+
+            {% endfor %}
+        </tr>
+
+    {% endfor %}
+</table>
+</div>
+                       <br>
+                       <br>
+                       <br>     
+                  
+
+ 
+      <script>
+            $(document).ready( function () {
+            $('#pricetable-qw12').DataTable();
+            } );
+        </script>  
+{% endblock %}  

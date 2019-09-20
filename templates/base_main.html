@@ -1,0 +1,53 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+
+    <title>{% block title %}
+                заголовок
+                {% endblock %}
+            </title>
+   {% load static%} 
+    
+        <link rel="stylesheet" href="{% static 'css/111.css' %}" type="text/css">
+        <script src="{% static 'js/123.js' %}"></script>
+        <script src="{% static 'js/jquery.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/bootstrap-grid.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-grid.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/normalize.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+
+
+        <script src="{% static 'js/bootstrap.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+             
+
+        <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}" type="text/css">
+
+
+        <script src="{% static 'js/q1.js' %}"></script>
+        <script src="{% static 'js/q2.js' %}"></script>
+        <script src="{% static 'js/q3.js' %}"></script>
+
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="{% static 'js/jquery.slim.min.js' %}"></script>
+        <script src="{% static 'js/moment.min.js' %}"></script>
+       
+        <link rel="stylesheet" href="{% static 'css/1.css' %}" type="text/css">
+   
+</head>
+<body  background="{% static 'img/fon.jpg' %}">
+
+        
+        {% block content %}
+        
+        {% endblock  %}   
+
+</body>
+</html>    

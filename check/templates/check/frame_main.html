@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+ <head>
+        <meta charset="UTF-8">
+
+        <title>{% block title %}
+                    заголовок
+                    {% endblock %}
+                </title>
+       {% load static%} 
+        
+       <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+       <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+       <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}" type="text/css">
+       <script src="{% static 'js/123.js' %}"></script>
+    
+          <link rel="stylesheet" href="{% static 'css/bootstrap-grid.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/bootstrap-grid.min.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.min.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/normalize.min.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+    
+    
+            <script src="{% static 'js/bootstrap.js' %}"></script>
+            <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+            <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    
+    
+ </head>
+
+ 
+                <frameset rows="20%,*">
+                        <frame src="{% url 'Frame_MENU_url' %}"  name="MENU"  ></frame>
+                        <frame src="{% url 'Frame_CONTENT_url' %}"  name="CONTENT">
+                       </frameset>    
+                
+
+
+
+</html>

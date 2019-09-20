@@ -1,0 +1,56 @@
+{% extends "main_tabl.html" %}
+{% block title %}
+ОТЧЁТ
+{% endblock %}
+{% block content %}
+{% include "include/include_logout.html"%}   
+<form action="{% url 'spisok_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+                <select style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
+
+    
+                    {% for i in сity %}
+                        {% if i.Код_Города == gorod %}
+                            <option selected value="{{i.Код_Города}}" >{{i.Город}}</option>
+                        {% else %}
+                            <option value="{{i.Код_Города}}" >{{i.Город}}</option>
+                        {% endif %} 
+                    {% endfor %}
+                </select><input type="week" style="width:33%; top: 0%;" name = "time_week" value="{{now}}"/><button type="submit" style="width:33%; top: 0%;">Загрузить</button>
+    </div> 
+</form> 
+
+<br>
+
+<div class="pricelist" id="pricelist">
+    <table id="pricetable-1qwe"  class="table-autosort:2">
+
+
+        <thead>
+            {% for j in head %}
+            <th style="padding: 3px;border: 1px solid black;background-color: #ffffff9c;">{{j}}</th>
+            {% endfor %}
+        </thead>
+        {% for i in data %}
+        <tr>
+        {% for q in i %}
+            <td  style="padding: 3px;border: 1px solid black;background: #ffffffe1; " >{{q}}</td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>          
+<script>
+        $(document).ready( function () {
+        $('#pricetable-1qwe').DataTable();
+        } )
+</script>    
+
+{% endblock %}
+
+<!--
+    <button _ngcontent-c3="" class="btn btn-link font-weight-bold" id="copyOrderId" triggers="manual">
+      <span _ngcontent-c3="" class="fa fa-clone font-weight-bold"></span>
+      Order ID
+    </button>-->

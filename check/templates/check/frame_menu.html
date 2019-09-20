@@ -1,0 +1,55 @@
+{% extends "check/main.html" %}
+{% block content %}
+{% include "include/include_logout.html"%}   
+
+
+<form action="{% url 'Frame_CONTENT_url' %}"  target='CONTENT' method="POST" >
+        {% csrf_token %}
+<p> 
+<div class="input-group mb-3" style="width:85%">
+                <select class="custom-select" style="width:15%" name="trip_id">
+                    {% for i in сity %}
+                    <option value={{i.Код_Города}}>{{i.Город}}</option>
+                    {% endfor %}
+                </select>
+            
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">C</span>
+    </div>
+        <input class="form-control" style="width:10%" type="date" name="dates" />
+        <input class="form-control" style="width:5%" type="time" value= "00:00" name="time" />
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">ДО</span>
+    </div>
+
+        <input class="form-control" style="width:10%" type="date" name="dates" />
+        <input class="form-control" style="width:5%" type="time" value= "00:00" name="time" />
+</div></p>
+<p>
+<div class="input-group mb-2" style="width:85%">
+        <select class="custom-select" style="width:1%" name="trip_id">
+            {% for i in сity %}
+            <option value={{i.Код_Города}}>{{i.Город}}</option>
+            {% endfor %}
+        </select>
+    <div class="input-group-prepend"> 
+
+  
+    </div>
+
+</p>
+</div>
+
+
+
+
+
+
+        <p><button type="submit" class="btn btn-secondary" >Загрузить</button></p>
+       </form> 
+
+ 
+ 
+ 
+
+{% endblock %}

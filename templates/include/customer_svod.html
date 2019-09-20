@@ -1,0 +1,54 @@
+
+{% block content %}
+
+
+
+
+
+
+<div class="pricelist_1" id="pricelist-1">
+    <table id="pricetable-1" class="table-autosort:2">
+        <colgroup>
+            <col class="name" class="name"></col>
+
+            <col class="last_col "></col>
+        </colgroup>
+
+        <thead>
+            {% for j in svod_cus_head %}
+
+            <th class=" filterable sortable table-sortable:numeric">{{j}}</th>
+
+            {% endfor %}
+        </thead>
+
+
+
+        {% for i in sv_cus %}
+        <tr  >
+        {% for q in i %}
+            <td class="nowrap" style="background-color: #ffffff83;" >{{q}}</td>
+        {% endfor %}
+        </tr>
+
+        {% endfor %}
+
+
+    </table>
+</div>          
+
+
+<script>
+        $(document).ready( function () {
+        $('#pricetable-1').DataTable();
+        } );</script>    
+        
+   
+
+
+
+     
+
+  
+{% endblock %}
+
