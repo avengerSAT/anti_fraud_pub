@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from pathlib import Path
-env_path = Path('/home/vkondratev/anti_fraud/antifraud/') / '.env'
+env_path = Path('./antifraud/') / '.env'
 load_dotenv(dotenv_path=env_path)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
