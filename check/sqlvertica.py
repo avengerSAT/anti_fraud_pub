@@ -1,39 +1,39 @@
 import vertica_python
 from vertica_python import connect
 from csv import writer
-import pandas as pd 
+import pandas as pd
 import csv
 import os
 from .con import Con_vert
 
+def peremen(data, head):
+    a = ([column[0].replace("_", ' ') for column in head])
+    b = data
+    return a, b
 
 
-def peremen(data,head):
-        a=([column[0].replace("_",' ') for column in head])
-        b=data 
-        return a,b
-
-
-def save_csv(data,head,trail):
+def save_csv(data, head, trail):
     with open(trail, "w", newline='') as csv_file:
         csv_writer = writer(csv_file, delimiter=',')
         csv_writer.writerow(head)
         csv_writer.writerows(data)
-   
-def save_csv1(data,trail):
+
+
+def save_csv1(data, trail):
     with open(trail, "w", newline='') as csv_file:
         csv_writer = writer(csv_file, delimiter=',')
-        csv_writer.writerows(data)   
+        csv_writer.writerows(data)
+
 
 def sql_trip(trail):
-        try:  
-                con = connect(
-                host=Con_vert.host,
-                port=Con_vert.port,
-                user=Con_vert.user,
-                password=Con_vert.password
-                )
-                sql = """ 
+    try:
+        con = connect(
+            host=Con_vert.host,
+            port=Con_vert.port,
+            user=Con_vert.user,
+            password=Con_vert.password)
+
+        sql = """ 
         SELECT DISTINCT
         dd.ext_id
         ,oo.customer_id
@@ -43,32 +43,31 @@ def sql_trip(trail):
         on oo.driver_id = dd.id
         where oo.id=%s
                 """
-                cursor = con.cursor()
-                cursor.execute(sql,(trail,))
-                data = cursor.fetchall()
+        cursor = con.cursor()
+        cursor.execute(sql, (trail,))
+        data = cursor.fetchall()
 
+        # переменная водитель
+        driver_id = data[0][0]
+        # переменная клиент
+        customer_id = data[0][1]
+        # переменная водитель корот
+        drv_id = data[0][2]
+        con.close()
+        return driver_id, customer_id, drv_id
+    except:
+        con.close()
+        driver_id, customer_id, drv_id = "Нет данных", "Нет данных", "Нет данных"
+        return driver_id, customer_id, drv_id
 
-                #переменная водитель
-                driver_id=data[0][0]
-                #переменная клиент
-                customer_id=data[0][1]
-                #переменная водитель корот
-                drv_id =   data[0][2]   
-                con.close()
-                return driver_id,customer_id,drv_id
-        except: 
-                con.close()
-                driver_id,customer_id,drv_id="Нет данных","Нет данных","Нет данных"      
-                return driver_id,customer_id,drv_id
-
-def sql_prov(customer_id,driver_id,drvr_id):
-        conn_info = {
-                'host': Con_vert.host,
-                'port': Con_vert.port,
-                'user': Con_vert.user,
-                'password': Con_vert.password
-                }
-        sql_1 = """ 
+def sql_prov(customer_id, driver_id, drvr_id):
+    conn_info = {
+        'host': Con_vert.host,
+        'port': Con_vert.port,
+        'user': Con_vert.user,
+        'password': Con_vert.password
+    }
+    sql_1 = """ 
 SELECT DISTINCT
 case WHEN cc.last_name is not NULL THEN (cc.last_name::varchar)||' '||(cc.first_name ::varchar) else cc.first_name end  Имя_Клиента
 ,oo.customer_id
@@ -81,7 +80,7 @@ LEFT JOIN facts.FS_Customers cc ON oo.customer_id=cc.id
 WHERE customer_id=%s 
              """
 
-        sql_2 = """ 
+    sql_2 = """ 
 SELECT DISTINCT
 case WHEN last_name is not NULL THEN (first_name::varchar)||' '||(last_name ::varchar) else first_name end  Имя_водителя
 ,(drv.id::varchar)||'  /  '||(drv.ext_id::varchar) as driver_id
@@ -93,7 +92,7 @@ LEFT JOIN facts.FS_Drivers drv ON drv.profile_id = pr.id
 LEFT JOIN facts.FS_Profiles_security prs ON pr.id = prs.id
 WHERE drv.ext_id = %s
         """
-        sql_3 = """
+    sql_3 = """
 SELECT DISTINCT
 (drv.id::varchar)||'  /  '||(drv.ext_id::varchar) as Ид_водителя
 ,case WHEN oo.driver_last_name is not NULL THEN (oo.driver_first_name::varchar)||' '||(oo.driver_last_name ::varchar) else oo.driver_first_name end  Имя_водителя
@@ -124,7 +123,7 @@ GROUP BY Ид_водителя ,Имя_водителя,temp.cust_trips
     ORDER BY
     Дуэт DESC
          """
-        sql_4 = """
+    sql_4 = """
 SELECT DISTINCT
 oo.id as ИД_поездки
 ,oo.order_src_address as Адрес_подачи
@@ -139,40 +138,41 @@ FROM facts.FS_Orders oo
 LEFT JOIN (select order_id,transaction_amount/100 as сумма_доплаты from facts.FS_Drivers_balance_transaction WHERE transaction_type='Compensation') dt 
 on dt.order_id = oo.id
 WHERE driver_id=%s and customer_id=%s and (sub_state = 'ORDER_COMPLETED' OR sub_state = 'CUSTOMER_CANCEL_AFTER_TRIP')
-         """ 
+         """
 
 # ,CAST(((osc.time + osc.long_time + osc.country_time)/1000) AS DECIMAL(20,0))::varchar as Время_поездки
-#,CAST((osc.distance+osc.long_distance+osc.country_distance)*0.001 AS DECIMAL(20,3))::varchar as Расстояние  
-# LEFT JOIN (SELECT DISTINCT *from facts.FS_Orders_customer_cost WHERE cost_type='regular' ) osc on osc.order_id=oo.id  
-# долгая загрузка из-за стягивания таблиц , надо попробовать два запроса 
-#                         
-        with connect(**conn_info) as conn:
-                cur = conn.cursor()
-                cur.execute(sql_1,(customer_id,))
-                data = cur.fetchall()
-                head = cur.description 
-                cus_head,cus=peremen(data,head)
-                cur.execute(sql_2,(driver_id,))
-                data = cur.fetchall()
-                head = cur.description 
-                drv_hed,drv=peremen(data,head)
-                cur.execute(sql_3,(customer_id,customer_id))
-                data = cur.fetchall()
-                head = cur.description 
-                svod_cus_head ,svod_cus=peremen(data,head)
-                cur.execute(sql_4,(drvr_id,customer_id))
-                data = cur.fetchall()
-                head = cur.description 
-                svod_drv_cus_head,svod_drv_cus=peremen(data,head)                                
-                cur.close
-        return cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus
+# ,CAST((osc.distance+osc.long_distance+osc.country_distance)*0.001 AS DECIMAL(20,3))::varchar as Расстояние
+# LEFT JOIN (SELECT DISTINCT *from facts.FS_Orders_customer_cost WHERE cost_type='regular' ) osc on osc.order_id=oo.id
+# долгая загрузка из-за стягивания таблиц , надо попробовать два запроса
+#
+    with connect(**conn_info) as conn:
+        cur = conn.cursor()
+        cur.execute(sql_1, (customer_id,))
+        data = cur.fetchall()
+        head = cur.description
+        cus_head, cus = peremen(data, head)
+        cur.execute(sql_2, (driver_id,))
+        data = cur.fetchall()
+        head = cur.description
+        drv_hed, drv = peremen(data, head)
+        cur.execute(sql_3, (customer_id, customer_id))
+        data = cur.fetchall()
+        head = cur.description
+        svod_cus_head, svod_cus = peremen(data, head)
+        cur.execute(sql_4, (drvr_id, customer_id))
+        data = cur.fetchall()
+        head = cur.description
+        svod_drv_cus_head, svod_drv_cus = peremen(data, head)
+        cur.close
+    return cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus
 
-def sql_doplat(start_date,end_date):
-        conn_info =  {'host': Con_vert.host,
-             'port': Con_vert.port,
-             'user': Con_vert.user,
-             'password': Con_vert.password}
-        sql_1 = """
+
+def sql_doplat(start_date, end_date):
+    conn_info = {'host': Con_vert.host,
+                 'port': Con_vert.port,
+                 'user': Con_vert.user,
+                 'password': Con_vert.password}
+    sql_1 = """
 SELECT DISTINCT
 region_id as ИД_региона
 ,(to_timestamp(oo.order_start_date)::date)::varchar as Дата_проверки
@@ -212,25 +212,26 @@ WHERE 1=1
  	 AND to_timestamp(oo.order_start_date)::date >= %s
  	 AND to_timestamp(oo.order_start_date)::date <= %s
 group by region_id, Дата_проверки
-        """   
-        with connect(**conn_info) as conn:
-                cur = conn.cursor()       
-                cur.execute(sql_1,(start_date,end_date))
-                data = cur.fetchall()
-                head = cur.description 
-                head,data=peremen(data,head)                                
-                cur.close
-        return head,data        
+        """
+    with connect(**conn_info) as conn:
+        cur = conn.cursor()
+        cur.execute(sql_1, (start_date, end_date))
+        data = cur.fetchall()
+        head = cur.description
+        head, data = peremen(data, head)
+        cur.close
+    return head, data
 
-def sql_old_drv(drv_id,trail):
-        try:  
-                con = connect(
-                host=Con_vert.host,
-                port=Con_vert.port,
-                user=Con_vert.user,
-                password=Con_vert.password
-                )
-                sql = """ 
+
+def sql_old_drv(drv_id, trail):
+    try:
+        con = connect(
+            host=Con_vert.host,
+            port=Con_vert.port,
+            user=Con_vert.user,
+            password=Con_vert.password
+        )
+        sql = """ 
 select DISTINCT
 gr.trip_number as Дуэт
 ,(to_timestamp(oo.arrive_time)-to_timestamp(oo.accept_time))::varchar as  Подача
@@ -271,34 +272,32 @@ GROUP BY customer_id, driver_id) gr ON gr.driver_id = oo.driver_id and gr.custom
 WHERE (sub_state = 'ORDER_COMPLETED' OR sub_state = 'CUSTOMER_CANCEL_AFTER_TRIP') and oo.driver_id=%s
                 """
 
-                cursor = con.cursor()
-                cursor.execute(sql,(drv_id,drv_id,))
-                data = cursor.fetchall()
-                head = cursor.description
-                a,b=peremen(data,head)
-                put=trail+'/Сводная_по_водителю.csv'
-                save_csv(b,a,put)
-                cursor.close() 
-                con.close()
-                return 
-        except:
-                put=trail+'/Сводная_по_водителю.csv'
-                print("ytn")
-                con.close()
-                return 
+        cursor = con.cursor()
+        cursor.execute(sql, (drv_id, drv_id,))
+        data = cursor.fetchall()
+        head = cursor.description
+        a, b = peremen(data, head)
+        put = trail+'/Сводная_по_водителю.csv'
+        save_csv(b, a, put)
+        cursor.close()
+        con.close()
+        return
+    except:
+        put = trail+'/Сводная_по_водителю.csv'
+        print("ytn")
+        con.close()
+        return
 
 
-
-
-def sql_drv_poezd(driver_id,start_date,end_date):
-        try:
-                con = connect(
-                host=Con_vert.host,
-                port=Con_vert.port,
-                user=Con_vert.user,
-                password=Con_vert.password
-                )
-                sql = """ 
+def sql_drv_poezd(driver_id, start_date, end_date):
+    try:
+        con = connect(
+            host=Con_vert.host,
+            port=Con_vert.port,
+            user=Con_vert.user,
+            password=Con_vert.password
+        )
+        sql = """ 
 SELECT
 gr.qwe as Количество_успешных_заказов
 ,gr_1.qwer as Количество_заказов_отмеченных_как_фрод
@@ -336,42 +335,40 @@ and to_timestamp(fo.order_date)::date <=%s
 GROUP BY o.driver_id
 ) gr_1 on gr_1.driver_id =gr.driver_id
                 """
-                cursor = con.cursor()
-                cursor.execute(sql,(driver_id,start_date,end_date,driver_id,start_date,end_date,))
-                data = cursor.fetchall()
-                head = cursor.description
-                head,data=peremen(data,head)
-                cursor.close() 
-                con.close()
-                return head,data
-        except:
-                con.close()
-                return 
+        cursor = con.cursor()
+        cursor.execute(sql, (driver_id, start_date, end_date,
+                             driver_id, start_date, end_date,))
+        data = cursor.fetchall()
+        head = cursor.description
+        head, data = peremen(data, head)
+        cursor.close()
+        con.close()
+        return head, data
+    except:
+        con.close()
+        return
+
 
 def sql_drv_id(driver_id):
-        try:
-                con = connect(
-                host=Con_vert.host,
-                port=Con_vert.port,
-                user=Con_vert.user,
-                password=Con_vert.password
-                )
-                sql = """ 
+    try:
+        con = connect(
+            host=Con_vert.host,
+            port=Con_vert.port,
+            user=Con_vert.user,
+            password=Con_vert.password
+        )
+        sql = """ 
 SELECT 
 id
 FROM facts.FS_Drivers drv
 WHERE ext_id=%s
                 """
-                cursor = con.cursor()
-                cursor.execute(sql,(driver_id,))
-                data = cursor.fetchall()
-                cursor.close() 
-                con.close()
-                return data
-        except:
-                con.close()
-                return 
-
-
-
-
+        cursor = con.cursor()
+        cursor.execute(sql, (driver_id,))
+        data = cursor.fetchall()
+        cursor.close()
+        con.close()
+        return data
+    except:
+        con.close()
+        return
