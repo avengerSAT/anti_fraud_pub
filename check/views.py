@@ -245,4 +245,4 @@ class brend(LoginRequiredMixin, View):
                                                     ,"drv_id":driver_id
                                                     ,"head":head
                                                     ,"data":data
-                                                    })    
+                                                    })
