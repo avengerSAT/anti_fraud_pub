@@ -21,6 +21,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
  #   'channels',
+    'fraud_inspector',
     'menu',
     'check',
     'django.contrib.admin',
@@ -74,23 +75,23 @@ WSGI_APPLICATION = 'antifraud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
-   }
-}
+#DATABASES = {
+#   'default': {
+#       'ENGINE': 'django.db.backends.sqlite3',
+#       'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+#   }
+#}
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.getenv('name'),
-#         'USER': os.getenv('user'),
-#         'PASSWORD': os.getenv('password'),
-#         'HOST': os.getenv('host'),
-#         'PORT': os.getenv('port')
-#     }
-# }
+DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': os.getenv('name'),
+         'USER': os.getenv('user'),
+         'PASSWORD': os.getenv('password'),
+         'HOST': os.getenv('host'),
+         'PORT': os.getenv('port')
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [

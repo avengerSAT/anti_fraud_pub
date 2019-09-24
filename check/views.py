@@ -29,7 +29,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from .models import *
+from .models import City
 from . import sqllite
 
 from . import import_csv
@@ -78,10 +78,18 @@ class Fraud_PROV(LoginRequiredMixin, View):
         return render (request,'check/test_prover.HTML')
     def post(self,request):
         trip_id = request.POST["trip_id"]
+        chek_box = request.POST.get("chek_box")
         driver_id,customer_id,drv_id=sqlvertica.sql_trip(trip_id)
-        cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id)
+        if chek_box=='yes':
+            cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
+            chek_box='checked'
+        else:
+            chek_box=''    
+            cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
+        
         return render (request,'check/test_prover.HTML',{"cus":cus,
                                                     "drv":drv,
+                                                    "box_c":chek_box,
                                                     "svod_drv_cus_head":svod_drv_cus_head,
                                                     "svod_drv_cus":svod_drv_cus,
                                                     "svod_cus_head":svod_cus_head,
@@ -203,10 +211,7 @@ class svod_doplat(LoginRequiredMixin, View):
         end_date = request.POST["end_date"]
         сity=City.objects.all()
         head,data=sqlvertica.sql_doplat(start_date,end_date) 
-        for i in сity:
-             for j in data:
-                 if i[1]==j[0]:
-                     j[0]=i[0]   
+  
         return render(request,'check/svod_dop.html',{"start_date":start_date
                                                     ,"end_date":end_date
                                                     ,"head":head
