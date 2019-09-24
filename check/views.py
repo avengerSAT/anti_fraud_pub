@@ -84,7 +84,7 @@ class Fraud_PROV(LoginRequiredMixin, View):
             cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
             chek_box='checked'
         else:
-            chek_box=''    
+            chek_box=''
             cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
         
         return render (request,'check/test_prover.HTML',{"cus":cus,
@@ -245,4 +245,4 @@ class brend(LoginRequiredMixin, View):
                                                     ,"drv_id":driver_id
                                                     ,"head":head
                                                     ,"data":data
-                                                    })    
+                                                    })
