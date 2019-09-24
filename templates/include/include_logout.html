@@ -3,9 +3,9 @@
 
 
 <div style=" position: fixed;    right: 10px;   top: 0%;   padding: 10px;   color: #fff; background-color: #6c757d;  border-color: #6c757d;  border: 1px solid rgb(253, 255, 255);  "> 
-<a href="{% url 'main_menu_url'%}">Меню </a>          
+<a href="{% url 'main_menu_url'%}" style="color: rgb(65, 196, 25)" >Меню </a>          
     User: {{ user.get_username }}
- <a href="{% url 'logout'%}?next={{request.path}}">Logout</div>  </a>   
+ <a href="{% url 'logout'%}?next={{request.path}}" style="color: rgb(65, 196, 25)">Logout</div>  </a>   
   
 {% endblock %}
 
