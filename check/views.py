@@ -1,36 +1,41 @@
-import csv
-import gzip
-import os
-import threading
+from django.views.decorators.csrf import csrf_exempt, csrf_protect,requires_csrf_token
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render,render_to_response,redirect
+from django.template import loader, Context
+from django.http import HttpResponse
+from django.contrib import auth
+from django.views import View
+
+import matplotlib.pyplot as plt
+from matplotlib.patches import ConnectionPatch
+import numpy as np
+from isoweek import Week
 import time
-from datetime import datetime, timedelta
+import threading
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime,timedelta
+import tablib
+import csv
+import os
+import gzip
+import csv
+import jinja2
+import pandas as pd
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import gspread
-import jinja2
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import plotly.express as px
-import tablib
-from django.contrib import auth
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
-from django.shortcuts import redirect, render, render_to_response
-from django.template import Context, loader
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
-                                          requires_csrf_token)
-from isoweek import Week
-from matplotlib.patches import ConnectionPatch
-from oauth2client.service_account import ServiceAccountCredentials
 
-from . import import_bd, import_csv, sqllite, sqlvertica
-from .models import *
+from .models import City
+from . import sqllite
+
+from . import import_csv
+from . import import_bd
+from . import sqlvertica 
+import plotly.express as px   
 
 
 def creatFolder(user_temp):
@@ -73,10 +78,18 @@ class Fraud_PROV(LoginRequiredMixin, View):
         return render (request,'check/test_prover.HTML')
     def post(self,request):
         trip_id = request.POST["trip_id"]
+        chek_box = request.POST.get("chek_box")
         driver_id,customer_id,drv_id=sqlvertica.sql_trip(trip_id)
-        cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id)
+        if chek_box=='yes':
+            cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
+            chek_box='checked'
+        else:
+            chek_box=''    
+            cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
+        
         return render (request,'check/test_prover.HTML',{"cus":cus,
                                                     "drv":drv,
+                                                    "box_c":chek_box,
                                                     "svod_drv_cus_head":svod_drv_cus_head,
                                                     "svod_drv_cus":svod_drv_cus,
                                                     "svod_cus_head":svod_cus_head,
@@ -198,10 +211,7 @@ class svod_doplat(LoginRequiredMixin, View):
         end_date = request.POST["end_date"]
         сity=City.objects.all()
         head,data=sqlvertica.sql_doplat(start_date,end_date) 
-        for i in сity:
-             for j in data:
-                 if i[1]==j[0]:
-                     j[0]=i[0]   
+  
         return render(request,'check/svod_dop.html',{"start_date":start_date
                                                     ,"end_date":end_date
                                                     ,"head":head
@@ -235,4 +245,4 @@ class brend(LoginRequiredMixin, View):
                                                     ,"drv_id":driver_id
                                                     ,"head":head
                                                     ,"data":data
-                                                    })    
+                                                    })
