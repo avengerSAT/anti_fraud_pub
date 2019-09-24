@@ -3,52 +3,55 @@
 Информация о движении денежных средств
 {% endblock %}
 {% block content %}
-{% include "include/include_logout.html"%}   
+    {% include "include/include_logout.html"%}   
 
-<form action="{% url 'svod_doplat_url' %}"  method="POST" >
-    {% csrf_token %}
-        <input type="text" disabled='disabled' style="width:5%;background-color: rgb(255, 255, 255) " value="Период с">
-        <input type="date" id="start_date" name="start_date" value="{{start_date}}">
-        <input type="text" disabled='disabled'  style="width:1.5%; background-color: rgb(250, 250, 250)" value="по">
-        <input type="date" id="end_date" name="end_date" value="{{end_date}}">
-    <button  type="submit" >ОТПРАВИТЬ</button>
-</form>
-<br><br>
-<br><br>
-<div class="pricelist" id="pricelist">
-    <table id="pricetable-sv" class="table-autosort:2"> 
-        <colgroup>
-            <col class="name" class="name"></col>
+    <form action="{% url 'svod_doplat_url' %}"  method="POST" >
+        {% csrf_token %}
+            <input type="text" disabled='disabled' style="width:5%;background-color: rgb(255, 255, 255) " value="Период с">
+            <input type="date" id="start_date" name="start_date" value="{{start_date}}">
+            <input type="text" disabled='disabled'  style="width:1.5%; background-color: rgb(250, 250, 250)" value="по">
+            <input type="date" id="end_date" name="end_date" value="{{end_date}}">
+        <button  type="submit" >ОТПРАВИТЬ</button>
+    </form>
+    <br><br>
+    <br><br>
+    <div class="pricelist" id="pricelist">
+        <table id="pricetable-sv" class="table-autosort:2"> 
+            <colgroup>
+                <col class="name" class="name"></col>
 
-            <col class="last_col "></col>
-        </colgroup>
+                <col class="last_col "></col>
+            </colgroup>
 
-        <thead>
-            {% for j in head %}
+            <thead>
+    {% for j in head %}               
+        <th class=" filterable sortable table-sortable:numeric" style="padding: 3px;border: 1px solid black;">{{j}}</th>
+    {% endfor %}
+            </thead>
 
-                <th class=" filterable sortable table-sortable:numeric" style="padding: 3px;border: 1px solid black;">{{j}}</th>
 
+
+    {% for qw in data %}
+        <tr >
+            {% for q in qw %}
+                {% if q == qw.0 %}
+                    {% for i in сity %}
+                        {% if i.Код_Города  == q %}
+                            <td class="nowrap" style="background-color:rgb(179, 179, 179);padding: 3px;border: 1px solid black;" >{{i.Город}}</td>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <td class="nowrap" style="background-color:rgb(179, 179, 179);padding: 3px;border: 1px solid black;" >{{q}}</td>    
+                {% endif %}
             {% endfor %}
-        </thead>
+        </tr>
+    {% endfor %}
 
-
-
-{% for i in data %}
-    <tr  >
-        {% for q in i %}
-            
-        <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;" >{{q}}</td>
-
-        {% endfor %}
-    </tr>
-
-{% endfor %}
-
-    </table>
-</div>
-<script>
-    $(document).ready( function () {
-    $('#pricetable-sv').DataTable();
-    } );
-</script>   
+        </table>
+    </div>
+    <script>
+        $(document).ready( function () {
+        $('#pricetable-sv').DataTable();
+        } );
+    </script>   
 {% endblock %}    
