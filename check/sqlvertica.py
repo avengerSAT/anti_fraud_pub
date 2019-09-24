@@ -7,6 +7,7 @@ import vertica_python
 from vertica_python import connect
 
 from .con import Con_vert
+from .sql_code import sql_vert
 
 
 def peremen(data, head):
@@ -54,7 +55,7 @@ def sql_trip(trail):
         return driver_id, customer_id, drv_id
 
 
-def sql_prov(customer_id, driver_id, drv_id):
+def sql_prov(customer_id, driver_id, drv_id, chek_box):
     conn_info = {
         'host': Con_vert.host,
         'port': Con_vert.port,
@@ -83,8 +84,15 @@ def sql_prov(customer_id, driver_id, drv_id):
                 head = cur.description
                 svod_cus_head, svod_cus = peremen(data, head)
                 
-            with open('./Sql/sql_prov-customer_driver_duet_data.sql', 'r') as customer_driver_duet_data:    
-                cur.execute(customer_driver_duet_data.read(), (driver_id, customer_id, drv_id))
+                
+            if chek_box == 'yes':
+                path = './Sql/sql_prov-customer_driver_duet_data.sql'
+                params = (driver_id, customer_id, drv_id)
+            else:
+                path = './Sql/sql_prov-customer_driver_duet_data_short.sql'
+                params = (drv_id, customer_id)
+            with open(path, 'r') as customer_driver_duet_data:    
+                cur.execute(customer_driver_duet_data.read(), params)
                 data = cur.fetchall()
                 head = cur.description
                 svod_drv_cus_head, svod_drv_cus = peremen(data, head)
@@ -96,8 +104,8 @@ def sql_doplat(start_date, end_date):
                  'port': Con_vert.port,
                  'user': Con_vert.user,
                  'password': Con_vert.password}
-                 
 
+    
     with connect(**conn_info) as con:
         with con.cursor() as cur:
 

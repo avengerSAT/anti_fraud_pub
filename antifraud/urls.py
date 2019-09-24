@@ -10,5 +10,5 @@ urlpatterns = [
     url('^', include('django.contrib.auth.urls')),
     url('^', include('menu.urls')),
     url('check/', include('check.urls')),
-   # path('django_plotly_dash/', include('django_plotly_dash.urls')),
+    url('anti_fraud/', include('fraud_inspector.urls'))
 ]
