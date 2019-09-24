@@ -1,41 +1,36 @@
-from django.views.decorators.csrf import csrf_exempt, csrf_protect,requires_csrf_token
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render,render_to_response,redirect
-from django.template import loader, Context
-from django.http import HttpResponse
-from django.contrib import auth
-from django.views import View
-
-import matplotlib.pyplot as plt
-from matplotlib.patches import ConnectionPatch
-import numpy as np
-from isoweek import Week
-import time
-import threading
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime,timedelta
-import tablib
 import csv
-import os
 import gzip
-import csv
-import jinja2
-import pandas as pd
+import os
+import threading
+import time
+from datetime import datetime, timedelta
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import gspread
+import jinja2
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import tablib
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
+from django.shortcuts import redirect, render, render_to_response
+from django.template import Context, loader
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
+                                          requires_csrf_token)
+from isoweek import Week
+from matplotlib.patches import ConnectionPatch
+from oauth2client.service_account import ServiceAccountCredentials
 
+from . import import_bd, import_csv, sqllite, sqlvertica
 from .models import *
-from . import sqllite
-
-from . import import_csv
-from . import import_bd
-from . import sqlvertica 
-import plotly.express as px   
 
 
 def creatFolder(user_temp):
