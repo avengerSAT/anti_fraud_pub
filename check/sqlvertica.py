@@ -1,10 +1,13 @@
-import vertica_python
-from vertica_python import connect
-from csv import writer
-import pandas as pd
 import csv
 import os
+from csv import writer
+
+import pandas as pd
+import vertica_python
+from vertica_python import connect
+
 from .con import Con_vert
+
 
 def peremen(data, head):
     a = ([column[0].replace("_", ' ') for column in head])
@@ -27,143 +30,64 @@ def save_csv1(data, trail):
 
 def sql_trip(trail):
     try:
-        con = connect(
-            host=Con_vert.host,
-            port=Con_vert.port,
-            user=Con_vert.user,
-            password=Con_vert.password)
+        with connect(
+                host=Con_vert.host,
+                port=Con_vert.port,
+                user=Con_vert.user,
+                password=Con_vert.password) as con:
 
-        sql = """ 
-        SELECT DISTINCT
-        dd.ext_id
-        ,oo.customer_id
-        ,oo.driver_id
-        FROM facts.FS_Orders oo 
-        left JOIN facts.FS_Drivers dd 
-        on oo.driver_id = dd.id
-        where oo.id=%s
-                """
-        cursor = con.cursor()
-        cursor.execute(sql, (trail,))
-        data = cursor.fetchall()
+            with open('./Sql/sql_trip.sql', 'r') as sql:
+                cursor = con.cursor()
+                cursor.execute(sql.read(), (trail,))
+                data = cursor.fetchall()
 
-        # переменная водитель
-        driver_id = data[0][0]
-        # переменная клиент
-        customer_id = data[0][1]
-        # переменная водитель корот
-        drv_id = data[0][2]
-        con.close()
-        return driver_id, customer_id, drv_id
+                # переменная водитель
+                driver_id = data[0][0]
+                # переменная клиент
+                customer_id = data[0][1]
+                # переменная водитель короткий
+                drv_id = data[0][2]
+
+            return driver_id, customer_id, drv_id
     except:
-        con.close()
-        driver_id, customer_id, drv_id = "Нет данных", "Нет данных", "Нет данных"
+        driver_id, customer_id, drv_id = [i for i in ["Нет данных" for i in range(3)]]
         return driver_id, customer_id, drv_id
 
-def sql_prov(customer_id, driver_id, drvr_id):
+
+def sql_prov(customer_id, driver_id, drv_id):
     conn_info = {
         'host': Con_vert.host,
         'port': Con_vert.port,
         'user': Con_vert.user,
         'password': Con_vert.password
     }
-    sql_1 = """ 
-SELECT DISTINCT
-case WHEN cc.last_name is not NULL THEN (cc.last_name::varchar)||' '||(cc.first_name ::varchar) else cc.first_name end  Имя_Клиента
-,oo.customer_id
-,cc.email AS почта_клиента
-,oo.customer_phone AS телефон_клиента
-,CAST(cc.trip_number AS DECIMAL(4,0)) as Количество_поездок_клиента
-,case when cc.status_reasons = '{}' then cc.status else cc.status_reasons end Статус
-FROM facts.FS_Orders oo
-LEFT JOIN facts.FS_Customers cc ON oo.customer_id=cc.id
-WHERE customer_id=%s 
-             """
 
-    sql_2 = """ 
-SELECT DISTINCT
-case WHEN last_name is not NULL THEN (first_name::varchar)||' '||(last_name ::varchar) else first_name end  Имя_водителя
-,(drv.id::varchar)||'  /  '||(drv.ext_id::varchar) as driver_id
-,prs.email AS почта_водителя
-,pr.phone AS телефон_водителя
-,drv.promo_code AS промокод_водителя
-FROM facts.FS_Profiles pr
-LEFT JOIN facts.FS_Drivers drv ON drv.profile_id = pr.id
-LEFT JOIN facts.FS_Profiles_security prs ON pr.id = prs.id
-WHERE drv.ext_id = %s
-        """
-    sql_3 = """
-SELECT DISTINCT
-(drv.id::varchar)||'  /  '||(drv.ext_id::varchar) as Ид_водителя
-,case WHEN oo.driver_last_name is not NULL THEN (oo.driver_first_name::varchar)||' '||(oo.driver_last_name ::varchar) else oo.driver_first_name end  Имя_водителя
-,COUNT(oo.driver_id) AS Дуэт
-,CAST(((COUNT(oo.driver_id)/temp.cust_trips)*100) AS NUMERIC(6,0)) Доля_совместных_поездок
-,(MAX(to_timestamp(order_start_date)))::varchar AS Время_последней_поездки
-,CAST(SUM(сумма_доплаты)AS NUMERIC(8,0)) as Сумма_доплат
-FROM facts.FS_Orders oo  
-LEFT JOIN facts.FS_Drivers drv ON drv.id = oo.driver_id
-LEFT JOIN (
-SELECT DISTINCT
-order_id
-,transaction_amount/100 as сумма_доплаты
-from facts.FS_Drivers_balance_transaction
-WHERE  transaction_type='Compensation'
-) qwe ON qwe.order_id = oo.id
-LEFT JOIN (
-SELECT DISTINCT
-customer_id, count(customer_id) as cust_trips 
-FROM facts.FS_Orders
-WHERE sub_state = 'ORDER_COMPLETED' AND customer_id = %s
-GROUP BY customer_id
-) temp ON temp.customer_id = oo.customer_id
-WHERE oo.customer_id = %s and oo.driver_id is not NULL and sub_state = 'ORDER_COMPLETED'
-GROUP BY Ид_водителя ,Имя_водителя,temp.cust_trips
-    HAVING
-    COUNT(oo.driver_id) >= 0
-    ORDER BY
-    Дуэт DESC
-         """
-    sql_4 = """
-SELECT DISTINCT
-oo.id as ИД_поездки
-,oo.order_src_address as Адрес_подачи
-,oo.order_dst_address as Конечный_адрес
-,(to_timestamp(oo.order_start_date))::varchar as Время_создания_заказа
-,(to_timestamp(oo.order_end_date))::varchar as Время_окончания_поездки
-,oo.promo_code_description as Промо
-,CAST(oo.promo_code_discount/100 AS DECIMAL(20,0))as Номинал_промокода
-,CAST(dt.сумма_доплаты AS DECIMAL(4,0)) as Сумма_доплаты
-,oo.sub_state as Статус_поездки
-FROM facts.FS_Orders oo
-LEFT JOIN (select order_id,transaction_amount/100 as сумма_доплаты from facts.FS_Drivers_balance_transaction WHERE transaction_type='Compensation') dt 
-on dt.order_id = oo.id
-WHERE driver_id=%s and customer_id=%s and (sub_state = 'ORDER_COMPLETED' OR sub_state = 'CUSTOMER_CANCEL_AFTER_TRIP')
-         """
-
-# ,CAST(((osc.time + osc.long_time + osc.country_time)/1000) AS DECIMAL(20,0))::varchar as Время_поездки
-# ,CAST((osc.distance+osc.long_distance+osc.country_distance)*0.001 AS DECIMAL(20,3))::varchar as Расстояние
-# LEFT JOIN (SELECT DISTINCT *from facts.FS_Orders_customer_cost WHERE cost_type='regular' ) osc on osc.order_id=oo.id
-# долгая загрузка из-за стягивания таблиц , надо попробовать два запроса
-#
     with connect(**conn_info) as conn:
-        cur = conn.cursor()
-        cur.execute(sql_1, (customer_id,))
-        data = cur.fetchall()
-        head = cur.description
-        cus_head, cus = peremen(data, head)
-        cur.execute(sql_2, (driver_id,))
-        data = cur.fetchall()
-        head = cur.description
-        drv_hed, drv = peremen(data, head)
-        cur.execute(sql_3, (customer_id, customer_id))
-        data = cur.fetchall()
-        head = cur.description
-        svod_cus_head, svod_cus = peremen(data, head)
-        cur.execute(sql_4, (drvr_id, customer_id))
-        data = cur.fetchall()
-        head = cur.description
-        svod_drv_cus_head, svod_drv_cus = peremen(data, head)
-        cur.close
+        with conn.cursor() as cur:
+
+            with open('./Sql/sql_prov-customer_data.sql', 'r') as customer_data:
+                cur.execute(customer_data.read(), (customer_id,))
+                data = cur.fetchall()
+                head = cur.description
+                cus_head, cus = peremen(data, head)
+            
+            with open('./Sql/sql_prov-driver_data.sql', 'r') as driver_data:
+                cur.execute(driver_data.read(), (driver_id,))
+                data = cur.fetchall()
+                head = cur.description
+                drv_hed, drv = peremen(data, head)
+                
+            with open('./Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:    
+                cur.execute(customer_trips_total_data.read(), (customer_id, customer_id))
+                data = cur.fetchall()
+                head = cur.description
+                svod_cus_head, svod_cus = peremen(data, head)
+                
+            with open('./Sql/sql_prov-customer_driver_duet_data.sql', 'r') as customer_driver_duet_data:    
+                cur.execute(customer_driver_duet_data.read(), (driver_id, customer_id, drv_id))
+                data = cur.fetchall()
+                head = cur.description
+                svod_drv_cus_head, svod_drv_cus = peremen(data, head)
     return cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus
 
 
