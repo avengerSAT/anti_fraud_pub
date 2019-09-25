@@ -37,7 +37,7 @@ def sql_trip(trail):
                 user=Con_vert.user,
                 password=Con_vert.password) as con:
 
-            with open('./Sql/sql_trip.sql', 'r') as sql:
+            with open('./check/Sql/sql_trip.sql', 'r') as sql:
                 cursor = con.cursor()
                 cursor.execute(sql.read(), (trail,))
                 data = cursor.fetchall()
@@ -66,19 +66,19 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
     with connect(**conn_info) as con:
         with con.cursor() as cur:
 
-            with open('./Sql/sql_prov-customer_data.sql', 'r') as customer_data:
+            with open('./check/Sql/sql_prov-customer_data.sql', 'r') as customer_data:
                 cur.execute(customer_data.read(), (customer_id,))
                 data = cur.fetchall()
                 head = cur.description
                 cus_head, cus = peremen(data, head)
             
-            with open('./Sql/sql_prov-driver_data.sql', 'r') as driver_data:
+            with open('./check/Sql/sql_prov-driver_data.sql', 'r') as driver_data:
                 cur.execute(driver_data.read(), (driver_id,))
                 data = cur.fetchall()
                 head = cur.description
                 drv_hed, drv = peremen(data, head)
                 
-            with open('./Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:    
+            with open('./check/Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:    
                 cur.execute(customer_trips_total_data.read(), (customer_id, customer_id))
                 data = cur.fetchall()
                 head = cur.description
@@ -86,10 +86,10 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 
                 
             if chek_box == 'yes':
-                path = './Sql/sql_prov-customer_driver_duet_data.sql'
+                path = './check/Sql/sql_prov-customer_driver_duet_data.sql'
                 params = (driver_id, customer_id, drv_id)
             else:
-                path = './Sql/sql_prov-customer_driver_duet_data_short.sql'
+                path = './check/Sql/sql_prov-customer_driver_duet_data_short.sql'
                 params = (drv_id, customer_id)
             with open(path, 'r') as customer_driver_duet_data:    
                 cur.execute(customer_driver_duet_data.read(), params)
@@ -109,7 +109,7 @@ def sql_doplat(start_date, end_date):
     with connect(**conn_info) as con:
         with con.cursor() as cur:
 
-            with open('./Sql/sql_doplat-sql.sql', 'r') as sql:
+            with open('./check/Sql/sql_doplat-sql.sql', 'r') as sql:
                 cur.execute(sql.read(), (start_date, end_date))
                 data = cur.fetchall()
                 head = cur.description
@@ -127,7 +127,7 @@ def sql_old_drv(drv_id, trail):
             ) as con:
 
             with con.cursor() as cursor:
-                with open('./Sql/sql_old_drv-sql.sql', 'r') as sql:
+                with open('./check/Sql/sql_old_drv-sql.sql', 'r') as sql:
                     cursor.execute(sql, (drv_id, drv_id,))
                     data = cursor.fetchall()
                     head = cursor.description
@@ -151,7 +151,7 @@ def sql_drv_poezd(driver_id, start_date, end_date):
             ) as con:
 
             with con.cursor() as cursor:
-                with open('./Sql/sql_drv_poezd-sql.sql', 'r') as sql:
+                with open('./check/Sql/sql_drv_poezd-sql.sql', 'r') as sql:
                     cursor.execute(sql, (driver_id, start_date, end_date,
                                         driver_id, start_date, end_date,))
                     data = cursor.fetchall()
