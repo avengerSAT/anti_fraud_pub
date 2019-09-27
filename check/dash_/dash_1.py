@@ -205,8 +205,7 @@ def _create_app(a):
                 dff=pandas_csv(a).loc[(pandas_csv(a)['ИД поездки'] == input2 ) | (pandas_csv(a)['ИД клиента'] == input2)]
                 drv_df =pands_per(pandas_csv(a),table_per.drv)
                 cus_dff=pands_per(dff,table_per.custoner)
-                print(cus_dff)
-                print(drv_df)
+
                 dff_sv=dff[table_per.svod]
                 return  html.Div([
                                 html.Div([
