@@ -26,5 +26,10 @@
         {% csrf_token %}
     <button class="btn btn-secondary btn-lg btn-block" title=""
         type="submit">Список заказов водителя за период </button>
-    </form>    
+    </form> 
+<form action="{% url 'dash_drv_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
+        {% csrf_token %}
+    <button class="btn btn-secondary btn-lg btn-block" title=""
+        type="submit">DASH Проверка водитель </button>
+    </form> 
 {% endblock %}
