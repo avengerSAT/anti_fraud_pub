@@ -1,7 +1,0 @@
-Performing system checks...
-
-System check identified no issues (0 silenced).
-September 27, 2019 - 15:23:15
-Django version 2.1.7, using settings 'antifraud.settings'
-Starting development server at http://0.0.0.0:8080/
-Quit the server with CONTROL-C.
