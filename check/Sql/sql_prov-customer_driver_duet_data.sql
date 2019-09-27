@@ -1,20 +1,14 @@
 SELECT
     o.id AS "ИД поездки"
-    , CASE WHEN o.arrive_time - o.order_start_date < 60
-    THEN CAST(o.arrive_time - o.order_start_date AS DECIMAL (5,2)) || ' sec'
-    WHEN o.arrive_time - o.order_start_date IS NULL
-    THEN ''
-    ELSE CAST((o.arrive_time - o.order_start_date) / 60 AS DECIMAL (5,2)) || ' min'
-    END "Подача мин"
-    , TO_TIMESTAMP(o.order_start_date) AS "Старт поездки"
+    , o.order_src_address AS "Адрес подачи"
+    , o.order_dst_address AS "Конечный адрес"
+    , o.arrive_time - o.order_start_date AS "Подача мин"
+    , TO_TIMESTAMP(o.order_start_date) AS "Создание поездки"
     , TO_TIMESTAMP(o.order_end_date) AS "Финиш поездки"
-    , ISNULL(CAST(ttl_time.trip_time / 60000 AS DECIMAL (5,2)), 0) || ' min' "Время поездки мин"
-    , ISNULL(CAST(ttl_time.trip_distance / 1000 AS DECIMAL (20,3)), 0) || ' km' "Расстояние поездки"
-    , ISNULL(pca.code, 'Пусто') AS "Промо код"
-    , CASE WHEN margin.margin IS NULL
-    THEN 0
-    ELSE CAST(margin.margin AS int)
-    END Доплата
+    , ttl_time.trip_time AS "Время поездки мин"
+    , ttl_time.trip_distance AS "Расстояние поездки"
+    , pca.code AS "Промо код"
+    , margin.margin AS Доплата
 FROM facts.FS_Orders o
 LEFT JOIN (
     SELECT

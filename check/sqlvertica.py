@@ -87,15 +87,45 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 
             if chek_box == 'yes':
                 path = './check/Sql/sql_prov-customer_driver_duet_data.sql'
-                params = (driver_id, customer_id, drv_id)
+                params = [driver_id, customer_id, drv_id]
+                with open(path, 'r') as customer_driver_duet_data:
+                    df_test = pd.read_sql_query(
+                        customer_driver_duet_data.read(), con, params=params)
+
+
+                    df_test = df_test.fillna(0)
+                    df_test['Старт поездки'] = df_test['Финиш поездки'].astype(int) - (df_test['Время поездки мин'].astype(int) * 1000**2)
+                    df_test.loc[df_test['Старт поездки'] > 0, 'Старт поездки'] = pd.to_datetime(df_test['Старт поездки'], unit='ns')
+                    df_test['Старт поездки'] = df_test['Старт поездки'].values.astype('<M8[s]')
+                    columns = df_test.columns.tolist()
+                    columns = columns[:5] + columns[-1:] + columns[5:-1]
+                    df_test = df_test[columns]
+
+                    a = df_test['Подача мин'] % 60
+                    b = df_test['Подача мин'] // 60
+                    c = b.astype(int).astype(str) + ' min ' + a.astype(int).astype(str) + ' sec'
+                    df_test['Подача мин'] = c
+
+
+                    a = df_test['Время поездки мин'] % 60
+                    b = df_test['Время поездки мин'] // 60000
+                    c = b.astype(int).astype(str) + ' min ' + a.astype(int).astype(str) + ' sec'
+                    df_test['Время поездки мин'] = c
+
+                    a = df_test['Расстояние поездки'] % 1000
+                    b = df_test['Расстояние поездки'] // 1000
+                    c = b.astype(int).astype(str) + ' km ' + a.astype(int).astype(str) + ' m'
+                    df_test['Расстояние поездки'] = c
+
+                    test = df_test.sort_values(by='Создание поездки', ascending=False)
+                    test['Доплата'] = test['Доплата'].astype(int)
+
+
+                    svod_drv_cus_head, svod_drv_cus = columns, test.values.tolist()
             else:
                 path = './check/Sql/sql_prov-customer_driver_duet_data_short.sql'
-                params = (drv_id, customer_id)
-            with open(path, 'r') as customer_driver_duet_data:    
-                cur.execute(customer_driver_duet_data.read(), params)
-                data = cur.fetchall()
-                head = cur.description
-                svod_drv_cus_head, svod_drv_cus = peremen(data, head)
+                params = [drv_id, customer_id]
+            
     return cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus
 
 
