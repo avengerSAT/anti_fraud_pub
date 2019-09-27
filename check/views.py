@@ -1,36 +1,33 @@
-from django.views.decorators.csrf import csrf_exempt, csrf_protect,requires_csrf_token
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render,render_to_response,redirect
-from django.template import loader, Context
-from django.http import HttpResponse
+import csv
+import gzip
+import os
+import threading
+import time
+from datetime import datetime, timedelta
+import jinja2
+import numpy as np
+import pandas as pd
+import tablib
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
+from django.shortcuts import redirect, render, render_to_response
+from django.template import Context, loader
+from django.utils.decorators import method_decorator
 from django.views import View
 
-
-import numpy as np
-from isoweek import Week
-import time
 import threading
 from datetime import datetime,timedelta
-import tablib
-import csv
-import os
-import gzip
-import csv
-import jinja2
-import pandas as pd
+from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
+                                          requires_csrf_token)
+from isoweek import Week
 
- 
 
+from . import import_bd, import_csv, sqlvertica
 from .models import City
-from . import sqllite
-
-from . import import_csv
-from . import import_bd
-from . import sqlvertica 
 from .dash_.dash_1 import dispatcher
+
 
 
 def creatFolder(user_temp):
@@ -78,7 +75,7 @@ class Fraud_PROV(LoginRequiredMixin, View):
             cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
             chek_box='checked'
         else:
-            chek_box=''    
+            chek_box=''
             cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
         
         return render (request,'check/test_prover.HTML',{"cus":cus,
@@ -239,6 +236,7 @@ class brend(LoginRequiredMixin, View):
                                                     ,"drv_id":driver_id
                                                     ,"head":head
                                                     ,"data":data
+
                                                      })  
                                                   
 def dash(request,**kwargs):
@@ -248,4 +246,5 @@ def dash(request,**kwargs):
 def dash_ajax(request):
     trail="check/templates/csv"+request.user.username 
     return HttpResponse(dispatcher(request,trail),content_type='application/json')  
+
 
