@@ -12,7 +12,7 @@ urlpatterns = [
     url('^', include('django.contrib.auth.urls')),
     url('^', include('menu.urls')),
     url('check/', include('check.urls')),
-    url(r'^dash', dash),
+    url(r'^dash', dash,name='dash_drv_url'),
     url(r'^_dash', dash_ajax ),
     url('^', include('fraud_inspector.urls'))
 ]
