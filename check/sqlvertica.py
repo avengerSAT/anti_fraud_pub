@@ -128,7 +128,7 @@ def sql_old_drv(drv_id, trail):
 
             with con.cursor() as cursor:
                 with open('./check/Sql/sql_old_drv-sql.sql', 'r') as sql:
-                    cursor.execute(sql, (drv_id, drv_id,))
+                    cursor.execute(sql.read(), (drv_id, drv_id,))
                     data = cursor.fetchall()
                     head = cursor.description
                     a, b = peremen(data, head)
@@ -154,7 +154,7 @@ def sql_drv_poezd(driver_id, start_date, end_date):
 
             with con.cursor() as cursor:
                 with open('./check/Sql/sql_drv_poezd-sql.sql', 'r') as sql:
-                    cursor.execute(sql, (driver_id, start_date, end_date,
+                    cursor.execute(sql.read(), (driver_id, start_date, end_date,
                                         driver_id, start_date, end_date,))
                     data = cursor.fetchall()
                     head = cursor.description
