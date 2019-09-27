@@ -4,8 +4,6 @@ import os
 import threading
 import time
 from datetime import datetime, timedelta
-
-
 import jinja2
 import numpy as np
 import pandas as pd
@@ -18,20 +16,25 @@ from django.shortcuts import redirect, render, render_to_response
 from django.template import Context, loader
 from django.utils.decorators import method_decorator
 from django.views import View
+
+import threading
+from datetime import datetime,timedelta
 from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
                                           requires_csrf_token)
 from isoweek import Week
 
-from . import import_bd, import_csv, sqllite, sqlvertica
+
+from . import import_bd, import_csv, sqlvertica
 from .models import City
+from .dash_.dash_1 import dispatcher
+
 
 
 def creatFolder(user_temp):
     if not os.path.exists(user_temp):
         os.mkdir(user_temp)
     
-
-
+ 
 
 
 def puti(username):
@@ -233,4 +236,15 @@ class brend(LoginRequiredMixin, View):
                                                     ,"drv_id":driver_id
                                                     ,"head":head
                                                     ,"data":data
-                                                    })
+
+                                                     })  
+                                                  
+def dash(request,**kwargs):
+    trail="check/templates/csv"+request.user.username
+    return HttpResponse(dispatcher(request,trail))
+@csrf_exempt      
+def dash_ajax(request):
+    trail="check/templates/csv"+request.user.username 
+    return HttpResponse(dispatcher(request,trail),content_type='application/json')  
+
+

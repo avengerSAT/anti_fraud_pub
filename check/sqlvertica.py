@@ -136,8 +136,10 @@ def sql_old_drv(drv_id, trail):
                     save_csv(b, a, put)
         return
     except:
+
         put = trail + '/Сводная_по_водителю.csv'
         print("Connection error")
+
         return
 
 
