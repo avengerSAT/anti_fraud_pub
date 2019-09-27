@@ -6,8 +6,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
 #    path('',views.MAIN.as_view(),name='prover'),
-    
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -8,14 +8,11 @@ from django.http import HttpResponse
 from django.contrib import auth
 from django.views import View
 
-import matplotlib.pyplot as plt
-from matplotlib.patches import ConnectionPatch
+
 import numpy as np
 from isoweek import Week
 import time
 import threading
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime,timedelta
 import tablib
 import csv
@@ -25,9 +22,7 @@ import csv
 import jinja2
 import pandas as pd
 
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+ 
 
 from .models import City
 from . import sqllite
@@ -35,15 +30,14 @@ from . import sqllite
 from . import import_csv
 from . import import_bd
 from . import sqlvertica 
-import plotly.express as px   
+from .dash_.dash_1 import dispatcher
 
 
 def creatFolder(user_temp):
     if not os.path.exists(user_temp):
         os.mkdir(user_temp)
     
-
-
+ 
 
 
 def puti(username):
@@ -245,4 +239,13 @@ class brend(LoginRequiredMixin, View):
                                                     ,"drv_id":driver_id
                                                     ,"head":head
                                                     ,"data":data
-                                                    })    
+                                                     })  
+                                                  
+def dash(request,**kwargs):
+    trail="check/templates/csv"+request.user.username
+    return HttpResponse(dispatcher(request,trail))
+@csrf_exempt      
+def dash_ajax(request):
+    trail="check/templates/csv"+request.user.username 
+    return HttpResponse(dispatcher(request,trail),content_type='application/json')  
+

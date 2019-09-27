@@ -123,7 +123,7 @@ def sql_old_drv(drv_id, trail):
         return
     except:
         put = trail+'/Сводная_по_водителю.csv'
-        print("ytn")
+        
         con.close()
         return
 
