@@ -1,6 +1,5 @@
 import csv,sys,os
 import pandas as pd
-from . import sqllite
 from check.models import *
 
 
