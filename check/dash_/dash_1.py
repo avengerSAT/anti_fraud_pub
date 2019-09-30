@@ -102,16 +102,15 @@ def _create_app(a):
     def displayClick(btn1, btn2, input1,input2):
        
         if int(btn1)>int(btn2):
-            input1=input1.replace(" ",'')
-            if input2 =="":
+            per_1=input1.replace(" ",'')
+            if per_1 =="":
                 msg = 'НЕ введен ид поездки'
-                print("q")
                 return html.Div([ 
                         html.Div(msg)
                     ])
             else:
                 try:
-                    driver_id,customer_id,drv_id=sqlvertica.sql_trip(input1)
+                    driver_id,customer_id,drv_id=sqlvertica.sql_trip(per_1)
                     sqlvertica.sql_old_drv(drv_id,a)
                 except:
                     msg='введен неверный ид водителя'
@@ -162,8 +161,8 @@ def _create_app(a):
                                 
                                 ])
         else:
-            input2=input2.replace(" ",'')  
-            if input2 =="": 
+            per_2=input2.replace(" ",'')  
+            if per_2 =="": 
                 drv_df =pands_per(pandas_csv(a),table_per.drv)
                 os_df=pandas_csv(a)[table_per.drv_solo]
                 return html.Div([
@@ -202,7 +201,7 @@ def _create_app(a):
                                 
                                 ])
             else:
-                dff=pandas_csv(a).loc[(pandas_csv(a)['ИД поездки'] == input2 ) | (pandas_csv(a)['ИД клиента'] == input2)]
+                dff=pandas_csv(a).loc[(pandas_csv(a)['ИД поездки'] == per_2 ) | (pandas_csv(a)['ИД клиента'] == per_2)]
                 drv_df =pands_per(pandas_csv(a),table_per.drv)
                 cus_dff=pands_per(dff,table_per.custoner)
 
