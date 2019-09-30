@@ -7,9 +7,9 @@ SELECT
     , prs.email AS "Почта водителя"
     , pr.phone AS "Телефон водителя"
     , drv.promo_code AS "Промокод водителя"
-FROM facts.FS_Profiles pr
-LEFT JOIN facts.FS_Drivers drv
+FROM facts.FS_Drivers drv
+INNER JOIN facts.FS_Profiles pr
     ON drv.profile_id = pr.id
-LEFT JOIN facts.FS_Profiles_security prs
+INNER JOIN facts.FS_Profiles_security prs
     ON pr.id = prs.id
 WHERE drv.ext_id = %s

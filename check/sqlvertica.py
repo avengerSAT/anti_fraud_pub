@@ -81,64 +81,76 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 drv_hed, drv = peremen(data, head)
 
             if chek_box == 'yes':
-                svod_cus_head, svod_cus = ['0'],['0']
+                svod_cus_head, svod_cus = ['0','0']
             else:
-                with open('./check/Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:    
-                    cur.execute(customer_trips_total_data.read(), (customer_id, customer_id))
-                    data = cur.fetchall()
-                    head = cur.description
-                    svod_cus_head, svod_cus = peremen(data, head)
-                
-                
-            if chek_box == 'yes':
-                path = './check/Sql/sql_prov-customer_driver_duet_data.sql'
-                params = [driver_id, customer_id, drv_id]
-                with open(path, 'r') as customer_driver_duet_data:
-
+                with open('./check/Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:
                     df_test = pd.read_sql_query(
-                        customer_driver_duet_data.read(), con, params=params)
+                        customer_trips_total_data.read(), con, params=[customer_id,])
 
+                    df_test['Кол-во поездок клиента'] = len(df_test.index)
 
-                    df_test = df_test.fillna(0)
-                    df_test['Старт поездки'] = df_test['Финиш поездки'].astype(int) - (df_test['Время поездки мин'].astype(int) * 1000**2)
-                    df_test.loc[df_test['Старт поездки'] > 0, 'Старт поездки'] = pd.to_datetime(df_test['Старт поездки'], unit='ns')
-                    df_test['Старт поездки'] = df_test['Старт поездки'].values.astype('<M8[s]')
+                    df2 = df_test.copy()
+                    df2 = df_test.groupby(['Ид водителя']).size().reset_index(name='Дуэтов')
+
+                    df_test = pd.merge(df_test, df2, on='Ид водителя', how='left')
+                    df_test['Доля дуэтов'] = (df_test['Дуэтов'] / df_test['Кол-во поездок клиента'] * 100).map('{:,.2f}%'.format)
                     columns = df_test.columns.tolist()
-                    columns = columns[:5] + columns[-1:] + columns[5:-1]
+                    columns = columns[:4] + columns[-3:] + columns[4:5]
                     df_test = df_test[columns]
-
-                    a = df_test['Подача мин'] % 60
-                    b = df_test['Подача мин'] // 60
-                    c = b.astype(int).astype(str) + ' min ' + a.astype(int).astype(str) + ' sec'
-                    df_test['Подача мин'] = c
+                    del df_test['Кол-во поездок клиента']
 
 
-                    a = df_test['Время поездки мин'] % 60
-                    b = df_test['Время поездки мин'] // 60000
-                    c = b.astype(int).astype(str) + ' min ' + a.astype(int).astype(str) + ' sec'
-                    df_test['Время поездки мин'] = c
+                    svod_cus_head, svod_cus = df_test.columns.tolist(), df_test.values.tolist()
+                
+                
+            with open('./check/Sql/sql_prov-customer_driver_duet_data.sql', 'r') as customer_driver_duet_data:
 
-                    a = df_test['Расстояние поездки'] % 1000
-                    b = df_test['Расстояние поездки'] // 1000
-                    c = b.astype(int).astype(str) + ' km ' + a.astype(int).astype(str) + ' m'
-                    df_test['Расстояние поездки'] = c
-
-                    test = df_test.sort_values(by='Создание поездки', ascending=False)
-                    test['Доплата'] = test['Доплата'].astype(int)
+                df_test = pd.read_sql_query(
+                    customer_driver_duet_data.read(), con, params=[customer_id, customer_id, drv_id])
 
 
-                    svod_drv_cus_head, svod_drv_cus = columns, test.values.tolist()
-            else:
-                path = './check/Sql/sql_prov-customer_driver_duet_data_short.sql'
-                params = [drv_id, customer_id]
-                with open(path, 'r') as customer_driver_duet_data:    
-                    cur.execute(customer_driver_duet_data.read(), params)
-                    data = cur.fetchall()
-                    head = cur.description
-                    svod_drv_cus_head, svod_drv_cus = peremen(data, head)
+                df_test = df_test.fillna(0)
+                df_test['Старт поездки'] = df_test['Финиш поездки'].astype(int) - (df_test['Время поездки мин'].astype(int) * 1000**2)
+                df_test.loc[df_test['Старт поездки'] > 0, 'Старт поездки'] = pd.to_datetime(df_test['Старт поездки'], unit='ns')
+                df_test['Старт поездки'] = df_test['Старт поездки'].values.astype('<M8[s]')
+                columns = df_test.columns.tolist()
+                columns = columns[:5] + columns[-1:] + columns[5:-1]
+                df_test = df_test[columns]
+
+                a = df_test['Подача мин'] % 60
+                b = df_test['Подача мин'] // 60
+                c = b.astype(int).astype(str) + ' min ' + a.astype(int).astype(str) + ' sec'
+                df_test['Подача мин'] = c
+
+
+                a = df_test['Время поездки мин'] % 60
+                b = df_test['Время поездки мин'] // 60000
+                c = b.astype(int).astype(str) + ' min ' + a.astype(int).astype(str) + ' sec'
+                df_test['Время поездки мин'] = c
+
+                a = df_test['Расстояние поездки'] % 1000
+                b = df_test['Расстояние поездки'] // 1000
+                c = b.astype(int).astype(str) + ' km ' + a.astype(int).astype(str) + ' m'
+                df_test['Расстояние поездки'] = c
+
+
+                df_test = df_test.sort_values(by='Создание поездки', ascending=False)
+                df_test['Создание поездки'] = df_test['Создание поездки'].astype(str)
+                df_test['Старт поездки'] = df_test['Старт поездки'].astype(str)
+                df_test['Финиш поездки'] = df_test['Финиш поездки'].astype(str)
+                df_test['Доплата'] = df_test['Доплата'].astype(int)
+
+
+                svod_drv_cus_head, svod_drv_cus = df_test.columns.tolist(), df_test.values.tolist()
+
+
     ended = dt.datetime.now()
     time = ended - started
-    time = time.strftime('%H:%M:%S')
+    microseconds = time.microseconds % 1000
+    seconds = time.seconds % 60
+    minutes = time.seconds // 60
+    hours = time.seconds // 60
+    time = str(hours)+':'+str(minutes)+':'+str(seconds)+'.'+str(microseconds)
     return cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time
 
 
