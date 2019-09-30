@@ -1,4 +1,5 @@
 import csv
+import datetime as dt
 import os
 from csv import writer
 
@@ -56,6 +57,7 @@ def sql_trip(trail):
 
 
 def sql_prov(customer_id, driver_id, drv_id, chek_box):
+    started = dt.datetime.now()
     conn_info = {
         'host': Con_vert.host,
         'port': Con_vert.port,
@@ -77,18 +79,22 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 data = cur.fetchall()
                 head = cur.description
                 drv_hed, drv = peremen(data, head)
-                
-            with open('./check/Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:    
-                cur.execute(customer_trips_total_data.read(), (customer_id, customer_id))
-                data = cur.fetchall()
-                head = cur.description
-                svod_cus_head, svod_cus = peremen(data, head)
+
+            if chek_box == 'yes':
+                svod_cus_head, svod_cus = ['0'],['0']
+            else:
+                with open('./check/Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:    
+                    cur.execute(customer_trips_total_data.read(), (customer_id, customer_id))
+                    data = cur.fetchall()
+                    head = cur.description
+                    svod_cus_head, svod_cus = peremen(data, head)
                 
                 
             if chek_box == 'yes':
                 path = './check/Sql/sql_prov-customer_driver_duet_data.sql'
                 params = [driver_id, customer_id, drv_id]
                 with open(path, 'r') as customer_driver_duet_data:
+
                     df_test = pd.read_sql_query(
                         customer_driver_duet_data.read(), con, params=params)
 
@@ -125,8 +131,15 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
             else:
                 path = './check/Sql/sql_prov-customer_driver_duet_data_short.sql'
                 params = [drv_id, customer_id]
-            
-    return cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus
+                with open(path, 'r') as customer_driver_duet_data:    
+                    cur.execute(customer_driver_duet_data.read(), params)
+                    data = cur.fetchall()
+                    head = cur.description
+                    svod_drv_cus_head, svod_drv_cus = peremen(data, head)
+    ended = dt.datetime.now()
+    time = ended - started
+    time = time.strftime('%H:%M:%S')
+    return cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time
 
 
 def sql_doplat(start_date, end_date):
