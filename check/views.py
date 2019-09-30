@@ -72,11 +72,13 @@ class Fraud_PROV(LoginRequiredMixin, View):
         chek_box = request.POST.get("chek_box")
         driver_id,customer_id,drv_id=sqlvertica.sql_trip(trip_id)
         if chek_box=='yes':
-            cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
+            cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
+                sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
             chek_box='checked'
         else:
+            cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
+                sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
             chek_box=''
-            cus_head,cus,drv_hed,drv,svod_cus_head ,svod_cus,svod_drv_cus_head,svod_drv_cus=sqlvertica.sql_prov(customer_id,driver_id,drv_id,chek_box)
         
         return render (request,'check/test_prover.HTML',{"cus":cus,
                                                     "drv":drv,
@@ -84,7 +86,8 @@ class Fraud_PROV(LoginRequiredMixin, View):
                                                     "svod_drv_cus_head":svod_drv_cus_head,
                                                     "svod_drv_cus":svod_drv_cus,
                                                     "svod_cus_head":svod_cus_head,
-                                                    "svod_cus":svod_cus})     
+                                                    "svod_cus":svod_cus,
+                                                    "time":time})     
 
 class Driver(LoginRequiredMixin, View):
     def get(self,request):
