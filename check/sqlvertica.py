@@ -81,7 +81,14 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 drv_hed, drv = peremen(data, head)
 
             if chek_box == 'yes':
-                svod_cus_head, svod_cus = ['0','0']
+                with open('./check/Sql/sql_prov-customer_trips_total_data_sat.sql', 'r') as customer_trips_total_data:
+                    df_test = pd.read_sql_query(
+                        customer_trips_total_data.read(), con, params=[customer_id, customer_id])
+                    df_test['Доля совместных поездок'] = df_test['Доля совместных поездок'].astype(int)
+                    df_test['Сумма доплат'] = df_test['Сумма доплат'].astype(int)
+                    
+
+                    svod_cus_head, svod_cus = df_test.columns.tolist(), df_test.values.tolist()
             else:
                 with open('./check/Sql/sql_prov-customer_trips_total_data.sql', 'r') as customer_trips_total_data:
                     df_test = pd.read_sql_query(
