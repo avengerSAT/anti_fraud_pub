@@ -1,105 +1,62 @@
-import csv,sys,os
+import csv
+import os
+import sys
+
 import pandas as pd
-from check.models import *
+import vertica_python
+from vertica_python import connect
+
+from fraud_inspector.models import *
+
+from .con import Con_vert
 
 
+def load_data(date):
+    conn_info = {
+        'host': Con_vert.host,
+        'port': Con_vert.port,
+        'user': Con_vert.user,
+        'password': Con_vert.password
+    }
+
+    with connect(**conn_info) as con:
+        with open('./fraud_inspector/Sql/load_data-loaddata.sql', 'r') as load_data_sql:
+            df = pd.read_sql_query(
+                load_data_sql.read(), con, params=[date])
+            data = df.values.tolist()
+    return data
 
 
-def del_head(trail):
-    df = pd.read_csv(trail, header=0)
+def update_db_fraud_orders():
+    data = load_data('2019-09-01')
 
-    df.to_csv(trail,header=False,index=False)
-
-
-
-def imp_mod_city(trail):
-#    del_head(trail)
-    data=csv.reader(open(trail),delimiter=",")
-    for row in data:
-            post=City()
-            post.Город=row[0]
-
-            post.Код_Города=row[1]
-
-            post.save()
-
-def del_dan():
-    Detalizacia.objects.all().delete()
-    
-def zap_det(trail):
-    del_head(trail)
-
-    del_dan()
-    data=csv.reader(open(trail),delimiter=",")
-    for row in data:
-            if row =="":
-                row[4]=0
-            post=Detalizacia()
-            post.Код_Города=row[0]
-            post.Ид_водителя_короткий =row[1]
-            post.Ид_водителя_длинный =row[2]
-            post.Текущий_баланс_водителя=row[3]
-            post.Начисления_на_баланс_водителя_за_текущий_период_исключая_пополнения=row[4]
-            post.Размер_всех_доплат=row[5]
-            post.Размер_всех_доплат_в_потенициальных_фрод=row[6]
-            post.Размер_бонусов_только_из_доплат_до_минималки=row[7]
-            post.Текущая_сумма_бонус_плана=row[8]
-
-            post.save()
-    os.remove(trail)        
-def srav_csv(trail,trail2):
-    df1=pd.read_csv(trail)
-    df2=pd.read_csv(trail2)
-    a=df1["ИД поездки"][~df1["ИД поездки"].isin(df2["ИД поездки"])].dropna()
-    result = pd.concat([a, df1], axis=1, join_axes=[a.index])
-    result.to_csv('antifraud/templates/csvV.Kondratev/trips1231.csv',index=False)
-    result= result.drop(result.columns[0], axis=1)
-    result.to_csv(trail,index=False)
-
-def svrka_dan(trail,trail2):
-  #  srav_csv(trail,trail2)
-    del_head(trail)
-
-    data=csv.reader(open(trail),delimiter=",")
+    data.drop_duplicates()
+    data = data.groupby(['order_id',
+                         'order_date',
+                         'launch_region_id',
+                         'driver_id',
+                         'customer_id',
+                         'state',
+                         'resolution',
+                         'compensation'])['pattern_name']\
+                           .apply(', '.join).reset_index(name='pattern_name')
+    columns = data.columns.tolist()
+    columns = columns[:6] + columns[-1:] + columns[6:-1]
+    data = data[columns]
+    data[['driver_id', 'compensation']] = \
+      data[['driver_id', 'compensation']].astype(int).astype(str)
 
     for row in data:
-            post=trip_dan()  
-            post.Дуэт=row[1]
-            if row[2]=='':
-              row[2]='00:00:00'
-            post.Подача=row[2]
-            if row[3]=='':
-              row[3]='00:00:00'            
-            post.Время_заказа=row[3]
-            post.Время_заказа_БО=row[4]
-            post.Дистанция=row[5]
-            if row[6]=='':
-              row[6]='0001-01-01 00:00:01'
-            post.Старт_поездки=row[6]
-            post.Адрес_подачи=row[7]
-            if row[8]=='':
-              row[8]='0001-01-01 00:00:01'            
-            post.Время_окончания_поездки=row[8]
-            post.Конечный_адрес=row[9]
-            post.Промо=row[10]
-            post.Часть_промо=row[11]
-            post.Доплата=row[12]
-            post.Статус_поездки=row[13]
-            post.ИД_поездки=row[14]
-            post.Кол_поездок_клиента=row[15]
-            post.ИД_клиента=row[16]
-            post.Стасус=row[17]
-            post.Имя_клиента=row[18]
-            post.Телефон_клиента=row[19]
-            post.Почта_клиента=row[20]
-            post.ИД_водителя=row[21]
-            post.Имя_водителя=row[22]
-            post.Телефон_водителя=row[23]
-            post.Почта_водителя=row[24]
-            post.Промо_водителя=row[25]
-            post.Статус_р=row[26]
+        post = FraudOrders()
 
-            post.save()
-    os.remove(trail)
+        post.order_id = row[0]
+        post.order_date = row[1]
+        post.launch_region_id = row[2]
+        post.driver_id = row[3]
+        post.customer_id = row[4]
+        post.state = row[5]
+        post.pattern_name = row[6]
+        post.resolution = row[7]
+        post.compensation = row[8]
 
-
+        post.save()
