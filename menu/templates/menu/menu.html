@@ -32,4 +32,9 @@
     <button class="btn btn-secondary btn-lg btn-block" title=""
         type="submit">DASH Проверка водитель </button>
     </form> 
+    <form action="{% url 'UnverifiedTripsCompensations_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
+        {% csrf_token %}
+    <button class="btn btn-secondary btn-lg btn-block" title=""
+        type="submit"> Непроверенные поездки с доплатами за 14 дней </button>
+    </form> 
 {% endblock %}
