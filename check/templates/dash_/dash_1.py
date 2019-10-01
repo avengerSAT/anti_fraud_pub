@@ -13,8 +13,12 @@ import json
 from check import views
 from check import sqlvertica
 
+external_scripts = ['static/js/jquery.js',
+                    'static/js/jquery.dataTables.min.js',
+                    'static/js/tapl.js']
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css',
+                        '//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css']
 
  
 
@@ -43,10 +47,10 @@ def pands_per (df,per):
 
 class table_per():
     PAGE_SIZE = 10
-    drv=['Имя водителя','ИД водителя','Телефон водителя','Почта водителя','Промо водителя']
+    drv=['ИД водителя','Имя водителя','Телефон водителя','Почта водителя','Промо водителя']
     drv_solo=[' ','Имя клиента','ИД клиента','Телефон клиента','Почта клиента','Статус','Кол поездок клиента','Дуэт','Доля совместных поездок','ИД поездки','Адрес подачи','Конечный адрес','Старт поездки','Время окончания поездки','Подача','Время заказа','Промо','Номинал промокода','Статус поездки']                    
     svod=[' ','Дуэт','ИД поездки','Адрес подачи','Конечный адрес','Старт поездки','Время окончания поездки','Подача','Время заказа','Промо','Номинал промокода','Статус поездки']
-    custoner=['Имя клиента','ИД клиента','Телефон клиента','Почта клиента','Статус','Кол поездок клиента','Дуэт','Доля совместных поездок']
+    custoner=['ИД клиента','Имя клиента','Телефон клиента','Почта клиента','Статус','Кол поездок клиента','Дуэт','Доля совместных поездок']
 
 
 def dispatcher(request,trail):
@@ -66,7 +70,8 @@ def dispatcher(request,trail):
         return response.get_data()
 
 def _create_app(a):
-    app = dash.Dash(__name__, external_stylesheets=external_stylesheets)    
+    app = dash.Dash(__name__,external_scripts=external_scripts, external_stylesheets=external_stylesheets) 
+  
     app.layout = html.Div([
         html.Div([
             html.Div(
@@ -102,7 +107,7 @@ def _create_app(a):
     def displayClick(btn1, btn2, input1,input2):
        
         if int(btn1)>int(btn2):
-            per_1=input1.replace(" ",'')
+            per_1=input1.replace(" ","")
             if per_1 =="":
                 msg = 'НЕ введен ид поездки'
                 return html.Div([ 
@@ -113,12 +118,12 @@ def _create_app(a):
                     driver_id,customer_id,drv_id=sqlvertica.sql_trip(per_1)
                     sqlvertica.sql_old_drv(drv_id,a)
                 except:
-                    msg='введен неверный ид водителя'
+                    msg='НЕ введен ид поездки-1'
                     return html.Div([ 
                         html.Div(msg)
                     ])
                 if driver_id=='Нет данных' or customer_id=='Нет данных' :
-                    msg='введен неверный ид водителя'
+                    msg='НЕ введен ид поездки-2'
                     return html.Div([ 
                         html.Div(msg)
                     ])                       
@@ -146,11 +151,12 @@ def _create_app(a):
                                         ]),
                                 html.Div(
                     dash_table.DataTable(
-                                        id='table',
+                                        id='pricetable-1',
                                         columns=[{"name": i, "id": i} for i in os_df.columns],
                                         data=os_df.to_dict('records'),
                                         page_current= 0,
                                         page_size= table_per.PAGE_SIZE,
+                                        
                                         style_cell={
                                                         'height': 'auto',
                                                         'minWidth': '0px', 'maxWidth': '230px',
@@ -161,7 +167,7 @@ def _create_app(a):
                                 
                                 ])
         else:
-            per_2=input2.replace(" ",'')  
+            per_2=input2.replace(" ","")  
             if per_2 =="": 
                 drv_df =pands_per(pandas_csv(a),table_per.drv)
                 os_df=pandas_csv(a)[table_per.drv_solo]
@@ -186,7 +192,7 @@ def _create_app(a):
                                         ]),
                                 html.Div(
                     dash_table.DataTable(
-                                        id='table',
+                                        id='pricetable-1',
                                         columns=[{"name": i, "id": i} for i in os_df.columns],
                                         data=os_df.to_dict('records'),
                                         page_current= 0,
@@ -209,8 +215,8 @@ def _create_app(a):
                 return  html.Div([
                                 html.Div([
                                 html.Div(dash_table.DataTable(
-                                            id='table',
-                                            columns=[{"name": i, "id": i} for i in  cus_dff.columns],
+                                            id='table_c',
+                                            columns=[{"name": i, "id": i} for i in  cus_dff.columns], 
                                             data= cus_dff.to_dict('records'),
                                             style_cell={
                                                         'height': 'auto',
@@ -224,7 +230,7 @@ def _create_app(a):
                                     'overflow':'auto',
                                     'float':'left'}),
                                 html.Div( dash_table.DataTable(
-                                            id='table',
+                                            id='table_d',
                                             columns=[{"name": i, "id": i} for i in drv_df.columns],
                                             data= drv_df.to_dict('records'),
                                             style_cell={
@@ -240,7 +246,7 @@ def _create_app(a):
                                                         ]),
                                 html.Div(
                     dash_table.DataTable(
-                                        id='table',
+                                        id='pricetable-1',
                                         columns=[{"name": i, "id": i} for i in dff_sv.columns],
                                         data=dff_sv.to_dict('records'),
                                         page_current= 0,

@@ -26,7 +26,7 @@ from isoweek import Week
 
 from . import import_bd, import_csv, sqlvertica
 from .models import City
-from .dash_.dash_1 import dispatcher 
+from .templates.dash_.dash_1 import dispatcher 
 
 
 
