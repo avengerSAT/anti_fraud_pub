@@ -11,7 +11,7 @@ from fraud_inspector.models import *
 from .con import Con_vert
 
 
-def load_data(date):
+def load_data(date_from,date_to):
     conn_info = {
         'host': Con_vert.host,
         'port': Con_vert.port,
@@ -22,7 +22,7 @@ def load_data(date):
     with connect(**conn_info) as con:
         with open('./fraud_inspector/Sql/load_data-loaddata.sql', 'r') as load_data_sql:
             data = pd.read_sql_query(
-                load_data_sql.read(), con, params=[date])
+                load_data_sql.read(), con, params=[date_from,date_to])
             data.drop_duplicates()
             data = data.groupby(['order_id',
                       'order_date',
@@ -44,7 +44,7 @@ def load_data(date):
 
 
 def update_db_fraud_orders():
-    data = load_data('2019-09-01')
+    data = load_data('2019-08-01','2019-09-01')
 
 
 

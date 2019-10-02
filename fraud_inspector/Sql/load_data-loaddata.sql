@@ -26,4 +26,4 @@ INNER JOIN (
 	GROUP BY order_id
 	) margin
 	ON fo.id = margin.order_id
-WHERE TO_TIMESTAMP(order_date) > %s
+WHERE TO_TIMESTAMP(order_date) BETWEEN %s AND %s
