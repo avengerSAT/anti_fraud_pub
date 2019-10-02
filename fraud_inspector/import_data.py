@@ -51,19 +51,19 @@ def update_db_fraud_orders():
 
     for row in data:
         a=FraudOrders.objects.filter(order_id=row[0])
-
-#        if str(a[0]) != str(row[0])  :    
-
- #           post = FraudOrders()
-#
- #           post.order_id = row[0]
- #           post.order_date = row[1]
- #           post.launch_region_id = row[2]
- #           post.driver_id = row[3]
- #           post.customer_id = row[4]
- #           post.state = row[5]
- #           post.pattern_name = row[6]
- #           post.resolution = row[7]
- #           post.compensation = row[8]
-#
- #           post.save()
+        try:
+            if a[0]!=row[0]:
+                print(a[0])
+        except:
+   
+           post = FraudOrders()
+           post.order_id = row[0]
+           post.order_date = row[1]
+           post.launch_region_id = row[2]
+           post.driver_id = row[3]
+           post.customer_id = row[4]
+           post.state = row[5]
+           post.pattern_name = row[6]
+           post.resolution = row[7]
+           post.compensation = row[8]
+           post.save()
