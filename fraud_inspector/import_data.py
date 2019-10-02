@@ -45,6 +45,7 @@ def update_db_fraud_orders():
     data = data[columns]
     data[['driver_id', 'compensation']] = \
       data[['driver_id', 'compensation']].astype(int).astype(str)
+    data.drop_duplicates()
 
     for row in data:
         post = FraudOrders()
