@@ -29,3 +29,4 @@ WHERE
 	TO_TIMESTAMP(order_date) > (CURRENT_DATE - 14)
 	AND margin.margin > 0
 	AND state = 'UNVERIFIED'
+ORDER BY "Дата" ASC
