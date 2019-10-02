@@ -21,43 +21,49 @@ def load_data(date):
 
     with connect(**conn_info) as con:
         with open('./fraud_inspector/Sql/load_data-loaddata.sql', 'r') as load_data_sql:
-            df = pd.read_sql_query(
+            data = pd.read_sql_query(
                 load_data_sql.read(), con, params=[date])
-            data = df.values.tolist()
+            data.drop_duplicates()
+            data = data.groupby(['order_id',
+                      'order_date',
+                      'launch_region_id',
+                      'driver_id',
+                      'customer_id',
+                      'state',
+                      'resolution',
+                      'compensation'])['pattern_name']\
+                        .apply(', '.join).reset_index(name='pattern_name')
+            columns = data.columns.tolist()
+            columns = columns[:6] + columns[-1:] + columns[6:-1]
+            data = data[columns]
+            data[['driver_id', 'compensation']] = \
+            data[['driver_id', 'compensation']].astype(int).astype(str)
+            data.drop_duplicates()
+            data = data.values.tolist()
     return data
 
 
 def update_db_fraud_orders():
     data = load_data('2019-09-01')
 
-    data.drop_duplicates()
-    data = data.groupby(['order_id',
-                         'order_date',
-                         'launch_region_id',
-                         'driver_id',
-                         'customer_id',
-                         'state',
-                         'resolution',
-                         'compensation'])['pattern_name']\
-                           .apply(', '.join).reset_index(name='pattern_name')
-    columns = data.columns.tolist()
-    columns = columns[:6] + columns[-1:] + columns[6:-1]
-    data = data[columns]
-    data[['driver_id', 'compensation']] = \
-      data[['driver_id', 'compensation']].astype(int).astype(str)
-    data.drop_duplicates()
+
+
 
     for row in data:
-        post = FraudOrders()
+        a=FraudOrders.objects.filter(order_id=row[0])
 
-        post.order_id = row[0]
-        post.order_date = row[1]
-        post.launch_region_id = row[2]
-        post.driver_id = row[3]
-        post.customer_id = row[4]
-        post.state = row[5]
-        post.pattern_name = row[6]
-        post.resolution = row[7]
-        post.compensation = row[8]
+#        if str(a[0]) != str(row[0])  :    
 
-        post.save()
+ #           post = FraudOrders()
+#
+ #           post.order_id = row[0]
+ #           post.order_date = row[1]
+ #           post.launch_region_id = row[2]
+ #           post.driver_id = row[3]
+ #           post.customer_id = row[4]
+ #           post.state = row[5]
+ #           post.pattern_name = row[6]
+ #           post.resolution = row[7]
+ #           post.compensation = row[8]
+#
+ #           post.save()
