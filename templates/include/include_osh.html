@@ -1,0 +1,15 @@
+{% block content %}
+
+<div id="overlay">
+    <div class="popup">
+        <h1>{{msg}}</h1>
+        <button class="close" title="Закрыть" onclick="document.getElementById('overlay').style.display='none';"></button>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	var delay_popup =10;
+	setTimeout("document.getElementById('overlay').style.display='block'", delay_popup);
+</script>
+{% endblock %}

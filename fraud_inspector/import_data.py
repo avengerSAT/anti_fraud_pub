@@ -44,18 +44,9 @@ def load_data(date_from,date_to):
 
 
 def update_db_fraud_orders():
-    data = load_data('2019-08-01','2019-09-01')
-
-
-
-
+    data = load_data('2019-07-30','2019-08-01')
     for row in data:
-        a=FraudOrders.objects.filter(order_id=row[0])
         try:
-            if a[0]!=row[0]:
-                print(a[0])
-        except:
-   
            post = FraudOrders()
            post.order_id = row[0]
            post.order_date = row[1]
@@ -67,3 +58,7 @@ def update_db_fraud_orders():
            post.resolution = row[7]
            post.compensation = row[8]
            post.save()
+        except:
+            pass
+
+

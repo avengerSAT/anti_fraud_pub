@@ -10,4 +10,6 @@ urlpatterns = [
 #    path('',views.MAIN.as_view(),name='prover'),
     path('zagr_tr',views.zagr_tr.as_view(),name='zagr_tr_url'),
     path('Fraud_inspector',views.Fraud_inspector.as_view(),name='Fraud_inspector_url'),
+     url(r'^frod_prov/',views.frod_prov,name='frod_prov_URL'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#frod_prov
