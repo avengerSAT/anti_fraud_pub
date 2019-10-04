@@ -164,7 +164,7 @@ class zagr_tr(LoginRequiredMixin, View):
             City=check_city()
             gorod="ALL"
             blocked_unblocked(trip_id,'UNBLOCKED')
-            msg="заказ разблокирован:"+trip_id
+            msg="Заказ разблокирован:"+trip_id
             return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
                                                                     "gorod":gorod,
                                                                     "end_time":end_time,
