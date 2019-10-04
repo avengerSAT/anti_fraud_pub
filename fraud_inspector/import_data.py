@@ -23,25 +23,17 @@ def load_data(date_from,date_to):
         with open('./fraud_inspector/Sql/load_data-loaddata.sql', 'r') as load_data_sql:
             data = pd.read_sql_query(
                 load_data_sql.read(), con, params=[date_from,date_to])
-            data.drop_duplicates()
-            data = data.groupby(['order_id',
-                      'order_date',
-                      'launch_region_id',
-                      'driver_id',
-                      'customer_id',
-                      'state',
-                      'resolution',
-                      'compensation'])['pattern_name']\
-                        .apply(', '.join).reset_index(name='pattern_name')
+            test = (data.groupby(['order_id'])['pattern_name']
+                        .apply(', '.join).reset_index(name='pattern_name'))
+            del data['pattern_name']
+            data = pd.merge(data, test, on='order_id', how='inner')
+            data = data.fillna(0)
             columns = data.columns.tolist()
             columns = columns[:6] + columns[-1:] + columns[6:-1]
             data = data[columns]
-            try:
-                data[['driver_id', 'compensation']] = \
-                data[['driver_id', 'compensation']].astype(int).astype(str)
-            except:
-                pass 
-            data.drop_duplicates()
+            data[['driver_id', 'compensation']] = \
+            data[['driver_id', 'compensation']].astype(int).astype(str)
+            data = data.drop_duplicates()
             data = data.values.tolist()
     return data
 def load_data_g(gorod,date_from,date_to):
@@ -56,25 +48,17 @@ def load_data_g(gorod,date_from,date_to):
         with open('./fraud_inspector/Sql/load_data-loaddata_g.sql', 'r') as load_data_sql:
             data = pd.read_sql_query(
                 load_data_sql.read(), con, params=[gorod,date_from,date_to])
-            data.drop_duplicates()
-            data = data.groupby(['order_id',
-                      'order_date',
-                      'launch_region_id',
-                      'driver_id',
-                      'customer_id',
-                      'state',
-                      'resolution',
-                      'compensation'])['pattern_name']\
-                        .apply(', '.join).reset_index(name='pattern_name')
+            test = (data.groupby(['order_id'])['pattern_name']
+                        .apply(', '.join).reset_index(name='pattern_name'))
+            del data['pattern_name']
+            data = pd.merge(data, test, on='order_id', how='inner')
+            data = data.fillna(0)
             columns = data.columns.tolist()
             columns = columns[:6] + columns[-1:] + columns[6:-1]
             data = data[columns]
-            try:
-                data[['driver_id', 'compensation']] = \
-                data[['driver_id', 'compensation']].astype(int).astype(str)
-            except:
-                pass    
-            data.drop_duplicates()
+            data[['driver_id', 'compensation']] = \
+            data[['driver_id', 'compensation']].astype(int).astype(str)
+            data = data.drop_duplicates()
             data = data.values.tolist()
     return data
 
@@ -82,7 +66,8 @@ def update_db_fraud_orders(gorod,date_from,date_to):
     if gorod=="ALL":
         data = load_data(date_from,date_to)
     else:
-        data = load_data_g(gorod,date_from,date_to) 
+        data = load_data_g(gorod,date_from,date_to)
+        
     for row in data:
         try:
            post = FraudOrders()
@@ -98,5 +83,5 @@ def update_db_fraud_orders(gorod,date_from,date_to):
            post.save()
         except:
             pass
-
+  
 

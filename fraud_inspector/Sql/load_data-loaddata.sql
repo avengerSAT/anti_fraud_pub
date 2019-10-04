@@ -15,13 +15,13 @@ LEFT JOIN (SELECT *
 		ON fop.pattern_id = fp.id
 	) fop
 	ON fo.id = fop.order_id
-INNER JOIN (
+LEFT JOIN (
 	SELECT
 		order_id
 		, SUM(transaction_amount) / 100 AS margin
 	FROM facts.FS_Drivers_balance_transaction
 	WHERE 
-		transaction_type IN ('Compensation', 'Order Refund')
+		transaction_type IN ('Compensation', 'Order Refund', 'Promocode discount')
 		AND order_id IS NOT NULL
 	GROUP BY order_id
 	) margin

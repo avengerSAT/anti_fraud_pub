@@ -151,10 +151,12 @@ class zagr_tr(LoginRequiredMixin, View):
             end_time= request.POST["end_time"]
             update_db_fraud_orders(gorod,start_time,end_time)
             City=check_city()
+            msg_1="Данные загружены"
             return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
                                                                     "end_time":end_time,
                                                                     "start_time":start_time,
-                                                                    "gorod":gorod
+                                                                    "gorod":gorod,
+                                                                    "msg_1":msg_1
             })
 
         elif function=="p_2":
