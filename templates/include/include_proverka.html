@@ -5,114 +5,136 @@
     <div class="popup">
 
 
-        <form action="{% url 'zagr_tr_url' %}"    method="POST" >
+        <form action="{% url 'Fraud_inspector_url' %}"    method="POST" >
             {% csrf_token %}
-            <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
-                <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="resolution">
-                {% for j in resol %}
-                    {% for i in FraudOrder %}
-                        {% if i.resolution == j.0 %}
-                            <option type="submit" selected value="{{j.0}}" >{{j.1}}</option>
-                        {% else %}
-                            <option value="{{j.0}}" >{{j.1}}</option>
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}    
-                <input type="hidden"   value="{{gorod}}///{{order_id}}///{{start_time}}///{{end_time}}///{{pattern}}"  id="block"  name="block"/>    
-                </select >
-                <input type="submit" value="Отправить"></p> 
-            </div> 
-        </form> 
 
-        <p>Время загрузки: {{ time }}</p>
-       <p> {{pattern}}</p>
-        {% for i in drv %}
-            {% for j in cus %}
-                <div class="form-row" style="margin:1%;margin-bottom:0;">
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustom01" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Имя водителя</label>
-                        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom01" placeholder="Имя водителя" disabled="disabled" value="{{i.0}}" required>  
-                    </div>
-                    {% if i.2 == j.2 %}
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustom02"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Почта водителя</label>
-                        <input type="text" class="form-control"  style=" background-color: #232ec236;font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom02" placeholder="Почта водителя"  disabled="disabled" value="{{i.2}}" required>
-                    </div>
-                    {% else %}
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustom02"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Почта водителя</label>
-                        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom02" placeholder="Почта водителя"  disabled="disabled" value="{{i.2}}" required>
-                    </div>
-                    {% endif %}
-                    {% if i.3 == j.3 %}
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustomUsername"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Телефон водителя</label>
-                        <input type="text" class="form-control"  style=" background-color: #be161683;font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustomUsername" value="{{i.3}}" placeholder="Имя пользователя" disabled="disabled" aria-describedby="inputGroupPrepend" required>     
-                    </div>
-                    {% else %}
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustomUsername"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Телефон водителя</label>
-                        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustomUsername" value="{{i.3}}" placeholder="Имя пользователя" disabled="disabled" aria-describedby="inputGroupPrepend" required>     
-                    </div>
-                    {% endif %}
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustom03"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">ИД водителя</label>
-                        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom03" placeholder="ИД водителя"value="{{i.1}}" disabled="disabled" required>
-                    </div>
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustom04"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Промо водителя</label>
-                        <input type="text" class="form-control" id="validationCustom04"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" disabled="disabled" placeholder="Промо водителя"value="{{i.4}}" required>
-                    </div>
-                </div> 
+<div class="input-group" style="width:33%; top: 0% ;height:30px ; ">
+    <select class="custom-select" id="inputGroupSelect04" style="background:#e9ecef;" aria-label="Example select with button addon"
+    type="submit"    name="resolution">
+        {% for j in resol %}
+            {% for i in FraudOrder %}
+                {% if i.resolution == j.0 %}
+                    <option type="submit" selected value="{{j.0}}" >{{j.1}}</option>
+                {% else %}
+                    <option value="{{j.0}}" >{{j.1}}</option>
+                {% endif %}
             {% endfor %}
-        {% endfor %}
-        {% for i in drv %}
-            {% for j in cus %}
-                <div class="form-row" style="margin:1%;margin-bottom:0;">
-                    <div style="margin-top: 0%;width: 25%; top: 1%;margin-bottom:0;">
-                        <label for="validationCustom01" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Имя клиента</label>
-                        <input type="text"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" class="form-control" id="validationCustom01" placeholder="Имя клиента" disabled="disabled" value="{{j.0}}" required>
-                    </div>
-                    {% if i.2 == j.2 %}
-                        <div style="margin-top: 0%;width: 25%; top: 0%;margin-bottom:0;">
-                            <label for="validationCustom02" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;" >Почта клиента</label>
-                            <input type="text" class="form-control"  style="margin-bottom:0;background-color: #232ec236;font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;" id="validationCustom02" placeholder="Почта клиента"  disabled="disabled" value="{{j.2}}" required>
-                        </div>
-                    {% else %}
-                        <div style="margin-top: 0%;width: 25%; top: 0%;margin-bottom:0;">
-                            <label for="validationCustom02" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;" >Почта клиента</label>
-                            <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom02" placeholder="Почта клиента"  disabled="disabled" value="{{j.2}}" required>
-                        </div>
-                    {% endif %}
-                    {% if i.3 == j.3 %}
-                        <div style="margin-top: 0%;width: 25%; top: 0%;margin-bottom:0;">
-                            <label for="validationCustomUsername" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Телефон клиента</label>
-                            <input type="text" class="form-control"  style="margin-bottom:0;background-color: #be161683;font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;" id="validationCustomUsername" value="{{j.3}}" placeholder="Телефон клиента" disabled="disabled" aria-describedby="inputGroupPrepend" required>
-                        </div>
-                    {% else %}
-                        <div style="margin-top: 0%;width: 25%; top: 0%;margin-bottom:0;">
-                            <label for="validationCustomUsername" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;">Телефон клиента</label>
-                            <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustomUsername" value="{{j.3}}" placeholder="Телефон клиента" disabled="disabled" aria-describedby="inputGroupPrepend" required>
-                        </div>
-                    {% endif %}
-                    <div style="margin-top: 0%;width: 25%; top: 0%;margin-bottom:0;">      
-                        <label for="validationCustom03"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;" >ИД клиента</label>
-                        <input type="text" class="form-control"  style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom03" placeholder="ИД клиента"value="{{j.1}}" disabled="disabled" required>
-                    </div>
-                    <div style="margin-top: 0%;width: 25%; top: 0%;margin-bottom:0;">
-                        <label for="validationCustom04"style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;" >Кол поездок клиента</label>
-                        <input type="text" class="form-control"   style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom04" disabled="disabled" placeholder="Кол поездок клиента"value="{{j.4}}" required>
-                    </div>
-                    <div style="margin-top: 0%;width: 25%; top: 0%;margin-bottom:0;">
-                        <label for="validationCustom04" style="font-size:12 ;width:100%; top: 0%;margin-top: 0%;font-weight: 600;margin-bottom:0;" >Стасус</label>
-                        <input type="text" class="form-control" style="font-size:12 ;width:100%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;" id="validationCustom04" disabled="disabled" placeholder="Стасус"value="{{j.5}}" required>
-                    </div>
-                </div> 
-            {% endfor %}
-        {% endfor %}
+        {% endfor %}    
+    </select>
+    <div class="input-group-append">
+        <input type="hidden"   value="{{gorod}}///{{order_id}}///{{start_time}}///{{end_time}}///{{pattern}}"  id="block"  name="block"/>  
+        <button class="btn btn-outline-secondary" style="background:rgb(48, 40, 54);color:rgb(255, 255, 255);" type="submit" >Сохранить</button>
+        </div>
+        </div>
+    <button class="close" title="Закрыть" onclick="document.getElementById('overlay').style.display='none';"></button>
+   </form> 
 
 
-        <div class="tabs" style="width:100%;height:auto; margin-top: 3%; background:  rgb(202, 216, 237);">
+  <div class="form-group" style="width:10%;">
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" disabled="disabled" placeholder="{{ time }}">
+    <small id="emailHelp" class="form-text text-muted">Время загрузки.</small>
+  </div>
+
+
+<div class="form-row" style="margin:0%;margin-bottom:0;">
+{% for i in pattern %}
+    <input type="text" class="form-control"  style="font-size:12 ;width:10%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;"
+        id="validationCustom01" placeholder="Имя водителя" disabled="disabled" value="{{i}}" required>   
+{% endfor %} 
+</div>
+
+<div>
+<div style="width:50%;overflow:auto;float:left;">
+{% for i in drv %}
+    {% for j in cus %}
+        <ul class="list-group">
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">ИД водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef; margin-top: 0%;margin-bottom:0;">{{i.1}}</li>
+            </ul>        
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Имя водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{i.0}}</li>
+            </ul>
+            {% if i.2 == j.2 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background: #232ec236; margin-top: 0%;margin-bottom:0;">{{i.2}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{i.2}}</li>
+            </ul>
+            {% endif %}
+            {% if i.3 == j.3 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#be161683;margin-top: 0%;margin-bottom:0;">{{i.3}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{i.3}}</li>
+            </ul>
+            {% endif %}            
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Промо водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{i.4}}</li>
+            </ul>
+        </ul>
+    {% endfor %}
+{% endfor %}
+</div>
+    <div style=" width:50%;overflow:auto;"> 
+{% for i in drv %}
+    {% for j in cus %}
+        <ul class="list-group">
+            <ul class="list-group list-group-horizontal-sm" style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">ИД клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef; margin-top: 0%;margin-bottom:0;">{{j.1}}</li>
+            </ul>        
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;" >
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Имя клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{j.0}}</li>
+            </ul>
+            {% if i.2 == j.2 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background: #232ec236; margin-top: 0%;margin-bottom:0;">{{j.2}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{j.2}}</li>
+            </ul>
+            {% endif %}
+            {% if i.3 == j.3 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#be161683;margin-top: 0%;margin-bottom:0;">{{j.3}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{j.3}}</li>
+            </ul>
+            {% endif %}            
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Кол поездок клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{j.4}}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Стасус</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{j.5}}</li>
+            </ul>            
+        </ul>
+    {% endfor %}
+{% endfor %}
+</div>
+</div>
+        
+        <div class="tabs" style="position: absolute;width:96%;height:auto; margin-top: 3%; background:  rgb(202, 216, 237);">
             <input type="radio" name="inset" value="" id="tab_1"   checked />
             <label for="tab_1" style="width:20%;">КЛИЕНТ/ВОДИТЕЛЬ</label>
             <input type="radio" name="inset" value="" id="tab_2"/>

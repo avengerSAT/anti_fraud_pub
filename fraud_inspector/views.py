@@ -14,11 +14,12 @@ from .import_data import update_db_fraud_orders
 from check import sqlvertica 
 
 import os
-
+from datetime import datetime,timedelta
 
 def filter_dan(gorod,start_time,end_time):
     if gorod=='ALL':
         FraudOrder=FraudOrders.objects.filter(order_date__range=(start_time,end_time))
+
     else:
         FraudOrder=FraudOrders.objects.filter(launch_region_id=gorod,order_date__range=(start_time,end_time))
     return FraudOrder
@@ -30,14 +31,25 @@ def check_city():
     City=apps.get_model('check','City')
     City=City.objects.all()
     return City
-class zagr_tr(LoginRequiredMixin, View):
+
+
+class Fraud_inspector(LoginRequiredMixin, View):
     def get(self,request):
-        City=apps.get_model('check','City')
-        City=City.objects.all()
-        return render (request,'fraud_inspector/zagr.html',{"City":City
+        end_time= datetime.now().strftime('%Y-%m-%d')
+        start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
+        City=check_city()
+        gorod="ALL"
+        FraudOrder=filter_dan(gorod,start_time,end_time)
+        resol=["UNVERIFIED" ,"FRAUD YES","FRAUD NO"]
+        return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
+                                                                        "end_time":end_time,
+                                                                        "start_time":start_time,
+                                                                        "gorod":gorod,
+                                                                        "FraudOrder":FraudOrder,
+                                                                        "resol":resol
         })
     def post(self,request):
-       # update_db_fraud_orders()  
+         
         City=check_city()
         resol=["UNVERIFIED" ,"FRAUD YES","FRAUD NO"]
         try:
@@ -45,11 +57,12 @@ class zagr_tr(LoginRequiredMixin, View):
             resolution= request.POST["resolution"]
             gorod,order_id,start_time,end_time,pattern =block.split("///")
             state='UNBLOCKED'
+            pattern=pattern.split(",")
             blocked_unblocked(order_id,state)
             FraudOrders.objects.filter(order_id=order_id).update(resolution=resolution)
             FraudOrder=filter_dan(gorod,start_time,end_time)
              
-            return render (request,'fraud_inspector/zagr.html',{"City":City,
+            return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
                                                             "resol":resol,
                                                             "gorod":gorod,
                                                             "start_time":start_time,
@@ -61,7 +74,7 @@ class zagr_tr(LoginRequiredMixin, View):
             start_time= request.POST["start_time"]
             end_time= request.POST["end_time"]
             FraudOrder=filter_dan(gorod,start_time,end_time) 
-            return render (request,'fraud_inspector/zagr.html',{"City":City,
+            return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
                                                             "gorod":gorod,
                                                             "resol":resol,
                                                             "start_time":start_time,
@@ -72,6 +85,7 @@ class zagr_tr(LoginRequiredMixin, View):
 def frod_prov(request):
     block= request.POST["block"]
     gorod,order_id,start_time,end_time,pattern =block.split("///")
+    pattern=pattern.split(",")
     state='BLOCKED'
     resol=["UNVERIFIED" ,"FRAUD YES","FRAUD NO"]
     a=FraudOrders.objects.values_list('state', flat=True).filter(order_id=order_id)
@@ -79,7 +93,7 @@ def frod_prov(request):
         msg="Заказ проверяет другой пользователь"
         City=check_city()
         FraudOrder=filter_dan(gorod,start_time,end_time)
-        return render (request,'fraud_inspector/zagr.html',{"City":City,
+        return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
                                                 "gorod":gorod,
                                                 "resol":resol,
                                                 "msg":msg,
@@ -94,7 +108,7 @@ def frod_prov(request):
     cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
         sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
     PRV="1"
-    return render (request,'fraud_inspector/zagr.html',{"gorod":gorod,
+    return render (request,'fraud_inspector/Fraud_inspector.html',{"gorod":gorod,
                                                             "resol":resol,
                                                             "pattern":pattern,
                                                             "cus":cus,
@@ -113,25 +127,54 @@ def frod_prov(request):
         })
 
 
- 
-
-class Fraud_inspector(LoginRequiredMixin, View):
+class zagr_tr(LoginRequiredMixin, View):
     def get(self,request):
-        City=apps.get_model('check','City')
-        City=City.objects.all()
-        FraudOrders=FraudOrders.objects.all()
-        return render (request,'fraud_inspector/zagr.html',{"City":City,
-                                                            "FraudOrders":FraudOrders
-        })
-    def post(self,request):
-        gorod= request.POST["kod_city"]
-        City=apps.get_model('check','City')
-        City=City.objects.all()
-        FraudOrders=FraudOrders.objects.all()
-        return render (request,'fraud_inspector/zagr.html',{"City":City,
-                                                            "gorod":gorod,
-                                                            "FraudOrders":FraudOrders
+        end_time  = datetime.now().strftime('%Y-%m-%d')
+        start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
+        City=check_city()
+        gorod="ALL"
+        return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
+                                                                "gorod":gorod,
+                                                                "end_time":end_time,
+                                                                "start_time":start_time
+
+
         })
 
 
-        
+
+    def post (self,request):
+        function=request.POST["function"]
+        if function=="p_1":
+            gorod= request.POST["kod_city"]
+            start_time= request.POST["start_time"]
+            end_time= request.POST["end_time"]
+            update_db_fraud_orders(gorod,start_time,end_time)
+            City=check_city()
+            return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
+                                                                    "end_time":end_time,
+                                                                    "start_time":start_time,
+                                                                    "gorod":gorod
+            })
+
+        elif function=="p_2":
+            trip_id= request.POST["trip_id"]
+            end_time  = datetime.now().strftime('%Y-%m-%d')
+            start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
+            City=check_city()
+            gorod="ALL"
+            blocked_unblocked(trip_id,'UNBLOCKED')
+            msg="заказ разблокирован:"+trip_id
+            return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
+                                                                    "gorod":gorod,
+                                                                    "end_time":end_time,
+                                                                    "start_time":start_time,
+                                                                    "msg":msg
+
+
+    })
+
+
+
+
+
