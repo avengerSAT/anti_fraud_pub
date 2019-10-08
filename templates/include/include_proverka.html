@@ -23,6 +23,7 @@
     </select>
     <div class="input-group-append">
         <input type="hidden"   value="{{gorod}}///{{order_id}}///{{start_time}}///{{end_time}}///{{pattern}}"  id="block"  name="block"/>  
+ 
         <button class="btn btn-outline-secondary" style="background:rgb(48, 40, 54);color:rgb(255, 255, 255);" type="submit" >Сохранить</button>
         </div>
         </div>
@@ -132,6 +133,27 @@
     {% endfor %}
 {% endfor %}
 </div>
+</div>
+<br>
+<div  >
+    <table >         
+        <thead>
+            {% for j in svod_drv_cus_head %}
+                <th  style="background-color: #ffffff56; width: 150px;padding: 3px;border: 2px solid black;font-size:12; ">{{j}}</th>
+            {% endfor %}
+        </thead>
+        {% for i in svod_drv_cus %}
+            <tr>
+                {% if i.0 == order_id%}
+                    {% for q in i %}
+                        
+                            <td style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black;font-size:12; ">{{q}}</td>
+                        
+                    {% endfor %}
+                {% endif %}  
+            </tr>
+        {% endfor %}     
+    </table>
 </div>
         
         <div class="tabs" style="position: absolute;width:96%;height:auto; margin-top: 3%; background:  rgb(202, 216, 237);">
