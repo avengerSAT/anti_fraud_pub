@@ -7,11 +7,13 @@ from django.template import loader, Context
 from django.http import HttpResponse
 from django.contrib import auth
 from django.views import View
+from django.views.generic import TemplateView
 
 from .models import FraudOrders
 from  django.apps  import apps
-from .import_data import update_db_fraud_orders
+from .import_data import update_db_fraud_orders ,order_id_zar
 from check import sqlvertica 
+from .track_points_map import get_info_from_bo as gifb
 
 import os
 from datetime import datetime,timedelta
@@ -31,7 +33,6 @@ def check_city():
     City=apps.get_model('check','City')
     City=City.objects.all()
     return City
-
 
 class Fraud_inspector(LoginRequiredMixin, View):
     def get(self,request):
@@ -108,6 +109,7 @@ def frod_prov(request):
     cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
         sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
     PRV="1"
+    track_points=order_id_points(order_id)
     return render (request,'fraud_inspector/Fraud_inspector.html',{"gorod":gorod,
                                                             "resol":resol,
                                                             "pattern":pattern,
@@ -122,6 +124,7 @@ def frod_prov(request):
                                                             "start_time":start_time,
                                                             "order_id":order_id,
                                                             "end_time":end_time,
+                                                            "track_points":track_points,
                                                             "FraudOrder":FraudOrder
 
         })
@@ -175,8 +178,70 @@ class zagr_tr(LoginRequiredMixin, View):
 
 
     })
+        elif function=="p_3":
+            order_id= request.POST["order_id"]
+            end_time  = datetime.now().strftime('%Y-%m-%d')
+            start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
+            City=check_city()
+            gorod="ALL"
+            order_id_zar(order_id)
+            msg_2="Заказ добавлен:"+order_id
+            return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
+                                                                    "gorod":gorod,
+                                                                    "end_time":end_time,
+                                                                    "start_time":start_time,
+                                                                    "msg_2":msg_2
 
 
+    })
 
 
+class google_Sheet(LoginRequiredMixin, View):
+    def get (self,request):
 
+        return render( request,'fraud_inspector/google_Sheet.html')
+    def post (self,request):
+        pass
+
+
+class test_map(LoginRequiredMixin,TemplateView):
+    def get(self,request):
+        order='f300c62f-287a-4eef-b995-22df78bdace1'
+        order_details= gifb('MANAGER_GET_ORDER_DETAILS','{"order_id": "'+order+'"}')
+       # order_details= gifb('MANAGER_GET_ORDER_DETAILS', '{"order_id": "f300c62f-287a-4eef-b995-22df78bdace1"}')
+        for key, val in order_details.items():
+            if key == 'order_details':
+                for i, j in val.items(): 
+                    if i == 'track_points':
+                        order_points=j
+        order_points=order_points.split(';')
+        order_points=list(([x] for x in order_points))[:-1]
+        track_points=[]
+        for ch in order_points:                                                                                                     
+            for i in ch:
+                    q,w=i.split(',')
+                    i=float(w),float(q)
+                    i=list(i)
+                    track_points.append(i)
+        
+        return render( request,'fraud_inspector/test_map.html',{"track_points":track_points})
+    
+def order_id_points(order_id):
+    order_details= gifb('MANAGER_GET_ORDER_DETAILS','{"order_id": "'+order_id+'"}')
+    for key, val in order_details.items():
+        if key == 'order_details':
+            for i, j in val.items(): 
+                if i == 'track_points':
+                    order_points=j
+    order_points=order_points.split(';')
+    order_points=list(([x] for x in order_points))[:-1]
+    track_points=[]
+    for ch in order_points:                                                                                                     
+        for i in ch:
+                q,w=i.split(',')
+                i=float(w),float(q)
+                i=list(i)
+                track_points.append(i)
+    print(track_points)
+    return track_points
+     

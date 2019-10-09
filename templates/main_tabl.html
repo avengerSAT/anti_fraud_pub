@@ -7,7 +7,7 @@
                 {% endblock %}
             </title>
    {% load static%} 
-    
+    {% load leaflet_tags %}
    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
    <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}" type="text/css">
@@ -27,7 +27,8 @@
         <script src="{% static 'js/bootstrap.js' %}"></script>
         <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
+    {% leaflet_js %}
+    {% leaflet_css %}
         
 
        

@@ -161,55 +161,59 @@
             <label for="tab_1" style="width:20%;">КЛИЕНТ/ВОДИТЕЛЬ</label>
             <input type="radio" name="inset" value="" id="tab_2"/>
             <label for="tab_2" style="width:20%;">СВОДНАЯ КЛИЕНТА</label>
-            <div id="txt_1">
-                <div class="pricelist" id="pricelist">
-                    <table id="pricetable-22" class="table-autosort:2">         
-                        <thead>
-                            {% for j in svod_drv_cus_head %}
-                                <th class=" filterable sortable table-sortable:numeric" style="background-color: #ffffff56; width: 150px;padding: 3px;border: 2px solid black; ">{{j}}</th>
-                            {% endfor %}
-                        </thead>
-                        {% for i in svod_drv_cus %}
-                            <tr>
-                                {% for q in i %}
-                                    <td class="nowrap" style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black; ">{{q}}</td>
+            <input type="radio" name="inset" value="" id="tab_3"/>
+            <label for="tab_3" style="width:20%;">КАРТА</label>
+                <div id="txt_1">
+                    <div class="pricelist" id="pricelist">
+                        <table id="pricetable-22" class="table-autosort:2">         
+                            <thead>
+                                {% for j in svod_drv_cus_head %}
+                                    <th class=" filterable sortable table-sortable:numeric" style="background-color: #ffffff56; width: 150px;padding: 3px;border: 2px solid black; ">{{j}}</th>
                                 {% endfor %}
-                            </tr>
-                        {% endfor %}     
-                    </table>
+                            </thead>
+                            {% for i in svod_drv_cus %}
+                                <tr>
+                                    {% for q in i %}
+                                        <td class="nowrap" style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black; ">{{q}}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}     
+                        </table>
+                    </div>
+                </div>              
+                <script>
+                        $(document).ready( function () {
+                        $('#pricetable-22').DataTable();
+                        } );
+                </script>    
+                <div id="txt_2">
+                    <div class="pricelist" id="pricelist">
+                        <table id="pricetable-222" class="table-autosort:2">
+                            <thead>
+                                {% for j in svod_cus_head %}            
+                                    <th class=" filterable sortable table-sortable:numeric"  style="width: 150px;padding: 3px;border: 2px solid black; ">{{j}}</th>
+                                {% endfor %}
+                            </thead>
+                            {% for i in svod_cus %}
+                                <tr>
+                                    {% for q in i %}
+                                        <td class="nowrap" style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black; ">{{q}}</td>
+                                    {% endfor %}
+                                </tr>            
+                            {% endfor %}
+                        </table>
+                    </div>  
                 </div>
-            </div>              
-            <script>
-                    $(document).ready( function () {
-                    $('#pricetable-22').DataTable();
-                    } );
-            </script>    
-            <div id="txt_2">
-                <div class="pricelist" id="pricelist">
-                    <table id="pricetable-222" class="table-autosort:2">
-                        <thead>
-                            {% for j in svod_cus_head %}            
-                                <th class=" filterable sortable table-sortable:numeric"  style="width: 150px;padding: 3px;border: 2px solid black; ">{{j}}</th>
-                            {% endfor %}
-                        </thead>
-                        {% for i in svod_cus %}
-                            <tr>
-                                {% for q in i %}
-                                    <td class="nowrap" style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black; ">{{q}}</td>
-                                {% endfor %}
-                            </tr>            
-                        {% endfor %}
-                    </table>
-                </div>  
+                <script>
+                        $(document).ready( function () {
+                        $('#pricetable-222').DataTable();
+                        } );
+                </script> 
+        
+            <div id="txt_3">
+            {% include "include/include_map.html"%}  
             </div>
-            <script>
-                    $(document).ready( function () {
-                    $('#pricetable-222').DataTable();
-                    } );
-            </script> 
-        </div> 
-
-
+        </div>     
     </div>
 </div>
 

@@ -33,8 +33,24 @@
         </form> 
   </div>
 </div>
-<br><br><br>
 
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Ручное добавление заказа на проверку</h1>
+    <p class="lead">{{msg_2}}</p>
+
+    <form action="{% url 'zagr_tr_url' %}"    method="POST" >
+        {% csrf_token %}
+        <div class="input-group-prepend">
+            <span class="input-group-text" style="background-color:#e9ecef;font-size: 10pt;" id="order_id">Введите trip_id :</span>
+            <input type="text" class="form-control" id="order_id" style="width:30%;" name="order_id"/  >  
+            <input type="hidden"   value="p_3"    name="function"/> 
+            <input type="submit" title="загрузка заказов для проверки фрода" value="Загрузить"></p> 
+        </div> 
+    </form> 
+  </div>
+</div>
 
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
@@ -52,6 +68,8 @@
     </form> 
   </div>
 </div>
+
+
 {% endblock %}  
 
 

@@ -245,7 +245,7 @@ def sql_drv_id(driver_id):
                 cursor = con.cursor()
                 cursor.execute(sql, (driver_id,))
                 data = cursor.fetchall()
-        return data
+        return data[0][0]
     except:
         return
 

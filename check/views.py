@@ -8,6 +8,7 @@ import jinja2
 import numpy as np
 import pandas as pd
 import tablib
+from django.apps  import apps
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,6 +17,7 @@ from django.shortcuts import redirect, render, render_to_response
 from django.template import Context, loader
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.db.models import Count
 
 import threading
 from datetime import datetime,timedelta
@@ -29,6 +31,12 @@ from .models import City
 from .templates.dash_.dash_1 import dispatcher 
 
 
+
+
+def fraud_inspector_FraudOrders():
+    FraudOrders=apps.get_model('fraud_inspector','FraudOrders')
+    FraudOrders=FraudOrders.objects.all()
+    return FraudOrders
 
 def creatFolder(user_temp):
     if not os.path.exists(user_temp):
@@ -226,22 +234,38 @@ class rez_prover(LoginRequiredMixin, View):
 class brend(LoginRequiredMixin, View):
     def get(self,request):                                                    
         return render(request,'check/brend.html')
-    def post(self,request):
-        start_date = request.POST["start_date"]
-        end_date = request.POST["end_date"]  
-        driver_id = request.POST["driver_id"] 
-        dr_dl=len(driver_id)
-        if dr_dl > 9:
-            driver_id=sqlvertica.sql_drv_id(driver_id)[0][0]
-        head,data=sqlvertica.sql_drv_poezd(driver_id,start_date,end_date)
-        return render(request,'check/brend.html',{"start_date":start_date
-                                                    ,"end_date":end_date
-                                                    ,"drv_id":driver_id
-                                                    ,"head":head
-                                                    ,"data":data
+    def post(self,request): 
+        try:
+            start_date = request.POST["start_date"]
+            end_date = request.POST["end_date"]  
+            driver_id = request.POST["driver_id"] 
+            dr_dl=len(driver_id)
+            if dr_dl > 9:
+                driver_id=sqlvertica.sql_drv_id(driver_id)
+            FraudOrders=fraud_inspector_FraudOrders()
+            Count=FraudOrders.filter(driver_id=driver_id,order_date__range=(start_date,end_date),resolution='FRAUD YES') 
+            Count=Count.count() 
+            head,data=sqlvertica.sql_drv_poezd(driver_id,start_date,end_date)
+            try:
+                if data[0][1] is None :
+                    data[0][1]=0
+                    data[0][2]=data[0][0]
+                data[0][1]=int(data[0][1])+int(Count)
+                data[0][2]=int(data[0][2])-int(Count)
+            except:
+                data=[[0,0,0]]  
+            return render(request,'check/brend.html',{"start_date":start_date
+                                                        ,"end_date":end_date
+                                                        ,"drv_id":driver_id
+                                                        ,"head":head
+                                                        ,"data":data
 
-                                                     })  
-                                                  
+                                                        })  
+        except:   
+            msg="Проверьте правильность вводимых данных"                                             
+            return render(request,'check/brend.html',{"msg":msg})           
+            
+                                   
 def dash(request,**kwargs):
     trail="check/templates/csv"+request.user.username
     return HttpResponse(dispatcher(request,trail))
