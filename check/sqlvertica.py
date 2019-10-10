@@ -11,6 +11,14 @@ from .con import Con_vert
 from .sql_code import sql_vert
 
 
+
+def drop_dub(data):
+    data=pd.DataFrame(data)
+    data = data.drop_duplicates()
+    data = data.values.tolist()
+
+    return data
+
 def peremen(data, head):
     a = ([column[0].replace("_", ' ') for column in head])
     b = data
@@ -72,12 +80,14 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 cur.execute(customer_data.read(), (customer_id,))
                 data = cur.fetchall()
                 head = cur.description
+                data=drop_dub(data)
                 cus_head, cus = peremen(data, head)
             
             with open('./check/Sql/sql_prov-driver_data.sql', 'r') as driver_data:
                 cur.execute(driver_data.read(), (driver_id,))
                 data = cur.fetchall()
                 head = cur.description
+                data=drop_dub(data)
                 drv_hed, drv = peremen(data, head)
 
             if chek_box == 'yes':
@@ -115,11 +125,12 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 df_test = pd.read_sql_query(
                     customer_driver_duet_data.read(), con, params=[customer_id, customer_id, drv_id])
 
-
+                
                 df_test = df_test.fillna(0)
                 df_test['Старт поездки'] = df_test['Финиш поездки'].astype(int) - (df_test['Время поездки мин'].astype(int) * 1000**2)
                 df_test.loc[df_test['Старт поездки'] > 0, 'Старт поездки'] = pd.to_datetime(df_test['Старт поездки'], unit='ns')
                 df_test['Старт поездки'] = df_test['Старт поездки'].values.astype('<M8[s]')
+                
                 columns = df_test.columns.tolist()
                 columns = columns[:5] + columns[-1:] + columns[5:-1]
                 df_test = df_test[columns]
@@ -146,8 +157,7 @@ def sql_prov(customer_id, driver_id, drv_id, chek_box):
                 df_test['Старт поездки'] = df_test['Старт поездки'].astype(str)
                 df_test['Финиш поездки'] = df_test['Финиш поездки'].astype(str)
                 df_test['Доплата'] = df_test['Доплата'].astype(int)
-
-
+                df_test = df_test.drop_duplicates()
                 svod_drv_cus_head, svod_drv_cus = df_test.columns.tolist(), df_test.values.tolist()
 
 
