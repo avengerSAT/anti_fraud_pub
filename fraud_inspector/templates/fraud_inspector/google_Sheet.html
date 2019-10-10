@@ -10,7 +10,7 @@ Driver OLD
 
 
 
-<form action="{% url 'zagr_tr_url' %}"    method="POST" >
+<form action="{% url 'google_Sheet_url' %}"    method="POST" >
     {% csrf_token %}
     <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
         <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
@@ -21,7 +21,9 @@ Driver OLD
                     <option value="{{i.Код_Города}}" >{{i.Город}}</option>
                 {% endif %} 
             {% endfor %}
-        </select><input type="submit" value="Отправить"></p> 
+        </select>
+        <input type="week" style="width:33%; top: 0%;" name = "time_week" value="{{now}}"/>
+        <input type="submit" value="Отправить"></p> 
     </div> 
 </form> 
   

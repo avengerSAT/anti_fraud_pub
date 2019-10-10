@@ -19,6 +19,7 @@ def get_token_from_bo():
 api_token = get_token_from_bo()
 #токен сохрании и переиспользуй обновляй по мере не обходимости
 
+#https://manager-http-gtw.k.fasten.com/history/api/public/v1/manager/orders/0701ea4c-c7bb-4207-ac5f-a39b73e0fd6b
 
 def get_info_from_bo(type_ws, data_ws):
     ws = create_connection("wss://manager-gtw.k.fasten.com/manager-gtw/manager")

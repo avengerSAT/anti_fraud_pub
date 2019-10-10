@@ -6,7 +6,7 @@ class google_sheet(models.Model):
     city = models.CharField(max_length=36, unique=True, db_index=True)
     launch_region_id = models.CharField(max_length=10)
     city_gspread_key = models.CharField(max_length=150)
-
+    city_bonus_plan_dict=models.CharField(max_length=250)
     def get_absolute_url(self):
         return  reverse('name из url',kwargs={'city':self.city}) # в шаблоне  html вместо ссылки {{post.get_absolute_url}}
 

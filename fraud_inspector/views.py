@@ -109,7 +109,7 @@ def frod_prov(request):
     cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
         sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
     PRV="1"
-    track_points=order_id_points(order_id)
+   # track_points=order_id_points(order_id)
     return render (request,'fraud_inspector/Fraud_inspector.html',{"gorod":gorod,
                                                             "resol":resol,
                                                             "pattern":pattern,
@@ -124,7 +124,7 @@ def frod_prov(request):
                                                             "start_time":start_time,
                                                             "order_id":order_id,
                                                             "end_time":end_time,
-                                                            "track_points":track_points,
+                                                           # "track_points":track_points,
                                                             "FraudOrder":FraudOrder
 
         })
@@ -198,17 +198,30 @@ class zagr_tr(LoginRequiredMixin, View):
 
 class google_Sheet(LoginRequiredMixin, View):
     def get (self,request):
-
-        return render( request,'fraud_inspector/google_Sheet.html')
+        City=check_city()
+        week=datetime.now().isocalendar()[1]
+        now = datetime.now().strftime('%Y')
+        now = now + '-W'+str(week)
+        return render( request,'fraud_inspector/google_Sheet.html',{"City":City,
+                                                                    "now":now
+        })
     def post (self,request):
-        pass
+        gorod= request.POST["kod_city"]
+        time_week= request.POST["time_week"]
+        City=check_city()
+        year,week=time_week.split("-W") 
+        return render( request,'fraud_inspector/google_Sheet.html',{"City":City,
+                                                                    "gorod":gorod,
+                                                                    "now":time_week,
+                                                                    
+        })
 
 
 class test_map(LoginRequiredMixin,TemplateView):
     def get(self,request):
-        order='f300c62f-287a-4eef-b995-22df78bdace1'
-        order_details= gifb('MANAGER_GET_ORDER_DETAILS','{"order_id": "'+order+'"}')
-       # order_details= gifb('MANAGER_GET_ORDER_DETAILS', '{"order_id": "f300c62f-287a-4eef-b995-22df78bdace1"}')
+      #  order='0701ea4c-c7bb-4207-ac5f-a39b73e0fd6b'
+       # order_details= gifb('HTTP received https://manager-http-gtw.k.fasten.com/history/api/public/v1/manager/orders/0701ea4c-c7bb-4207-ac5f-a39b73e0fd6b','{"order_id": "0701ea4c-c7bb-4207-ac5f-a39b73e0fd6b"}')
+        order_details= gifb('MANAGER_GET_ORDER_DETAILS', '{"order_id": "aaeb2171-cb22-4e05-ad0e-726b5614947c"}')
         for key, val in order_details.items():
             if key == 'order_details':
                 for i, j in val.items(): 
@@ -228,6 +241,7 @@ class test_map(LoginRequiredMixin,TemplateView):
     
 def order_id_points(order_id):
     order_details= gifb('MANAGER_GET_ORDER_DETAILS','{"order_id": "'+order_id+'"}')
+    print(order_details)
     for key, val in order_details.items():
         if key == 'order_details':
             for i, j in val.items(): 
