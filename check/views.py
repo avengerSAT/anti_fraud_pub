@@ -90,6 +90,7 @@ class Fraud_PROV(LoginRequiredMixin, View):
         
         return render (request,'check/test_prover.HTML',{"cus":cus,
                                                     "drv":drv,
+                                                    "trip_id":trip_id,
                                                     "box_c":chek_box,
                                                     "svod_drv_cus_head":svod_drv_cus_head,
                                                     "svod_drv_cus":svod_drv_cus,

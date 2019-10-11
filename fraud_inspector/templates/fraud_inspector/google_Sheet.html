@@ -8,23 +8,30 @@ Driver OLD
 
 {% include "include/include_logout.html"%}  
 
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Загрузка водителей претендующих на бонус план</h1>
+    <p class="lead">{{msg}}</p>
+    <form action="{% url 'google_Sheet_url' %}"    method="POST" >
+        {% csrf_token %}
+        <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+            <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
+                {% for i in City %}
+                    {% if i.1 == gorod %}
+                    
+                        <option type="submit" selected value="{{i.1}}" >{{i.0}}</option>
+                    {% else %}
+                        <option value="{{i.1}}" >{{i.0}}</option>
+                    {% endif %} 
+                {% endfor %}
+            </select>
+            <input type="week" style="width:50%; top: 0%;" name = "time_week" value="{{now}}"/>
+            <input type="submit" value="Отправить">
+        </div> 
+    </form> 
+  </div>
+</div>
 
 
-<form action="{% url 'google_Sheet_url' %}"    method="POST" >
-    {% csrf_token %}
-    <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
-        <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
-            {% for i in City %}
-                {% if i.Код_Города == gorod %}
-                    <option type="submit" selected value="{{i.Код_Города}}" >{{i.Город}}</option>
-                {% else %}
-                    <option value="{{i.Код_Города}}" >{{i.Город}}</option>
-                {% endif %} 
-            {% endfor %}
-        </select>
-        <input type="week" style="width:33%; top: 0%;" name = "time_week" value="{{now}}"/>
-        <input type="submit" value="Отправить"></p> 
-    </div> 
-</form> 
   
 {% endblock %}  

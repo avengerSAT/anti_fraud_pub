@@ -9,12 +9,14 @@ from django.contrib import auth
 from django.views import View
 from django.views.generic import TemplateView
 
-from .models import FraudOrders
+from .models import FraudOrders,google_sheet
 from  django.apps  import apps
 from .import_data import update_db_fraud_orders ,order_id_zar
 from check import sqlvertica 
 from .track_points_map import get_info_from_bo as gifb
+from .main import Update
 
+import pandas as pd
 import os
 from datetime import datetime,timedelta
 
@@ -196,22 +198,49 @@ class zagr_tr(LoginRequiredMixin, View):
     })
 
 
+def City_google():
+    City_t=google_sheet.objects.values_list()
+    City=[]
+    for i in City_t: 
+        i=list(i) 
+        City.append([str(i[1]),str(i[2]),str(i[3])])
+    City=pd.DataFrame(City)
+    City = City.drop_duplicates()
+    City = City.values.tolist() 
+    
+    return City
+
+def City_table_bonus_plan_dict(region_id):
+    City_t=google_sheet.objects.filter(launch_region_id=region_id)
+    City_t=City_t.values_list()
+    city_bonus_plan_dict=[]
+    for i in City_t: 
+        i=list(i) 
+        city_bonus_plan_dict.append([i[4],i[5],i[6]])
+    return city_bonus_plan_dict
+
 class google_Sheet(LoginRequiredMixin, View):
     def get (self,request):
-        City=check_city()
+
         week=datetime.now().isocalendar()[1]
         now = datetime.now().strftime('%Y')
         now = now + '-W'+str(week)
+        City=City_google()
         return render( request,'fraud_inspector/google_Sheet.html',{"City":City,
                                                                     "now":now
         })
     def post (self,request):
         gorod= request.POST["kod_city"]
         time_week= request.POST["time_week"]
-        City=check_city()
-        year,week=time_week.split("-W") 
+        City=google_sheet.objects.all()
+        year,week=time_week.split("-W")
+        City=City_google()
+        city_bonus_plan_dict=City_table_bonus_plan_dict(gorod) 
+        Update(week, year, gorod,city_bonus_plan_dict,City) 
+        msg="Заказ загружен  :"+week+"   "+year
         return render( request,'fraud_inspector/google_Sheet.html',{"City":City,
                                                                     "gorod":gorod,
+                                                                    "msg":msg,
                                                                     "now":time_week,
                                                                     
         })

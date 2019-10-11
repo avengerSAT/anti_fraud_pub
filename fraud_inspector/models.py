@@ -3,10 +3,12 @@ from django.shortcuts import reverse
 
 
 class google_sheet(models.Model):
-    city = models.CharField(max_length=36, unique=True, db_index=True)
-    launch_region_id = models.CharField(max_length=10)
+    city= models.CharField(max_length=36, db_index=True)
+    launch_region_id = models.IntegerField()
     city_gspread_key = models.CharField(max_length=150)
-    city_bonus_plan_dict=models.CharField(max_length=250)
+    city_bonus_plan_dict=models.IntegerField()
+    bonus_plan_ver=models.IntegerField()
+    bonus_plan_niz=models.IntegerField()
     def get_absolute_url(self):
         return  reverse('name из url',kwargs={'city':self.city}) # в шаблоне  html вместо ссылки {{post.get_absolute_url}}
 
