@@ -16,7 +16,7 @@ def get_token_from_bo():
             return mess['data']['slt']
 
 
-api_token = get_token_from_bo()
+
 #токен сохрании и переиспользуй обновляй по мере не обходимости
 
 #https://manager-http-gtw.k.fasten.com/history/api/public/v1/manager/orders/0701ea4c-c7bb-4207-ac5f-a39b73e0fd6b
@@ -24,7 +24,7 @@ api_token = get_token_from_bo()
 def get_info_from_bo(type_ws, data_ws):
     ws = create_connection("wss://manager-gtw.k.fasten.com/manager-gtw/manager")
     sequence_id = str(uuid.uuid4())
-    x = '{"api_token": "' + api_token + '", "type": "' + type_ws + '", "sequence_id": "' + sequence_id + '", "data": ' + data_ws + '}'
+    x = '{"api_token": "' + get_token_from_bo() + '", "type": "' + type_ws + '", "sequence_id": "' + sequence_id + '", "data": ' + data_ws + '}'
     ws.send(x)
     mess = json.loads(ws.recv())
     ws.close()

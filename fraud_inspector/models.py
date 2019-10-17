@@ -10,7 +10,7 @@ class google_sheet(models.Model):
     bonus_plan_ver=models.IntegerField()
     bonus_plan_niz=models.IntegerField()
     def get_absolute_url(self):
-        return  reverse('name из url',kwargs={'city':self.city}) # в шаблоне  html вместо ссылки {{post.get_absolute_url}}
+        return  reverse('book-detail', args=[str(self.city)]) # в шаблоне  html вместо ссылки {{post.get_absolute_url}}
 
     def __str__(self):
         return '{}'.format(self.city)

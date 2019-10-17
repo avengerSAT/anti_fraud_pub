@@ -288,3 +288,79 @@ def order_id_points(order_id):
     print(track_points)
     return track_points
      
+class test_123 (LoginRequiredMixin, View):
+    def get (self,request):
+        page_size=10
+        _list=1
+        df=pd.read_csv('/home/vkondratev/anti_fraud/check/templates/csvvkondratev/Сводная_по_водителю.csv')
+        df['N'] = range(1, len(df) + 1)
+        df=df[df['N']>=1]
+        df=df[df['N']<=10] 
+        head=df.columns.tolist()
+        data=df.values.tolist()
+        _list=df['N'].count()
+        stranic=str(float(_list)/float(page_size))
+        stran,ost=stranic.split('.')
+        if ost!='0':
+            kol_stranic=int(stran)+1
+        else:
+            kol_stranic=int(stran)
+        _str=1 
+        return render (request , 'fraud_inspector/test.html',{"page_size":page_size,
+                                                            "head":head,
+                                                            "sstr":_str, 
+                                                            "data":data,
+                                                            "kol_stranic":kol_stranic,
+                                                            "list":_list
+                                                            })                 
+    def post (self,request):     
+        page_size= int(request.POST["page_size"])
+        __list=request.POST["list"] 
+        keys=request.POST["key"]
+        _str=int(request.POST["sstr"])
+        df=pd.read_csv('/home/vkondratev/anti_fraud/check/templates/csvvkondratev/Сводная_по_водителю.csv')
+        df['N'] = range(1, len(df) + 1)
+        key,nkey=keys.split('.')
+        if nkey=='n1':
+            df=df.sort_values([key], ascending = [1])
+        elif nkey=='n2':
+            df=df.sort_values([key], ascending = [0])
+        else:        
+            df=df.sort_values(['N'], ascending = [1])
+        head=df.columns.tolist()
+        _list=df['N'].count()
+        stranic=str(float(_list)/float(page_size))
+        stran,ost=stranic.split('.')
+        if ost!='0':
+            kol_stranic=int(stran)+1
+        else:
+            kol_stranic=int(stran)  
+        if __list == 'start':
+            _str=1
+        elif __list=="end":
+            _str=kol_stranic
+        elif __list=='+1':
+            _str=_str+1 
+            if _str> kol_stranic:
+                _str=kol_stranic
+               
+        elif __list=='-1':
+            _str=_str-1 
+            if _str == 0:
+                _str=1                
+        if _str>kol_stranic:
+            _str=kol_stranic
+        index_max=_str*int(page_size)
+        index_min=_str*int(page_size)-int(page_size)+1     
+        df=df[df['N']>=index_min]
+        df=df[df['N']<=index_max]
+        data=df.values.tolist() 
+        return render (request , 'fraud_inspector/test.html',{"page_size":page_size,
+                                                            "head":head,
+                                                            "sstr":_str,
+                                                            "nkey":nkey,
+                                                            "key":key,
+                                                            "data":data,
+                                                            "kol_stranic":kol_stranic,
+                                                            "list":_list
+                                                            })            
