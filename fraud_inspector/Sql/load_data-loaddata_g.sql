@@ -26,4 +26,4 @@ LEFT JOIN (
 	GROUP BY order_id
 	) margin
 	ON fo.id = margin.order_id
-WHERE fo.launch_region_id=%s AND (TO_TIMESTAMP(order_date) BETWEEN %s AND %s)
+WHERE fo.launch_region_id=%s AND (TO_TIMESTAMP(order_date) BETWEEN %s AND %s) AND fo.state='UNVERIFIED'

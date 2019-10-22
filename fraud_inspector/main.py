@@ -25,6 +25,7 @@ def Update(week, year, city,city_bonus_plan_dict,city_gspread_key):
     wks = conn(city,city_gspread_key)
     createTable(wks, name_sheet)
     total_fraud_table, fraud_detalization_table = [i for i in loadData(date_from, date_to, city, week, year, min_trips_for_bonus,city_bonus_plan_dict)]
+    print(name_sheet, total_fraud_table, fraud_detalization_table, wks)
     updateGspread(name_sheet, total_fraud_table, fraud_detalization_table, wks)
 
 def prepareData(city, week, year,city_bonus_plan_dict):
@@ -63,7 +64,7 @@ def loadData(date_from, date_to, city, week, year, min_trips_for_bonus,city_bonu
 
     drv_ids = [0, 0]
     for i in total_fraud_table:
-        if i[8] > 0:
+        if i[8] != 0:
             drv_ids.append(i[1])
     drv_ids = tuple(drv_ids)
 
@@ -71,11 +72,11 @@ def loadData(date_from, date_to, city, week, year, min_trips_for_bonus,city_bonu
     return total_fraud_table, fraud_detalization_table
 
 def TotalFraudTable(date_from, date_to, city_id, week, year, min_trips_for_bonus,city_bonus_plan_dict):
-    _date_from = date_from
-    _date_to = date_to
-    _city_id = city_id
-    _week = week
-    _year = year
+    _date_from = str(date_from)
+    _date_to = str(date_to)
+    _city_id = str(city_id)
+    _week = str(week)
+    _year = str(year)
     _min_trips_for_bonus = min_trips_for_bonus
     with closing(connect(host=Con_vert.host,
                          port=Con_vert.port,
@@ -88,8 +89,14 @@ def TotalFraudTable(date_from, date_to, city_id, week, year, min_trips_for_bonus
 
         with open('./fraud_inspector/Sql/TotalFraudTable.sql', 'r') as sql:
             df = pd.read_sql_query(sql.read(), con, params=[_date_from, _date_to, _city_id, _week, _year, _min_trips_for_bonus])
+        
+        df.loc[df['Успешных поездок'] >= city_bonus_plan_dict[0][0], 'Получен бонус план'] = city_bonus_plan_dict[0][1]
+        for i in city_bonus_plan_dict:
+            df.loc[df['Успешных поездок'] < i[0],
+                   'Получен бонус план'] = i[2]
 
-        df.loc[df['Успешных за вычетом фродовых'] >= city_bonus_plan_dict[0][0], 'К списанию'] = 0
+        df.loc[df['Успешных за вычетом фродовых'] >=
+               city_bonus_plan_dict[0][0], 'К списанию'] = 0
         for i in city_bonus_plan_dict:
             df.loc[df['Успешных за вычетом фродовых'] < i[0],'К списанию'] = df['Получен бонус план'] - i[2]
         df = df.drop_duplicates(subset=['Длинный позывной', 'Короткий позывной'], keep='first')
@@ -97,9 +104,9 @@ def TotalFraudTable(date_from, date_to, city_id, week, year, min_trips_for_bonus
 
 
 def FraudDetalizationTable(date_from, date_to, city_id, drv_ids):
-    _date_from = date_from
-    _date_to = date_to
-    _city_id = city_id
+    _date_from = str(date_from)
+    _date_to = str(date_to)
+    _city_id = str(city_id)
     _drv_ids = drv_ids
     with closing(connect(host=Con_vert.host,
                          port=Con_vert.port,
@@ -112,10 +119,11 @@ def FraudDetalizationTable(date_from, date_to, city_id, drv_ids):
 
         with open('./fraud_inspector/Sql/FraudDetalizationTable.sql', 'r') as sql:
             df = pd.read_sql_query(sql.read(), con, params=[_date_from, _date_to, _city_id, _drv_ids])
-
+        
         cols = df.columns.tolist()
         cols = cols[-1:] + cols[1:2] + cols[0:1]
         df = df[cols]
+        
         return df
 
 

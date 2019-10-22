@@ -35,7 +35,11 @@ def check_city():
     City=apps.get_model('check','City')
     City=City.objects.all()
     return City
-
+def resol_count(resol,FraudOrder):
+        resol_N=[]
+        for i in resol:
+            resol_N.append(FraudOrder.filter(resolution=i).count())
+        return resol_N
 class Fraud_inspector(LoginRequiredMixin, View):
     def get(self,request):
         end_time= datetime.now().strftime('%Y-%m-%d')
@@ -44,8 +48,10 @@ class Fraud_inspector(LoginRequiredMixin, View):
         gorod="ALL"
         FraudOrder=filter_dan(gorod,start_time,end_time)
         resol=["UNVERIFIED" ,"FRAUD YES","FRAUD NO"]
+        resol_N= resol_count(resol,FraudOrder) 
         return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
                                                                         "end_time":end_time,
+                                                                        "resol_N":resol_N,
                                                                         "start_time":start_time,
                                                                         "gorod":gorod,
                                                                         "FraudOrder":FraudOrder,
@@ -64,9 +70,10 @@ class Fraud_inspector(LoginRequiredMixin, View):
             blocked_unblocked(order_id,state)
             FraudOrders.objects.filter(order_id=order_id).update(resolution=resolution)
             FraudOrder=filter_dan(gorod,start_time,end_time)
-             
+            resol_N= resol_count(resol,FraudOrder) 
             return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
                                                             "resol":resol,
+                                                            "resol_N":resol_N,
                                                             "gorod":gorod,
                                                             "start_time":start_time,
                                                             "end_time":end_time,
@@ -77,8 +84,10 @@ class Fraud_inspector(LoginRequiredMixin, View):
             start_time= request.POST["start_time"]
             end_time= request.POST["end_time"]
             FraudOrder=filter_dan(gorod,start_time,end_time) 
+            resol_N= resol_count(resol,FraudOrder) 
             return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
                                                             "gorod":gorod,
+                                                            "resol_N":resol_N,
                                                             "resol":resol,
                                                             "start_time":start_time,
                                                             "end_time":end_time,
@@ -96,8 +105,10 @@ def frod_prov(request):
         msg="Заказ проверяет другой пользователь"
         City=check_city()
         FraudOrder=filter_dan(gorod,start_time,end_time)
+        resol_N= resol_count(resol,FraudOrder) 
         return render (request,'fraud_inspector/Fraud_inspector.html',{"City":City,
                                                 "gorod":gorod,
+                                                "resol_N":resol_N,
                                                 "resol":resol,
                                                 "msg":msg,
                                                 "start_time":start_time,
@@ -219,7 +230,7 @@ def City_table_bonus_plan_dict(region_id):
         city_bonus_plan_dict.append([i[4],i[5],i[6]])
     return city_bonus_plan_dict
 
-class google_Sheet(LoginRequiredMixin, View):
+class google__Sheet(LoginRequiredMixin, View):
     def get (self,request):
 
         week=datetime.now().isocalendar()[1]
@@ -285,20 +296,18 @@ def order_id_points(order_id):
                 i=float(w),float(q)
                 i=list(i)
                 track_points.append(i)
-    print(track_points)
     return track_points
      
 class test_123 (LoginRequiredMixin, View):
     def get (self,request):
         page_size=10
-        _list=1
         df=pd.read_csv('/home/vkondratev/anti_fraud/check/templates/csvvkondratev/Сводная_по_водителю.csv')
         df['N'] = range(1, len(df) + 1)
+        _list=df['N'].count()
         df=df[df['N']>=1]
         df=df[df['N']<=10] 
         head=df.columns.tolist()
         data=df.values.tolist()
-        _list=df['N'].count()
         stranic=str(float(_list)/float(page_size))
         stran,ost=stranic.split('.')
         if ost!='0':
