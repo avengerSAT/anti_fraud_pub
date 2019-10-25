@@ -9,7 +9,7 @@ from django.contrib import auth
 from django.views import View
 from django.views.generic import TemplateView
 
-from .models import FraudOrders,google_sheet
+from .models import FraudOrders,google_sheet,option_city
 from  django.apps  import apps
 from .import_data import update_db_fraud_orders ,order_id_zar
 from check import sqlvertica 
@@ -147,8 +147,8 @@ class zagr_tr(LoginRequiredMixin, View):
     def get(self,request):
         end_time  = datetime.now().strftime('%Y-%m-%d')
         start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
-        City=check_city()
-        gorod="ALL"
+        City=option_city.objects.all()
+        gorod=0
         return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
                                                                 "gorod":gorod,
                                                                 "end_time":end_time,
@@ -166,7 +166,7 @@ class zagr_tr(LoginRequiredMixin, View):
             start_time= request.POST["start_time"]
             end_time= request.POST["end_time"]
             update_db_fraud_orders(gorod,start_time,end_time)
-            City=check_city()
+            City=option_city.objects.all()
             msg_1="Данные загружены"
             return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
                                                                     "end_time":end_time,
@@ -179,7 +179,7 @@ class zagr_tr(LoginRequiredMixin, View):
             trip_id= request.POST["trip_id"]
             end_time  = datetime.now().strftime('%Y-%m-%d')
             start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
-            City=check_city()
+            City=option_city.objects.all()
             gorod="ALL"
             blocked_unblocked(trip_id,'UNBLOCKED')
             msg="Заказ разблокирован:"+trip_id
@@ -195,8 +195,8 @@ class zagr_tr(LoginRequiredMixin, View):
             order_id= request.POST["order_id"]
             end_time  = datetime.now().strftime('%Y-%m-%d')
             start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
-            City=check_city()
-            gorod="ALL"
+            City=option_city.objects.all()
+            gorod=0
             order_id_zar(order_id)
             msg_2="Заказ добавлен:"+order_id
             return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
@@ -207,7 +207,21 @@ class zagr_tr(LoginRequiredMixin, View):
 
 
     })
+        elif function=="Выполнить":
+            end_time  = datetime.now().strftime('%Y-%m-%d')
+            start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
+            City=check_city()
+            gorod="ALL"
+            FraudOrders.objects.filter(state='BLOCKED').update(state='UNBLOCKED')
+            msg_3="Заказы разблокированы"
+            return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
+                                                                    "gorod":gorod,
+                                                                    "end_time":end_time,
+                                                                    "start_time":start_time,
+                                                                    "msg_3":msg_3
 
+
+    })
 
 def City_google():
     City_t=google_sheet.objects.values_list()
@@ -372,4 +386,37 @@ class test_123 (LoginRequiredMixin, View):
                                                             "data":data,
                                                             "kol_stranic":kol_stranic,
                                                             "list":_list
-                                                            })            
+                                                            })         
+
+class city_option(LoginRequiredMixin, View):
+    def get (self,request):
+        city=option_city.objects.all()
+        context={"city":city}
+        return render (request,'fraud_inspector/city_option.html',context)
+    def post (self,request):
+        try:
+            filt=request.POST["filter"] 
+            if filt=='':
+                city=option_city.objects.all()
+            else:    
+                city=option_city.objects.filter(city__contains= filt)
+            context={"city":city}
+            return render (request,'fraud_inspector/city_option.html',context)
+        except:
+            city=option_city.objects.values_list()
+            for i in city:
+                if i[1] !='Все города':
+                    loading_trips_with_surcharges=request.POST[str(i[2])+'.loading_trips_with_surcharges']
+                    loading_trips_affecting_the_bonus_plan=request.POST[str(i[2])+'.loading_trips_affecting_the_bonus_plan']
+                    loading_trips_trips_without_surcharges=request.POST[str(i[2])+'.loading_trips_trips_without_surcharges']
+                    option_city.objects.filter(city=i[1]).update(loading_trips_with_surcharges=loading_trips_with_surcharges,
+                    loading_trips_affecting_the_bonus_plan=loading_trips_affecting_the_bonus_plan,loading_trips_trips_without_surcharges=loading_trips_trips_without_surcharges)
+            city=option_city.objects.all()
+            context={"city":city}
+            return render (request,'fraud_inspector/city_option.html',context)     
+
+class prov_dop(LoginRequiredMixin, View):
+    def get(self,request):
+        doplat=google_sheet.objects.all()
+        context={"doplat":doplat}
+        return render (request,'fraud_inspector/doplat_option.html',context)

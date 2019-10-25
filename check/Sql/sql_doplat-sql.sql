@@ -31,7 +31,6 @@ LEFT JOIN (
                     GROUP BY order_pattern_id, resolution, session_id
                     ) fr
                     ON fv.id = fr.session_id
-                WHERE resolution = 'YES'
             ) gr_1
             ON gr_1.order_id=dt.order_id
         WHERE transaction_type='Order Refund'

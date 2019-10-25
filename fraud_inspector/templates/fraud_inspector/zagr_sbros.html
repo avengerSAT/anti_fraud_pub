@@ -18,10 +18,10 @@
             <div  style="width:70%; top: 0%;height:30px ;margin-top: 0%;">
                 <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
                     {% for i in City %}
-                        {% if i.Код_Города == gorod %}
-                            <option type="submit" selected value="{{i.Код_Города}}" >{{i.Город}}</option>
+                        {% if i.launch_region_id == gorod %}
+                            <option type="submit" selected value="{{i.launch_region_id}}" >{{i.city}}</option>
                         {% else %}
-                            <option value="{{i.Код_Города}}" >{{i.Город}}</option>
+                            <option value="{{i.launch_region_id}}" >{{i.city}}</option>
                         {% endif %} 
                     {% endfor %}
                 </select>    
@@ -46,7 +46,7 @@
             <span class="input-group-text" style="background-color:#e9ecef;font-size: 10pt;" id="order_id">Введите trip_id :</span>
             <input type="text" class="form-control" id="order_id" style="width:30%;" name="order_id"/  >  
             <input type="hidden"   value="p_3"    name="function"/> 
-            <input type="submit" title="загрузка заказов для проверки фрода" value="Загрузить"></p> 
+            <input type="submit" title="загрузка заказов для проверки фрода" value="Выполнить"></p> 
         </div> 
     </form> 
   </div>
@@ -63,12 +63,25 @@
             <span class="input-group-text" style="background-color:#e9ecef;font-size: 10pt;" id="trip_id">Введите trip_id :</span>
             <input type="text" class="form-control" id="trip_id" style="width:30%;" name="trip_id"/  >  
             <input type="hidden"   value="p_2"    name="function"/> 
-            <input type="submit" title="загрузка заказов для проверки фрода" value="Загрузить"></p> 
+            <input type="submit" title="загрузка заказов для проверки фрода" value="Выполнить"></p> 
         </div> 
     </form> 
   </div>
 </div>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Убрать зависшие заказы</h1>
+    <p class="lead">{{msg_3}}</p>
 
+    <form action="{% url 'zagr_tr_url' %}"    method="POST" >
+        {% csrf_token %}
+        <div class="input-group-prepend">
+            <input type="hidden"   value="Выполнить"  name="function"/> 
+            <input type="submit" title="загрузка заказов для проверки фрода"  value="Выполнить"></p> 
+        </div> 
+    </form> 
+  </div>
+</div>
 
 {% endblock %}  
 

@@ -87,8 +87,7 @@ def update_db_fraud_orders(gorod,date_from,date_to):
 
 def order_id_zar(order_id):
 
-    data = load_order_id(order_id)
-    print(data)    
+    data = load_order_id(order_id)    
     for row in data:
         try: 
             post = FraudOrders()
