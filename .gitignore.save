@@ -7,11 +7,11 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-client_secret.json
+
 settings.py
 db.sqlite3
 *.pyc
-.vscode/*
+.vscode*
 test.py
 *.csv
 config.py

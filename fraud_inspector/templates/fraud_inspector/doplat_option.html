@@ -1,0 +1,62 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+Настройка параметров города
+{% endblock %}
+ 
+{% block content %}
+{% include "include/include_logout.html"%}  
+ 
+
+<table style="width: 70%; margin-top:10%;margin-left:15%;  "   >
+        <thead>            
+            <th >Город</th>
+            <th >Ключ для подключения к гугл докс</th>
+            <th title="Кол-во поездок для бонус плана">Кол-во поездок</th>
+            <th title="Сумма при достижении нужного количества поездок">MAX</th>
+            <th title="Сумма если нужного количества поездок не набрано">MIN</th>
+        </thead>
+    {% for j in doplat %}
+        <tr style="margin-top:0%"> 
+            <td style="width: 20%; margin-top:0%"> 
+                    <input  disabled="disabled" style="width: 100%; "
+                        id="basic-addon1"
+                     value="{{j.city}}" />
+            </td> 
+            <td  style="width: 65%; margin-top:0%" >     
+                    <input type="text"  style="width: 100%; " disabled="disabled" 
+                     value="{{j.city_gspread_key}}" name="{{j.city_gspread_key}}"/>
+            </td> 
+            <td style="width: 5%; margin-top:0%">         
+                    <input type="text"   style="width: 100%; " disabled="disabled" 
+                    value="{{j.city_bonus_plan_dict}}" name="{{j.city_bonus_plan_dict}}"/>
+            </td> 
+            <td style="width: 5%; margin-top:0%">        
+                    <input type="text"   style="width: 100%; " disabled="disabled" 
+                     value="{{j.bonus_plan_ver}}" name="{{j.bonus_plan_ver}}" />
+            </td> 
+            <td style="width: 5%; margin-top:0%">         
+                    <input type="text"   style="width: 100%; " disabled="disabled" 
+                     value="{{j.bonus_plan_niz}}" name="{{j.bonus_plan_niz}}"  />
+                      
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+ 
+
+
+
+
+
+<style>
+
+
+</style>    
+{% endblock %}  
+<!--    city= models.CharField(max_length=36, db_index=True)
+    launch_region_id = models.IntegerField()
+    city_gspread_key = models.CharField(max_length=150)
+    city_bonus_plan_dict=models.IntegerField()
+    bonus_plan_ver=models.IntegerField()
+    bonus_plan_niz=models.IntegerField()-->

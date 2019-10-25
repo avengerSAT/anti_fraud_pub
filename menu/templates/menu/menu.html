@@ -32,14 +32,30 @@
     <button class="btn btn-secondary btn-lg btn-block" title=""
         type="submit">DASH Проверка водитель </button>
 </form> 
-<form action="{% url 'zagr_tr_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
+<form action="{% url 'Fraud_inspector_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
         {% csrf_token %}
     <button class="btn btn-secondary btn-lg btn-block" title=""
         type="submit"> Fraud inspector </button>
 </form> 
- <form action="{% url 'Fraud_inspector_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
+{% for i in request.user.groups.all %}
+    {% if i.name == 'Группа_2'%}
+        <form action="{% url 'zagr_tr_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
+            {% csrf_token %}
+            <button class="btn btn-secondary btn-lg btn-block" title=""
+            type="submit">АЙКИДО,КИМОНО</button>
+        </form> 
+    {% endif %} 
+{% endfor %}
+
+<form action="{% url 'test_map_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
         {% csrf_token %}
     <button class="btn btn-secondary btn-lg btn-block" title=""
-        type="submit"> Непроверенные поездки с доплатами за 14 дней </button>
-    </form> 
+        type="submit"> test_map_url </button>
+</form>
+
+<form action="{% url 'google_Sheet_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
+    {% csrf_token %}
+<button class="btn btn-secondary btn-lg btn-block" title=""
+    type="submit"> google_Sheet_url </button>
+</form> 
 {% endblock %}

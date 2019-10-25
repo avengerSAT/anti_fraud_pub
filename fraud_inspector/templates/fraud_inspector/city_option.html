@@ -1,0 +1,140 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+Настройка параметров города
+{% endblock %}
+ 
+{% block content %}
+{% include "include/include_logout.html"%}  
+
+
+<form style="width: 50%;margin-left:10%;"  action="{% url 'city_option_url' %}"    method="POST" >
+    {% csrf_token %}  
+    <input class="one" style="background-color:rgb(255, 255, 255); width: 70%"  name="filter" value=""/> 
+    <input class="one"
+     style="background-color:rgb(60, 107, 78);width: 50%" type="submit" value="ПОИСК ПО ГОРОДАМ">
+</form>           
+
+<form style="width: 80%; margin-left:10%" action="{% url 'city_option_url' %}"    method="POST" >
+        {% csrf_token %}   
+        <button     type="submit"  >
+        <img src="media/media/save.svg" width="30" height="40" alt="Письма мастера дзен">SAVE</button>
+    <table style="width: 100%;"  >
+        <thead>            
+            <th class="one">Город</th>
+            <th class="two">Поездки с доплатами</th>
+            <th class="two">Поездки влияющие на бонус план</th>
+            <th class="two">Поездки без доплат</th>
+        </thead>
+
+
+
+
+
+        {% for i in city %}
+            {% if i.city != "Все города" %}
+                <tr>
+                    <td class="one">
+                        <input type="text" 
+                        class="one" 
+                        disabled="disabled" value="{{i.city}}" name="{{i.city}}"  />
+                    </td>
+
+
+                    <td class="two">
+                        <select type="submit"
+                        class="one"
+                        name="{{i.launch_region_id}}.loading_trips_with_surcharges">
+                                {% if i.loading_trips_with_surcharges == 0 %}
+                                
+                                    <option   selected value="0" >НЕТ</option>
+                                    <option value="1" >ДА</option>
+                                {% else %}
+                                    <option  selected value="1" >ДА</option>
+                                    <option value="0" >НЕТ</option>
+                                {% endif %} 
+
+                        </select>
+                    </td>
+                    <td class="two">
+                        <select type="submit"
+                        class="one"
+                        name="{{i.launch_region_id}}.loading_trips_affecting_the_bonus_plan">
+                                {% if i.loading_trips_affecting_the_bonus_plan == 0 %}
+                                
+                                    <option   selected value="0" >НЕТ</option>
+                                    <option value="1" >ДА</option>
+                                {% else %}
+                                    <option  selected value="1" >ДА</option>
+                                    <option value="0" >НЕТ</option>
+                                {% endif %} 
+                        </select>
+                    </td>
+                    <td class="two">
+                        <select type="submit"
+                        class="one"
+                        name="{{i.launch_region_id}}.loading_trips_trips_without_surcharges">
+                                {% if i.loading_trips_trips_without_surcharges == 0 %}
+                                
+                                    <option selected value="0" >НЕТ</option>
+                                    <option value="1" >ДА</option>
+                                {% else %}
+                                    <option selected value="1" >ДА</option>
+                                    <option value="0" >НЕТ</option>
+                                {% endif %} 
+                        </select>            
+                    </td>
+                </tr> 
+            {% endif %}    
+        {% endfor %}
+    </table>
+</form>    
+ 
+<style>
+input.one{
+    width: 100%;
+    color:rgb(0, 0, 0);
+    font-weight:bold;
+    text-align: center;
+    background-color:rgb(93, 153, 116);
+    padding: 3px;
+    border: 1px solid black;
+    font-size: 14pt; 
+}
+select.one{
+    width: 100%;
+    background-color:rgb(138, 230, 173);
+    padding: 3px;
+    border: 1px solid black;
+    font-size: 14pt; 
+}
+
+td.one{
+    width: 35%;
+}
+td.two{
+    width: 15%;
+}
+th.one{
+    width: 35%;
+    color:rgb(0, 0, 0);
+    font-weight:bold;
+    text-align: center;
+    background-color:rgb(93, 153, 116);
+    padding: 3px;
+    border: 1px solid black;
+    font-size: 14pt;
+}
+th.two{
+    width: 15%;
+    color:rgb(0, 0, 0);
+    font-weight:bold;
+    text-align: center;
+    background-color:rgb(93, 153, 116);
+    padding: 3px;
+    border: 1px solid black;
+    font-size: 14pt;
+}
+</style>
+
+{% endblock %}  

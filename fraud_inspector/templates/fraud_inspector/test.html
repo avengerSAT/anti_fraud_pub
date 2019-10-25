@@ -1,0 +1,129 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+TEST
+{% endblock %}
+ 
+{% block content %}
+
+
+ 
+<form action="{% url 'test_url' %}"    method="POST" >
+    {% csrf_token %}
+        <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"   name="key" /> 
+        <input type="hidden"   value="{{sstr}}"          id="sstr"  name="sstr"/> 
+        <input type="hidden"   value="{{list}}"          id="list"  name="list"/> 
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="submit" class="btn btn-secondary" name='page_size' value='10' > 10</button>
+        <button type="submit" class="btn btn-secondary" name='page_size' value='25' > 25</button>
+        <button type="submit" class="btn btn-secondary" name='page_size' value='50' > 50</button>  
+        <button type="submit" class="btn btn-secondary" name='page_size' value='100'>100</button>
+    </div>
+</form> 
+ 
+
+
+<div class="pricelist" id="pricelist">
+    <table >
+        <thead><tr> 
+                {% for j in head %}
+                    {% if j == key %}
+                        {% if nkey == 'n1' %}
+                            <form action="{% url 'test_url' %}"    method="POST" >
+                            {% csrf_token %}
+                                <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
+                                <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
+                                <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
+                                <th  >  
+                                    <button type="submit"
+                                    style="background-color:#3f4d70; height:80px"
+                                    class="btn btn-secondary" name='key' value='{{j}}.n2'>{{j}}</button>
+                                </th> 
+                            </form> 
+                        {% elif nkey == 'n2' %}
+                            <form action="{% url 'test_url' %}"    method="POST" >
+                            {% csrf_token %}
+                                <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
+                                <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
+                                <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
+                                <th  >  
+                                    <button type="submit"
+                                    style="background-color:#54703f; height:80px"
+                                    class="btn btn-secondary" name='key' value='{{j}}.n0'>{{j}}</button>
+                                </th> 
+                            </form>
+                        {% elif nkey == 'n0' %}
+                            <form action="{% url 'test_url' %}"    method="POST" >
+                            {% csrf_token %}
+                                <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
+                                <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
+                                <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
+                                <th  >  
+                                    <button type="submit"  
+                                    style="height:80px"
+                                    class="btn btn-secondary" name='key' value='{{j}}.n1'>{{j}}</button>
+                                </th> 
+                            </form>                        
+                         {% endif %}   
+                    {% else %}
+                    <form action="{% url 'test_url' %}"    method="POST" >
+                    {% csrf_token %}
+                        <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
+                        <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
+                        <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
+                        <th  >  
+                            <button type="submit" 
+                            style="height:80px"
+                            class="btn btn-secondary" name='key' value='{{j}}.n1'>{{j}}</button>
+                        </th> 
+                    </form> 
+                    {% endif %}
+                {% endfor %}
+            </div></tr>
+          
+        </thead>
+<form action="{% url 'test_url' %}"    method="POST" >
+    {% csrf_token %}
+    <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"        name="key"/> 
+    <input type="hidden"   value="{{sstr}}"          id="sstr"       name="sstr"/> 
+    <input type="hidden"   value="{{page_size}}"     id="page_size"  name="page_size"/> 
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="submit" class="btn btn-secondary" name='list' value='start' > 1</button>
+        <button type="submit" class="btn btn-secondary" name='list' value='-1'    > {</button>
+        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{sstr}}"/> 
+        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{kol_stranic}}" /> 
+        <button type="submit" class="btn btn-secondary" name='list' value='+1' > }</button>  
+        <button type="submit" class="btn btn-secondary" name='list' value='end'>END</button>
+    </div>
+</form> 
+
+{% for i in data %}
+            <tr>
+                {% for q in i %}
+                    <td class="nowrap" 
+                    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+                    {{q}}
+                    </td>
+                {% endfor %}
+            </tr>    
+{% endfor %}
+</table>
+</div>
+
+<form action="{% url 'test_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="submit" class="btn btn-secondary" name='list' value='start' > 1</button>
+        <button type="submit" class="btn btn-secondary" name='list' value='-1'    > {</button>
+        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{sstr}}"/> 
+        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{kol_stranic}}" /> 
+        <button type="submit" class="btn btn-secondary" name='list' value='+1'  > }</button>  
+        <button type="submit" class="btn btn-secondary" name='list' value='end' >END</button>
+    </div>
+    <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"        name="key"/> 
+    <input type="hidden"   value="{{sstr}}"          id="sstr"       name="sstr"/> 
+    <input type="hidden"   value="{{page_size}}"     id="page_size"  name="page_size"/> 
+</form> 
+ 
+
+{% endblock %}

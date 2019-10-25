@@ -1,0 +1,230 @@
+
+{% block content %}
+
+<div id="overlay">
+    <div class="popup">
+
+
+        <form action="{% url 'Fraud_inspector_url' %}"    method="POST" >
+            {% csrf_token %}
+
+<div class="input-group" style="width:33%; top: 0% ;height:30px ; ">
+    <select class="custom-select" id="inputGroupSelect04" style="background:#e9ecef;" aria-label="Example select with button addon"
+    type="submit"    name="resolution">
+        {% for j in resol %}
+            {% for i in FraudOrder %}
+                {% if i.resolution == j.0 %}
+                    <option type="submit" selected value="{{j.0}}" >{{j.1}}</option>
+                {% else %}
+                    <option value="{{j.0}}" >{{j.1}}</option>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}    
+    </select>
+    <div class="input-group-append">
+        <input type="hidden"   value="{{gorod}}///{{order_id}}///{{start_time}}///{{end_time}}///{{pattern}}"  id="block"  name="block"/>  
+ 
+        <button class="btn btn-outline-secondary" style="background:rgb(48, 40, 54);color:rgb(255, 255, 255);" type="submit" >Сохранить</button>
+        </div>
+        </div>
+    <button class="close" title="Закрыть" onclick="document.getElementById('overlay').style.display='none';"></button>
+   </form> 
+
+
+  <div class="form-group" style="width:10%;">
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" disabled="disabled" placeholder="{{ time }}">
+    <small id="emailHelp" class="form-text text-muted">Время загрузки.</small>
+  </div>
+
+
+<div class="form-row" style="margin:0%;margin-bottom:0;">
+{% for i in pattern %}
+    <input type="text" class="form-control"  style="font-size:12 ;width:10%; top: 0%; margin-top: 0%;font-weight: 600;margin-bottom:0;"
+        id="validationCustom01" placeholder="Имя водителя" disabled="disabled" value="{{i}}" required>   
+{% endfor %} 
+</div>
+
+<div>
+<div style="width:50%;overflow:auto;float:left;">
+{% for i in drv %}
+    {% for j in cus %}
+        <ul class="list-group">
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">ИД водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef; margin-top: 0%;margin-bottom:0;">{{i.1}}</li>
+            </ul>        
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Имя водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{i.0}}</li>
+            </ul>
+            {% if i.2 == j.2 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background: #232ec236; margin-top: 0%;margin-bottom:0;">{{i.2}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{i.2}}</li>
+            </ul>
+            {% endif %}
+            {% if i.3 == j.3 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#be161683;margin-top: 0%;margin-bottom:0;">{{i.3}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{i.3}}</li>
+            </ul>
+            {% endif %}            
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Промо водителя</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{i.4}}</li>
+            </ul>
+        </ul>
+    {% endfor %}
+{% endfor %}
+</div>
+    <div style=" width:50%;overflow:auto;"> 
+{% for i in drv %}
+    {% for j in cus %}
+        <ul class="list-group">
+            <ul class="list-group list-group-horizontal-sm" style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">ИД клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef; margin-top: 0%;margin-bottom:0;">{{j.1}}</li>
+            </ul>        
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;" >
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Имя клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{j.0}}</li>
+            </ul>
+            {% if i.2 == j.2 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background: #232ec236; margin-top: 0%;margin-bottom:0;">{{j.2}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Почта клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top: 0%;margin-bottom:0;">{{j.2}}</li>
+            </ul>
+            {% endif %}
+            {% if i.3 == j.3 %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#be161683;margin-top: 0%;margin-bottom:0;">{{j.3}}</li>
+            </ul>
+            {% else %}
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Телефон клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{j.3}}</li>
+            </ul>
+            {% endif %}            
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Кол поездок клиента</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{j.4}}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal-sm"style="height:30px;">
+                <li class="list-group-item" style="font-size:14 ;width:30%; top: 0%;margin-top: 0%;margin-bottom:0;">Стасус</li>
+                <li class="list-group-item" style="font-size:14 ;width:70%; top: 0%;background:#e9ecef;margin-top:0%;margin-bottom:0;">{{j.5}}</li>
+            </ul>            
+        </ul>
+    {% endfor %}
+{% endfor %}
+</div>
+</div>
+<br>
+<div  >
+    <table >         
+        <thead>
+            {% for j in svod_drv_cus_head %}
+                <th  style="background-color: #ffffff56; width: 150px;padding: 3px;border: 2px solid black;font-size:12; ">{{j}}</th>
+            {% endfor %}
+        </thead>
+        {% for i in svod_drv_cus %}
+            <tr>
+                {% if i.0 == order_id%}
+                    {% for q in i %}
+                        
+                            <td style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black;font-size:12; ">{{q}}</td>
+                        
+                    {% endfor %}
+                {% endif %}  
+            </tr>
+        {% endfor %}     
+    </table>
+</div>
+        
+        <div class="tabs" style="position: absolute;width:96%;height:auto; margin-top: 3%; background:  rgb(202, 216, 237);">
+            <input type="radio" name="inset" value="" id="tab_1"   checked />
+            <label for="tab_1" style="width:20%;">КЛИЕНТ/ВОДИТЕЛЬ</label>
+            <input type="radio" name="inset" value="" id="tab_2"/>
+            <label for="tab_2" style="width:20%;">СВОДНАЯ КЛИЕНТА</label>
+            <input type="radio" name="inset" value="" id="tab_3"/>
+            <label for="tab_3" style="width:20%;">КАРТА</label>
+                <div id="txt_1">
+                    <div class="pricelist" id="pricelist">
+                        <table id="pricetable-22" class="table-autosort:2">         
+                            <thead>
+                                {% for j in svod_drv_cus_head %}
+                                    <th class=" filterable sortable table-sortable:numeric" style="background-color: #ffffff56; width: 150px;padding: 3px;border: 2px solid black; ">{{j}}</th>
+                                {% endfor %}
+                            </thead>
+                            {% for i in svod_drv_cus %}
+                                <tr>
+                                    {% for q in i %}
+                                        <td class="nowrap" style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black; ">{{q}}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}     
+                        </table>
+                    </div>
+                </div>              
+                <script>
+                        $(document).ready( function () {
+                        $('#pricetable-22').DataTable();
+                        } );
+                </script>    
+                <div id="txt_2">
+                    <div class="pricelist" id="pricelist">
+                        <table id="pricetable-222" class="table-autosort:2">
+                            <thead>
+                                {% for j in svod_cus_head %}            
+                                    <th class=" filterable sortable table-sortable:numeric"  style="width: 150px;padding: 3px;border: 2px solid black; ">{{j}}</th>
+                                {% endfor %}
+                            </thead>
+                            {% for i in svod_cus %}
+                                <tr>
+                                    {% for q in i %}
+                                        <td class="nowrap" style="background-color: #ffffff83; width: 150px;padding: 3px;border: 2px solid black; ">{{q}}</td>
+                                    {% endfor %}
+                                </tr>            
+                            {% endfor %}
+                        </table>
+                    </div>  
+                </div>
+                <script>
+                        $(document).ready( function () {
+                        $('#pricetable-222').DataTable();
+                        } );
+                </script> 
+        
+            <div id="txt_3">
+            {% include "include/include_map.html"%}  
+            </div>
+        </div>     
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	var delay_popup =10;
+	setTimeout("document.getElementById('overlay').style.display='block'", delay_popup);
+</script>
+
+
+     
+
+  
+{% endblock %}

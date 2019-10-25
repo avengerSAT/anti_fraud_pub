@@ -1,0 +1,34 @@
+{% block content %}
+
+
+ <style>
+ body{overflow: hidden;}
+  </style>
+ 
+
+<div id="map" 
+style="width:90%;height:90%;"></div>
+
+<script>
+var map = L.map('map', {
+        renderer: L.svg(),
+        minZoom:1,
+        maxZoom:15
+
+});
+
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+ attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+var polygon = L.polygon({{track_points}}
+    , {color: 'blue'}).addTo(map);
+    // zoom the map to the polygon
+    map.fitBounds(polygon.getBounds());
+</script>
+
+
+
+{% endblock %}
+

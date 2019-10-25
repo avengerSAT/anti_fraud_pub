@@ -1,0 +1,103 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+Проверка треков на фрод
+{% endblock %}
+ 
+{% block content %}
+
+{% include "include/include_logout.html"%}  
+
+
+
+<form action="{% url 'Fraud_inspector_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+        <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
+            {% for i in City %}
+                {% if i.Код_Города == gorod %}
+                    <option type="submit" selected value="{{i.Код_Города}}" >{{i.Город}}</option>
+                {% else %}
+                    <option value="{{i.Код_Города}}" >{{i.Город}}</option>
+                {% endif %} 
+            {% endfor %}
+            <input type="date" name="start_time" value="{{start_time}}">
+            <input type="date" name="end_time" value="{{end_time}}">
+            
+        </select><input type="submit" value="Отправить"></p> 
+    </div> 
+</form> 
+
+{% if msg %}
+{% include "include/include_osh.html"%}  
+{% endif %}
+
+{% if PRV %}
+{% include "include/include_proverka.html"%}  
+{% endif %}
+
+<div class="tabs" style="width:100%;height:auto; margin-top: 3%; background:  rgb(202, 216, 237);">
+    <input type="radio" name="inset" value="" id="tab_1"   checked />
+    <label for="tab_1" style="width:20%;">НЕ ПРОВЕРЕНО : {{resol_N.0}}</label>
+    <input type="radio" name="inset" value="" id="tab_2"/>
+    <label for="tab_2" style="width:20%;">ФРОД : {{resol_N.1}}</label>
+    <input type="radio" name="inset" value="" id="tab_3"/>
+    <label for="tab_3" style="width:20%;">НЕ ФРОД : {{resol_N.2}}</label>
+
+
+    
+<div id="txt_1">
+    <div class="pricelist" id="pricelist" style="margin-top: 6%;" >
+        <table id="pricetable-dan1" class="table-autosort:2">
+            {% include "include/include_Fraud_inspector_t.html"%}
+            {% for i in FraudOrder %} 
+                {% if i.resolution == resol.0 %}
+                    {% include "include/include_Fraud_inspector.html"%}
+                {% endif %}
+            {% endfor %} 
+        </table>
+    </div>
+</div>
+<div id="txt_2">
+        <div class="pricelist" id="pricelist" style="margin-top: 6%;" >
+        <table id="pricetable-dan2" class="table-autosort:2">
+            {% include "include/include_Fraud_inspector_t.html"%}
+            {% for i in FraudOrder %} 
+                {% if i.resolution == resol.1 %}
+                    {% include "include/include_Fraud_inspector.html"%}
+                {% endif %}
+            {% endfor %} 
+        </table>
+    </div>
+</div>
+<div id="txt_3">
+    <div class="pricelist" id="pricelist" style="margin-top: 6%;" >
+        <table id="pricetable-dan3" class="table-autosort:2">
+            {% include "include/include_Fraud_inspector_t.html"%}
+            {% for i in FraudOrder %} 
+                {% if i.resolution == resol.2 %}
+                    {% include "include/include_Fraud_inspector.html"%}
+                {% endif %}
+            {% endfor %} 
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready( function () {
+    $('#pricetable-dan1').DataTable();
+    } );
+</script>
+<script>
+    $(document).ready( function () {
+    $('#pricetable-dan2').DataTable();
+    } );
+</script>
+<script>
+    $(document).ready( function () {
+    $('#pricetable-dan3').DataTable();
+    } );
+</script>
+
+
+
+{% endblock %}  

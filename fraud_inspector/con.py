@@ -10,4 +10,8 @@ class Con_vert():
         port= os.getenv('port_vertica')
         user= os.getenv('user_vertica')
         password= os.getenv('password_vertica')
-        
+        data_base ='dwh'
+        read_timeout = 120        
+
+class Credentials():
+    credentials = 'templates/js/client_secret.json'        

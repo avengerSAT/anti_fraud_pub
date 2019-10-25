@@ -1,0 +1,58 @@
+{% block content %}
+
+
+
+<tr>
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+    {{i.order_id}}
+    </td>
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+    {{i.order_date}}
+    </td>
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+    {{i.launch_region_id}}
+    </td>
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+    {{i.driver_id}}
+    </td>
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+    {{i.pattern_name}}
+    </td>
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+    {{i.compensation}}
+    </td>        
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+    {{i.update_date}}
+    </td>  
+    <td class="nowrap" 
+    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
+        {% if i.state == "UNBLOCKED" %}
+            <form action="{% url 'frod_prov_URL' %}"    method="POST" >
+                {% csrf_token %}
+                <button value="{{gorod}}///{{i.order_id}}///{{start_time}}///{{end_time}}///{{i.pattern_name}}" name="block"
+                style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" 
+                onClick="window.open('https://backoffice.k.fasten.com/#/orders/{{i.order_id}}','CONTENT')"  >
+                Проверить заказ
+                </button>
+            </form>
+        {% else %}
+            <form action="{% url 'frod_prov_URL' %}"    method="POST" >
+                {% csrf_token %}
+                <button value="" name="block" disabled
+                style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;">
+                Заказ проверяется другим пользователем ...
+                </button>
+            </form>                 
+        {% endif %}    
+    </td>    
+</tr>
+
+
+{% endblock %}

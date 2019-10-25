@@ -21,6 +21,10 @@
     <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="driver_id:{{drv_id}}   Период:{{start_date}} - {{end_date}}">    
 </div> 
 
+{% if msg %}
+    <h4>{{msg}}</h4>
+{% endif %}
+
 <div class="pricelist" id="pricelist">
         <table id="pricetable-drv" class="table-autosort:2"> 
             <colgroup>
@@ -43,7 +47,7 @@
                 <tr  >
                     {% for q in i %}
     
-                    <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;"" >{{q}}</td>
+                    <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;" >{{q}}</td>
         
                     {% endfor %}
                 </tr>
