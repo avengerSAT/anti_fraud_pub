@@ -42,6 +42,7 @@ def conn(city,city_gspread_key):
     for i in city_gspread_key:
         if i[1]==city:
             gspread_key=i[2]
+            
     return gc.open_by_key(gspread_key)
 
 def createTable(wks, name_sheet):
