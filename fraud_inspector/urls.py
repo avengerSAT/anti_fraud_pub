@@ -7,7 +7,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-#    path('',views.MAIN.as_view(),name='prover'),
+#    path('',views.MAIN.as_view(),name='prover'),option_city_trips
     path('test',views.test_123.as_view(),name='test_url'),
     path('zagr_tr',views.zagr_tr.as_view(),name='zagr_tr_url'),
     path('prov_dop',views.prov_dop.as_view(),name='prov_dop_url'),

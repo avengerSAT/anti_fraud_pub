@@ -46,7 +46,15 @@
         </form> 
     {% endif %} 
 {% endfor %}
-
+{% for i in request.user.groups.all %}
+    {% if i.name == 'Группа_1'%}
+        <form action="{% url 'city_option_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
+            {% csrf_token %}
+            <button class="btn btn-secondary btn-lg btn-block" title="Доплаты, бонус план"
+            type="submit">Настройка выгрузки</button>
+        </form> 
+    {% endif %} 
+{% endfor %}
 <form action="{% url 'test_map_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
         {% csrf_token %}
     <button class="btn btn-secondary btn-lg btn-block" title=""
@@ -59,3 +67,5 @@
     type="submit"> google_Sheet_url </button>
 </form> 
 {% endblock %}
+
+

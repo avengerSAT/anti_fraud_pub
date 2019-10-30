@@ -15,6 +15,7 @@ from .import_data import update_db_fraud_orders ,order_id_zar
 from check import sqlvertica 
 from .track_points_map import get_info_from_bo as gifb
 from .main import Update
+from .loading_trips import trips_affecting_the_bonus_plan ,trips_with_surcharges
 
 import pandas as pd
 import os
@@ -122,7 +123,6 @@ def frod_prov(request):
     cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
         sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
     PRV="1"
-   # track_points=order_id_points(order_id)
     return render (request,'fraud_inspector/Fraud_inspector.html',{"gorod":gorod,
                                                             "resol":resol,
                                                             "pattern":pattern,
@@ -141,7 +141,30 @@ def frod_prov(request):
                                                             "FraudOrder":FraudOrder
 
         })
-
+@csrf_exempt
+def option_city_trips(gorod, start_time,end_time):
+        print("1")
+        city_all=[]
+        if gorod == "0":
+            all_city=option_city.objects.values_list()
+            for i in all_city:
+                i=list(i)
+                if i[2] != 0:
+                    city_all.append(i[2])
+        else:
+            city_gor=option_city.objects.filter(launch_region_id=gorod).values_list()
+            gorod=(list(city_gor[0]))
+            city_all.append(gorod[2])  
+        for city_id in city_all: 
+            j_slov=option_city.objects.filter(launch_region_id=city_id).values().first() 
+            if j_slov['loading_trips_with_surcharges'] !=0:
+                trips_with_surcharges (start_time,end_time,city_id)
+            if j_slov['loading_trips_affecting_the_bonus_plan']!=0:  
+                city_bonus_plan_dict=City_table_bonus_plan_dict(city_id)
+                trips_affecting_the_bonus_plan (city_id,start_time,end_time,city_bonus_plan_dict)
+            if j_slov['loading_trips_trips_without_surcharges']!=0:
+                update_db_fraud_orders(city_id,start_time,end_time)      
+        return 
 
 class zagr_tr(LoginRequiredMixin, View):
     def get(self,request):
@@ -165,7 +188,7 @@ class zagr_tr(LoginRequiredMixin, View):
             gorod= request.POST["kod_city"]
             start_time= request.POST["start_time"]
             end_time= request.POST["end_time"]
-            update_db_fraud_orders(gorod,start_time,end_time)
+            option_city_trips(gorod,start_time,end_time)
             City=option_city.objects.all()
             msg_1="Данные загружены"
             return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
@@ -420,3 +443,4 @@ class prov_dop(LoginRequiredMixin, View):
         doplat=google_sheet.objects.all()
         context={"doplat":doplat}
         return render (request,'fraud_inspector/doplat_option.html',context)
+

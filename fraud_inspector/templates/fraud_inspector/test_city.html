@@ -1,0 +1,27 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+TEST
+{% endblock %}
+ 
+{% block content %}
+
+<form action="{% url 'option_city_trips_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+        <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="kod_city">
+            {% for i in option_city %}
+                {% if i.launch_region_id == 0 %}
+                    <option type="submit" selected value="{{i.launch_region_id}}" >{{i.city}}</option>
+                {% else %}
+                    <option value="{{i.launch_region_id}}" >{{i.city}}</option>
+                {% endif %} 
+            {% endfor %}
+                <input type="date" name="start_time" value="{{start_time}}">
+                <input type="date" name="end_time" value="{{end_time}}">
+            
+        </select><input type="submit" value="Отправить"></p> 
+    </div> 
+</form> 
+
+{% endblock %}
