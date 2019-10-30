@@ -413,30 +413,35 @@ class test_123 (LoginRequiredMixin, View):
 
 class city_option(LoginRequiredMixin, View):
     def get (self,request):
+
         city=option_city.objects.all()
         context={"city":city}
         return render (request,'fraud_inspector/city_option.html',context)
     def post (self,request):
-        try:
-            filt=request.POST["filter"] 
-            if filt=='':
-                city=option_city.objects.all()
-            else:    
-                city=option_city.objects.filter(city__contains= filt)
-            context={"city":city}
-            return render (request,'fraud_inspector/city_option.html',context)
-        except:
-            city=option_city.objects.values_list()
-            for i in city:
-                if i[1] !='Все города':
-                    loading_trips_with_surcharges=request.POST[str(i[2])+'.loading_trips_with_surcharges']
-                    loading_trips_affecting_the_bonus_plan=request.POST[str(i[2])+'.loading_trips_affecting_the_bonus_plan']
-                    loading_trips_trips_without_surcharges=request.POST[str(i[2])+'.loading_trips_trips_without_surcharges']
-                    option_city.objects.filter(city=i[1]).update(loading_trips_with_surcharges=loading_trips_with_surcharges,
-                    loading_trips_affecting_the_bonus_plan=loading_trips_affecting_the_bonus_plan,loading_trips_trips_without_surcharges=loading_trips_trips_without_surcharges)
-            city=option_city.objects.all()
-            context={"city":city}
-            return render (request,'fraud_inspector/city_option.html',context)     
+        groups = request.user.groups.values_list()#'Группа_1', flat=True
+        for group in groups:
+            if group[1] == 'Группа_1':   
+                try:
+                    filt=request.POST["filter"] 
+                    if filt=='':
+                        city=option_city.objects.all()
+                    else:    
+                        city=option_city.objects.filter(city__contains= filt)
+                    context={"city":city}
+                    return render (request,'fraud_inspector/city_option.html',context)
+                except:
+                    city=option_city.objects.values_list()
+                    for i in city:
+                        if i[1] !='Все города':
+                            loading_trips_with_surcharges=request.POST[str(i[2])+'.loading_trips_with_surcharges']
+                            loading_trips_affecting_the_bonus_plan=request.POST[str(i[2])+'.loading_trips_affecting_the_bonus_plan']
+                            loading_trips_trips_without_surcharges=request.POST[str(i[2])+'.loading_trips_trips_without_surcharges']
+                            option_city.objects.filter(city=i[1]).update(loading_trips_with_surcharges=loading_trips_with_surcharges,
+                            loading_trips_affecting_the_bonus_plan=loading_trips_affecting_the_bonus_plan,loading_trips_trips_without_surcharges=loading_trips_trips_without_surcharges)
+        city=option_city.objects.all()
+        context={"city":city}
+        return render (request,'fraud_inspector/city_option.html',context)     
+
 
 class prov_dop(LoginRequiredMixin, View):
     def get(self,request):
