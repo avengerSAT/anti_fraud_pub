@@ -28,7 +28,6 @@ def update_db_fraud_orders(data):
 def trips_with_surcharges (date_from, date_to, city_id):
     city_id=str(city_id)
     date_from, date_to=date_from.replace("-", ''), date_to.replace("-", '')
-    print(date_from, date_to, city_id)
     with closing(connect(host=Con_vert.host,
                                     port=Con_vert.port,
                                     user=Con_vert.user,
@@ -50,7 +49,6 @@ def trips_with_surcharges (date_from, date_to, city_id):
             data[['driver_id', 'compensation']].astype(int).astype(str)
             data = data.drop_duplicates()
             data = data.values.tolist()
-            print(data)
     update_db_fraud_orders(data)
     return            
 
@@ -79,7 +77,6 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                 df.loc[df['Успешных за вычетом фродовых'] < i[0],'К списанию'] = df['Получен бонус план'] - i[2]
             total_fraud_table = df.drop_duplicates(subset=['Длинный позывной', 'Короткий позывной'], keep='first')
         total_fraud_table=total_fraud_table.values.tolist()
-        
         drv_ids = []
         for i in total_fraud_table:
             if i[8] != 0:
@@ -110,7 +107,7 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                 data = data.drop_duplicates()
                 data = data.values.tolist()
 
-
+        
         update_db_fraud_orders(data)            
         return 
     except:

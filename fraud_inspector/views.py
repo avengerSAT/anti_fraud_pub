@@ -143,7 +143,6 @@ def frod_prov(request):
         })
 @csrf_exempt
 def option_city_trips(gorod, start_time,end_time):
-        print("1")
         city_all=[]
         if gorod == "0":
             all_city=option_city.objects.values_list()
