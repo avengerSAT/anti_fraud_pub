@@ -25,7 +25,7 @@ def Update(week, year, city,city_bonus_plan_dict,city_gspread_key):
     wks = conn(city,city_gspread_key)
     createTable(wks, name_sheet)
     total_fraud_table, fraud_detalization_table = [i for i in loadData(date_from, date_to, city, week, year, min_trips_for_bonus,city_bonus_plan_dict)]
-    print(name_sheet, total_fraud_table, fraud_detalization_table, wks)
+#    print(name_sheet, total_fraud_table, fraud_detalization_table, wks)
     updateGspread(name_sheet, total_fraud_table, fraud_detalization_table, wks)
 
 def prepareData(city, week, year,city_bonus_plan_dict):
@@ -42,6 +42,7 @@ def conn(city,city_gspread_key):
     for i in city_gspread_key:
         if i[1]==city:
             gspread_key=i[2]
+            
     return gc.open_by_key(gspread_key)
 
 def createTable(wks, name_sheet):
