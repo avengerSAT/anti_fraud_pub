@@ -29,7 +29,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 var polygon = L.polygon({{track_points}}
     , {color: 'blue'}).addTo(map);
-    // zoom the map to the polygon
     map.fitBounds(polygon.getBounds());
 </script>
 {% include "include/include_map.html"%}  

@@ -12,7 +12,7 @@ SELECT
     ELSE cc.status_reasons
     END "Статус"
 FROM facts.FS_Customers cc
-INNER JOIN (
+LEFT JOIN (
 	SELECT customer_id, customer_phone, ROW_NUMBER() OVER(PARTITION BY customer_id) AS rnk
 	FROM facts.FS_Orders
 	) oo
