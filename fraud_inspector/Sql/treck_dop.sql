@@ -1,15 +1,16 @@
-
 SELECT
 	fo.id AS order_id
 	, TO_TIMESTAMP(order_date) AS order_date
 	, fo.launch_region_id
-	, CAST(driver_id AS DECIMAL(10,0)) driver_id
+	, CAST(fo.driver_id AS DECIMAL(10,0)) driver_id
 	, rider_id AS customer_id
 	, ('UNBLOCKED') AS state
 	, pattern_name
 	, ('UNVERIFIED') AS resolution
 	, margin AS compensation
-FROM facts.FS_Fraud_orders fo
+FROM facts.FS_Orders oo
+LEFT JOIN facts.FS_Fraud_orders fo
+ON oo.id=fo.id
 LEFT JOIN (SELECT *
 	FROM facts.FS_Fraud_orders_pattern fop
 	LEFT JOIN facts.FS_Fraud_patterns fp
@@ -31,5 +32,5 @@ LEFT JOIN (
 WHERE  (TO_TIMESTAMP(order_date) BETWEEN %s
 		AND %s )
 		AND fo.state='UNVERIFIED'
-		AND margin.transaction_amount > 0 
+		AND (oo.final_driver_cost-oo.final_customer_cost)>0
 		AND fo.launch_region_id = %s

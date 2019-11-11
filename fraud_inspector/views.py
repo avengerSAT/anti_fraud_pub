@@ -317,7 +317,6 @@ class test_map(LoginRequiredMixin,TemplateView):
     
 def order_id_points(order_id):
     order_details= gifb('MANAGER_GET_ORDER_DETAILS','{"order_id": "'+order_id+'"}')
-    print(order_details)
     for key, val in order_details.items():
         if key == 'order_details':
             for i, j in val.items(): 
@@ -362,9 +361,15 @@ class test_123 (LoginRequiredMixin, View):
         page_size= int(request.POST["page_size"])
         __list=request.POST["list"] 
         keys=request.POST["key"]
+        fil_ter=request.POST["fil_ter"]
         _str=int(request.POST["sstr"])
         df=pd.read_csv('/home/vkondratev/anti_fraud/check/templates/csvvkondratev/Сводная_по_водителю.csv')
-        df['N'] = range(1, len(df) + 1)
+        df=df.astype('str')
+        if fil_ter.replace(" ", '')!='':
+            for i in df.columns.tolist():
+                if fil_ter in df[i]  :
+                    print("1")
+        df['N'] = range(1, len(df) + 1)    
         key,nkey=keys.split('.')
         if nkey=='n1':
             df=df.sort_values([key], ascending = [1])
@@ -402,6 +407,7 @@ class test_123 (LoginRequiredMixin, View):
         data=df.values.tolist() 
         return render (request , 'fraud_inspector/test.html',{"page_size":page_size,
                                                             "head":head,
+                                                            "fil_ter":fil_ter,
                                                             "sstr":_str,
                                                             "nkey":nkey,
                                                             "key":key,

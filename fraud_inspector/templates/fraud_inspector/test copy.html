@@ -7,29 +7,13 @@ TEST
 {% block content %}
 
 
-
-<form action="{% url 'test_url' %}"    method="POST" >
-    {% csrf_token %}
-        <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"   name="key" /> 
-        <input type="hidden"   value="{{sstr}}"          id="sstr"  name="sstr"/> 
-        <input type="hidden"   value="{{list}}"          id="list"  name="list"/> 
-        <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/>
-    <div class="input-group mb-3" style="width:35%;" >
-        <input type="text" class="form-control" name="fil_ter" id="fil_ter"  aria-describedby="button-addon2">
-        <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">ПОИСК</button>
-        </div>
-    </div>
-</form> 
  
 <form action="{% url 'test_url' %}"    method="POST" >
     {% csrf_token %}
-        <input type="hidden"   value="{{fil_ter}}"  id="fil_ter"   name="fil_ter" /> 
         <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"   name="key" /> 
         <input type="hidden"   value="{{sstr}}"          id="sstr"  name="sstr"/> 
         <input type="hidden"   value="{{list}}"          id="list"  name="list"/> 
     <div class="btn-group" role="group" aria-label="Basic example">
-        <input   class="btn btn-secondary"  value="{{page_size}}"  id="page_size"  name="page_size" style="background-color:rgb(194, 194, 194);width:75px;" />
         <button type="submit" class="btn btn-secondary" name='page_size' value='10' > 10</button>
         <button type="submit" class="btn btn-secondary" name='page_size' value='25' > 25</button>
         <button type="submit" class="btn btn-secondary" name='page_size' value='50' > 50</button>  
@@ -47,7 +31,6 @@ TEST
                         {% if nkey == 'n1' %}
                             <form action="{% url 'test_url' %}"    method="POST" >
                             {% csrf_token %}
-                                <input type="hidden"   value="{{fil_ter}}"  id="fil_ter"   name="fil_ter" />
                                 <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
                                 <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
                                 <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
@@ -60,7 +43,6 @@ TEST
                         {% elif nkey == 'n2' %}
                             <form action="{% url 'test_url' %}"    method="POST" >
                             {% csrf_token %}
-                                <input type="hidden"   value="{{fil_ter}}"  id="fil_ter"   name="fil_ter" />
                                 <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
                                 <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
                                 <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
@@ -73,7 +55,6 @@ TEST
                         {% elif nkey == 'n0' %}
                             <form action="{% url 'test_url' %}"    method="POST" >
                             {% csrf_token %}
-                                <input type="hidden"   value="{{fil_ter}}"  id="fil_ter"   name="fil_ter" />
                                 <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
                                 <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
                                 <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
@@ -87,7 +68,6 @@ TEST
                     {% else %}
                     <form action="{% url 'test_url' %}"    method="POST" >
                     {% csrf_token %}
-                        <input type="hidden"   value="{{fil_ter}}"  id="fil_ter"   name="fil_ter" />
                         <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
                         <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
                         <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
@@ -104,7 +84,6 @@ TEST
         </thead>
 <form action="{% url 'test_url' %}"    method="POST" >
     {% csrf_token %}
-    <input type="hidden"   value="{{fil_ter}}"  id="fil_ter"   name="fil_ter" />
     <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"        name="key"/> 
     <input type="hidden"   value="{{sstr}}"          id="sstr"       name="sstr"/> 
     <input type="hidden"   value="{{page_size}}"     id="page_size"  name="page_size"/> 
@@ -141,7 +120,6 @@ TEST
         <button type="submit" class="btn btn-secondary" name='list' value='+1'  > }</button>  
         <button type="submit" class="btn btn-secondary" name='list' value='end' >END</button>
     </div>
-    <input type="hidden"   value="{{fil_ter}}"  id="fil_ter"   name="fil_ter" />
     <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"        name="key"/> 
     <input type="hidden"   value="{{sstr}}"          id="sstr"       name="sstr"/> 
     <input type="hidden"   value="{{page_size}}"     id="page_size"  name="page_size"/> 
