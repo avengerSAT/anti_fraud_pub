@@ -77,7 +77,7 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                 df.loc[df['Успешных за вычетом фродовых'] < i[0],'К списанию'] = df['Получен бонус план'] - i[2]
             total_fraud_table = df.drop_duplicates(subset=['Длинный позывной', 'Короткий позывной'], keep='first')
         total_fraud_table=total_fraud_table.values.tolist()
-        drv_ids = []
+        drv_ids = ["0","0"]
         for i in total_fraud_table:
             if i[8] != 0:
                 if i[1] != 0:

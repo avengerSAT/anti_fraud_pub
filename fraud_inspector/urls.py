@@ -14,6 +14,7 @@ urlpatterns = [
     path('google_Sheet',views.google__Sheet.as_view(),name='google_Sheet_url'),
     path('test_map',views.test_map.as_view(),name='test_map_url'),
     path('city_option',views.city_option.as_view(),name='city_option_url'),
+    path('fraud_inspector_ver_2',views.fraud_inspector_ver_2.as_view(),name='fraud_inspector_ver_2_url'),
     path('Fraud_inspector',views.Fraud_inspector.as_view(),name='Fraud_inspector_url'),
     url(r'^frod_prov/',views.frod_prov,name='frod_prov_URL'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
