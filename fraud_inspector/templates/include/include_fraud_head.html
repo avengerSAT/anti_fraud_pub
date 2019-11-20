@@ -1,47 +1,42 @@
 {% block content %}
-
 <thead>
 <tr> 
     {% for j in head %}
+        
         {% if j != 'state'%}
             {% if j == key %}
                 {% if nkey == 'n1' %}
-                    <form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
-                    {% csrf_token %}
                     <th  >  
                         <button type="submit"
                         style="background-color:#3f4d70; width:100%"
                         name='key' value='{{j}}.n2'>{{j}}</button>
                     </th> 
-                    </form> 
+
                 {% elif nkey == 'n2' %}
-                    <form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
-                    {% csrf_token %}
+
                     <th  >  
                         <button type="submit"
                         style="background-color:#54703f; width:100%"
                         name='key' value='{{j}}.n0'>{{j}}</button>
                     </th> 
-                    </form>
+
                 {% elif nkey == 'n0' %}
-                    <form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
-                    {% csrf_token %}
+
                     <th  >  
                         <button type="submit"  
                         style="width:100%"
                         name='key' value='{{j}}.n1'>{{j}}</button>
                     </th> 
-                    </form>                        
+                      
                 {% endif %}   
                 {% else %}
-                    <form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
-                    {% csrf_token %}
+
                     <th >  
                         <button type="submit" 
                         style="width:100%"
                         name='key' value='{{j}}.n1'>{{j}}</button>
                     </th> 
-                    </form>   
+  
             {% endif %}
         {% endif %}
     {% endfor %}

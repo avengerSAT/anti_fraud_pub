@@ -7,7 +7,7 @@ SELECT
 	, ('UNBLOCKED') AS state
 	, (' ') AS pattern_name
 	, ('UNVERIFIED') AS resolution
-	, case WHEN margin is NULL   THEN 0 ELSE margin end compensation
+	, CAST(margin AS DECIMAL(10,0)) compensation
 FROM facts.FS_Orders oo
 LEFT JOIN (
 	SELECT
@@ -15,12 +15,15 @@ LEFT JOIN (
 		,SUM(transaction_amount)/ 100 as margin
 	FROM facts.FS_Drivers_balance_transaction
 	WHERE 
-		transaction_type IN ('Compensation', 'Order Refund', 'Promocode discount')
+		transaction_type NOT IN ('Fix Fare', 'Percent Fare')
 		AND order_id IS NOT NULL
 	GROUP BY order_id
 	) margin
 	ON oo.id = margin.order_id
-WHERE TO_TIMESTAMP () > %s 
-	AND TO_TIMESTAMP() < %s 
+WHERE TO_TIMESTAMP () => %s 
+	AND TO_TIMESTAMP() =< %s 
 	AND launch_region_id = %s , 
 	AND driver_id IN %s
+
+
+	

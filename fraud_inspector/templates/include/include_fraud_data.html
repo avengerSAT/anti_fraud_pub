@@ -4,24 +4,20 @@
 {% for j in i %}
     {% if j == "UNBLOCKED" %}
         <td class="nowrap" >
-            <form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
-            {% csrf_token %}
-                <button  
+                <button  value="{{i.1}}" name="block"
                 style="background-color:rgb(179, 179, 179);font-size: 10pt;" 
                 onClick="window.open('https://backoffice.k.fasten.com/#/orders/{{i.1}}','CONTENT')"  >
                 Проверить заказ
                 </button>
-            </form>
+       
         </td>  
     {% elif j == "BLOCKED" %} 
         <td class="nowrap" >
-            <form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
-            {% csrf_token %}
                 <button value="" name="block" disabled
                 style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;">
                 Заказ проверяется другим пользователем ...
                 </button>
-            </form>  
+          
         </td>           
     {% else %}
         <td class="nowrap" 
