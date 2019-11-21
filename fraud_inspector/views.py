@@ -22,9 +22,9 @@ import os
 from datetime import datetime,timedelta
 
 
-from .templates.dash_fraud_inspector.dash_Graf import dispatcher #DASH
 
 def filter_dan(gorod,start_time,end_time):
+    end_time=(datetime.strptime(end_time,'%Y-%m-%d')+ timedelta(days=1)).strftime('%Y-%m-%d')
     if gorod=='ALL' :
         FraudOrder=FraudOrders.objects.filter(order_date__range=(start_time,end_time))
     elif gorod=='0':
@@ -654,13 +654,8 @@ class fraud_inspector_ver_2(LoginRequiredMixin, View):
 
 
 
-
-# DASH 
-def dash(request,**kwargs):
-    fraim
-    return HttpResponse(dispatcher(request,fraim))
-@csrf_exempt      
-def dash_ajax(request):
-    
-    fraim
-    return HttpResponse(dispatcher(request,fraim),content_type='application/json') 
+class test_qwe (LoginRequiredMixin, View):
+    def get(self,request):
+        return render (request,'fraud_inspector/test1.html',)    
+    def post(self,request):
+        return render (request,'fraud_inspector/test1.html',)        

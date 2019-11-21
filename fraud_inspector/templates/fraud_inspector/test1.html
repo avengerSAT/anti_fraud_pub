@@ -1,0 +1,31 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+
+    <title>{% block title %}
+                заголовок
+                {% endblock %}
+            </title>
+   {% load static%} 
+
+   
+</head>
+<body  background="{% static 'img/fon.jpg' %}">
+
+ 
+{% load plotly_dash %}
+
+
+
+	    <div class="{% plotly_class name='Fraf_dash_fols' %} card" style="width:100%; top: 0% ;height:100%;background-color:red">	 
+		<h1>qweqweq</h1>   
+          {% plotly_app name="Fraf_dash_fols" %}
+	    </div>
+
+</body>
+</html>    
+
+
+
+
+ 

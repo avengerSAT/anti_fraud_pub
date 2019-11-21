@@ -16,5 +16,5 @@ urlpatterns = [
     path('svod_doplat',views.svod_doplat.as_view(),name='svod_doplat_url'),
     url(r'^Driver/1/',views.drvr,name='DRV_URL'),
     path('UnverifiedTripsCompensations', views.UnverifiedTripsCompensations.as_view(), name='UnverifiedTripsCompensations_url'),
-    path('django_plotly_dash/', include('django_plotly_dash.urls'))
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
