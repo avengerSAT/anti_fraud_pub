@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 client_secret.json
+*client_secret.json
 db.sqlite3
 *.pyc
 .vscode/*
