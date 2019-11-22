@@ -13,12 +13,7 @@ import json
 from check import views
 from check import sqlvertica
 
-external_scripts = ['static/js/jquery.js',
-                    'static/js/jquery.dataTables.min.js',
-                    'static/js/tapl.js']
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css',
-                        '//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css']
 
  
 
@@ -51,7 +46,9 @@ class table_per():
     drv_solo=[' ','Имя клиента','ИД клиента','Телефон клиента','Почта клиента','Статус','Кол поездок клиента','Дуэт','Доля совместных поездок','ИД поездки','Адрес подачи','Конечный адрес','Старт поездки','Время окончания поездки','Подача','Время заказа','Промо','Номинал промокода','Статус поездки']                    
     svod=[' ','Дуэт','ИД поездки','Адрес подачи','Конечный адрес','Старт поездки','Время окончания поездки','Подача','Время заказа','Промо','Номинал промокода','Статус поездки']
     custoner=['ИД клиента','Имя клиента','Телефон клиента','Почта клиента','Статус','Кол поездок клиента','Дуэт','Доля совместных поездок']
+    external_scripts = ['static/js/jquery.js','static/js/jquery.dataTables.min.js','static/js/tapl.js']
 
+    external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css','//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css']
 
 def dispatcher(request,trail):
     a=trail
@@ -70,7 +67,7 @@ def dispatcher(request,trail):
         return response.get_data()
 
 def _create_app(a):
-    app = dash.Dash(__name__,external_scripts=external_scripts, external_stylesheets=external_stylesheets) 
+    app = dash.Dash(__name__,external_scripts=table_per.external_scripts, external_stylesheets=table_per.external_stylesheets) 
   
     app.layout = html.Div([
         html.Div([

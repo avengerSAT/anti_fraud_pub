@@ -99,7 +99,7 @@ def order_id_zar(order_id):
             post.state = row[5]
             post.pattern_name = row[6]
             post.resolution = row[7]
-            post.compensation = row[8]
+            post.compensation = int(row[8])
             post.save()
         except: 
             pass

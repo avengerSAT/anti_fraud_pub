@@ -10,15 +10,14 @@ from vertica_python import connect
 import pandas as pd
 
 
+def gcc():
+    scope = ['https://spreadsheets.google.com/feeds',
+            'https://www.googleapis.com/auth/drive']
 
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(Credentials.credentials, scope)
 
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
-
-credentials = ServiceAccountCredentials.from_json_keyfile_name(Credentials.credentials, scope)
-
-gc = gspread.authorize(credentials)
-
+    gc = gspread.authorize(credentials)
+    return gc
 
 def Update(week, year, city,city_bonus_plan_dict,city_gspread_key):
     week, year, city, date_from, date_to, name_sheet,min_trips_for_bonus = [i for i in prepareData(city, week, year,city_bonus_plan_dict)]
@@ -42,7 +41,7 @@ def conn(city,city_gspread_key):
     for i in city_gspread_key:
         if i[1]==city:
             gspread_key=i[2]
-            
+    gc=gcc()       
     return gc.open_by_key(gspread_key)
 
 def createTable(wks, name_sheet):

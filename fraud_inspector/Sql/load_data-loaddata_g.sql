@@ -21,7 +21,7 @@ LEFT JOIN (
 		, SUM(transaction_amount) / 100 AS margin
 	FROM facts.FS_Drivers_balance_transaction
 	WHERE 
-		transaction_type IN ('Compensation', 'Order Refund', 'Promocode discount')
+		transaction_type NOT IN ('Fix Fare', 'Percent Fare')
 		AND order_id IS NOT NULL
 	GROUP BY order_id
 	) margin

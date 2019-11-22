@@ -14,5 +14,6 @@ urlpatterns = [
     url('check/', include('check.urls')),
     url(r'^dash', dash,name='dash_drv_url'),
     url(r'^_dash', dash_ajax ),
-    url('^', include('fraud_inspector.urls'))
+    url('^', include('fraud_inspector.urls')),
+    path('django_plotly_dash/', include('django_plotly_dash.urls'))
 ]

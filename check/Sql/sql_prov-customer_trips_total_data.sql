@@ -16,7 +16,7 @@ SELECT
 	, ids.start_date "Начало поездки"
 	, ISNULL(margin.margin, 0)::integer AS "Доплата"
 FROM ids
-INNER JOIN facts.FS_Drivers drv
+LEFT JOIN facts.FS_Drivers drv
     ON drv.id = ids.driver_id
 LEFT JOIN (
 	    SELECT

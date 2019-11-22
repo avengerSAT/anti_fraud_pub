@@ -1,0 +1,51 @@
+{% block content %}
+<thead>
+<tr> 
+    {% for j in head %}
+        
+        {% if j != 'state'%}
+            {% if j == key %}
+                {% if nkey == 'n1' %}
+                    <th  >  
+                        <button type="submit"
+                        style="background-color:#3f4d70; width:100%"
+                        name='key' value='{{j}}.n2'>{{j}}</button>
+                    </th> 
+
+                {% elif nkey == 'n2' %}
+
+                    <th  >  
+                        <button type="submit"
+                        style="background-color:#54703f; width:100%"
+                        name='key' value='{{j}}.n0'>{{j}}</button>
+                    </th> 
+
+                {% elif nkey == 'n0' %}
+
+                    <th  >  
+                        <button type="submit"  
+                        style="width:100%"
+                        name='key' value='{{j}}.n1'>{{j}}</button>
+                    </th> 
+                      
+                {% endif %}   
+                {% else %}
+
+                    <th >  
+                        <button type="submit" 
+                        style="width:100%"
+                        name='key' value='{{j}}.n1'>{{j}}</button>
+                    </th> 
+  
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+     
+</tr>
+</thead>
+ 
+
+
+ 
+
+{% endblock %}

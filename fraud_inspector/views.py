@@ -21,10 +21,14 @@ import pandas as pd
 import os
 from datetime import datetime,timedelta
 
-def filter_dan(gorod,start_time,end_time):
-    if gorod=='ALL':
-        FraudOrder=FraudOrders.objects.filter(order_date__range=(start_time,end_time))
 
+
+def filter_dan(gorod,start_time,end_time):
+    end_time=(datetime.strptime(end_time,'%Y-%m-%d')+ timedelta(days=1)).strftime('%Y-%m-%d')
+    if gorod=='ALL' :
+        FraudOrder=FraudOrders.objects.filter(order_date__range=(start_time,end_time))
+    elif gorod=='0':
+        FraudOrder=FraudOrders.objects.filter(order_date__range=(start_time,end_time))
     else:
         FraudOrder=FraudOrders.objects.filter(launch_region_id=gorod,order_date__range=(start_time,end_time))
     return FraudOrder
@@ -202,7 +206,7 @@ class zagr_tr(LoginRequiredMixin, View):
             end_time  = datetime.now().strftime('%Y-%m-%d')
             start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
             City=option_city.objects.all()
-            gorod="ALL"
+            gorod=0
             blocked_unblocked(trip_id,'UNBLOCKED')
             msg="Заказ разблокирован:"+trip_id
             return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
@@ -232,8 +236,8 @@ class zagr_tr(LoginRequiredMixin, View):
         elif function=="Выполнить":
             end_time  = datetime.now().strftime('%Y-%m-%d')
             start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
-            City=check_city()
-            gorod="ALL"
+            City=option_city.objects.all()
+            gorod=0
             FraudOrders.objects.filter(state='BLOCKED').update(state='UNBLOCKED')
             msg_3="Заказы разблокированы"
             return render(request,'fraud_inspector/zagr_sbros.html',{"City":City,
@@ -350,13 +354,9 @@ class test_123 (LoginRequiredMixin, View):
         else:
             kol_stranic=int(stran)
         _str=1 
-        return render (request , 'fraud_inspector/test.html',{"page_size":page_size,
-                                                            "head":head,
-                                                            "sstr":_str, 
-                                                            "data":data,
-                                                            "kol_stranic":kol_stranic,
-                                                            "list":_list
-                                                            })                 
+        context={"page_size":page_size,"head":head,"sstr":_str,"data":data,"kol_stranic":kol_stranic,"list":_list}
+        return render (request , 'fraud_inspector/test.html',context)                 
+
     def post (self,request):     
         page_size= int(request.POST["page_size"])
         __list=request.POST["list"] 
@@ -366,9 +366,7 @@ class test_123 (LoginRequiredMixin, View):
         df=pd.read_csv('/home/vkondratev/anti_fraud/check/templates/csvvkondratev/Сводная_по_водителю.csv')
         df=df.astype('str')
         if fil_ter.replace(" ", '')!='':
-            for i in df.columns.tolist():
-                if fil_ter in df[i]  :
-                    print("1")
+            df=df[(df.values  == fil_ter)]
         df['N'] = range(1, len(df) + 1)    
         key,nkey=keys.split('.')
         if nkey=='n1':
@@ -405,16 +403,8 @@ class test_123 (LoginRequiredMixin, View):
         df=df[df['N']>=index_min]
         df=df[df['N']<=index_max]
         data=df.values.tolist() 
-        return render (request , 'fraud_inspector/test.html',{"page_size":page_size,
-                                                            "head":head,
-                                                            "fil_ter":fil_ter,
-                                                            "sstr":_str,
-                                                            "nkey":nkey,
-                                                            "key":key,
-                                                            "data":data,
-                                                            "kol_stranic":kol_stranic,
-                                                            "list":_list
-                                                            })         
+        context ={"page_size":page_size,"head":head,"fil_ter":fil_ter,"sstr":_str,"nkey":nkey,"key":key,"data":data,"kol_stranic":kol_stranic,"list":_list}
+        return render (request , 'fraud_inspector/test.html',context)         
 
 class city_option(LoginRequiredMixin, View):
     def get (self,request):
@@ -454,3 +444,220 @@ class prov_dop(LoginRequiredMixin, View):
         context={"doplat":doplat}
         return render (request,'fraud_inspector/doplat_option.html',context)
 
+
+class peremen_fraud_ins():
+    _list=["list1","list2","list3"]
+    zap=["zap1","zap2","zap3"]
+    _str=["sstr1","sstr2","sstr3"]
+    resol=["UNVERIFIED" ,"FRAUD YES","FRAUD NO"]
+    resol_name=[["UNVERIFIED","НЕ ПРОВЕРЕНО"],["FRAUD YES","ФРОД"],["FRAUD NO","НЕ ФРОД"]]
+    data=["data1","data2","data3"]
+    kol_stranic=["kol_stranic1","kol_stranic2","kol_stranic3"]
+    
+    head=['N','order_id','order_date','launch_region_id','driver_id','pattern_name','compensation','state']
+
+def fraud_inspector_sc(dff,page_size,_str,_list,key,sor_t):
+    for i in range(len(peremen_fraud_ins.resol)):
+            df=dff[(dff['resolution']==  peremen_fraud_ins.resol[i])]
+            df['N']=range(1,len(df)+1)
+            peremen_fraud_ins.zap[i]=df['N'].count()
+            df=df[peremen_fraud_ins.head]
+            try:
+                df[key]=df[key].astype('int')
+            except:
+                pass
+            df=df.sort_values([key], ascending = [sor_t])
+            df['order_date']=df['order_date'].astype('datetime64[ns]')   
+            stranic=str(float(peremen_fraud_ins.zap[i])/float(page_size))
+            stran,ost=stranic.split('.')
+            if ost != '0':
+                peremen_fraud_ins.kol_stranic[i]=int(stran)+1
+            elif stran == '0':
+                peremen_fraud_ins.kol_stranic[i]=1
+            else:
+                peremen_fraud_ins.kol_stranic[i]=int(stran)
+            if _list[i] == 'start':
+                _str[i]=1
+            elif _list[i]=="end":
+                _str[i]=peremen_fraud_ins.kol_stranic[i]
+            elif _list[i]=='+1':
+                _str[i]=_str[i]+1 
+                if _str[i]> peremen_fraud_ins.kol_stranic[i]:
+                    _str[i]=peremen_fraud_ins.kol_stranic[i]
+            elif _list[i]=='-1':
+                _str[i]=_str[i]-1 
+                if _str[i] == 0:
+                    _str[i]=1
+
+            if _str[i]>peremen_fraud_ins.kol_stranic[i]:
+                _str[i]=peremen_fraud_ins.kol_stranic[i] 
+            
+        
+            index_max=int(_str[i])*int(page_size)
+            index_min=int(_str[i])*int(page_size)-int(page_size)+1  
+            df['N']=range(1,len(df)+1)   
+            df=df[df['N']>=index_min]
+            df=df[df['N']<=index_max]
+            peremen_fraud_ins.data[i]=df.values.tolist()
+    return peremen_fraud_ins.data ,peremen_fraud_ins.kol_stranic,peremen_fraud_ins.zap
+
+def fraud_inspector_head():
+    head=[]
+    for e in FraudOrders._meta.get_fields():
+        head.append((str(e)).replace("fraud_inspector.FraudOrders.", ''))
+    return head
+def sort_df(data,key,sor_t):
+    dff=pd.DataFrame(data,columns=peremen_fraud_ins.head)
+    try:
+       dff[key]=dff[key].astype('int')
+    except:
+        pass
+    dff=dff.sort_values([key], ascending = [sor_t])
+    dff['order_date']=dff['order_date'].astype('datetime64[ns]') #datetime64
+    data=dff.values.tolist()
+    return  data
+
+
+
+def dff_fil(dff,fil__ter,fil_ter,cont):
+    dff=dff.loc[(dff[fil__ter] == fil_ter)]
+    zap_cont(cont,"fil__ter",fil__ter)
+    zap_cont(cont,"fil_ter",fil_ter)
+    return dff,cont
+def zap_cont(cont,per_1,per_2):
+    cont.append(per_1)
+    cont.append(per_2)
+class fraud_inspector_ver_2(LoginRequiredMixin, View):
+    def get(self,request):
+        gorod='0'
+        page_size=10
+        end_time= datetime.now().strftime('%Y-%m-%d')
+        start_time= (datetime.now()- timedelta(days=1)).strftime('%Y-%m-%d')
+        head=fraud_inspector_head()
+        FraudOrder=filter_dan(gorod,start_time,end_time)
+        FraudOrder_=FraudOrder.values_list()
+        dff=pd.DataFrame(FraudOrder_,columns=head)
+        _str=[1,1,1] 
+        _list=[1,1,1]
+        data,kol_stranic,zap=fraud_inspector_sc(dff,page_size,_str,_list,"N",1)
+        city=option_city.objects.all()
+        fil_ter=""
+        context={"City":city,"gorod":gorod,"end_time":end_time,"start_time":start_time,"resol_name":peremen_fraud_ins.resol_name,
+        "head":peremen_fraud_ins.head,"inset_":"tab_2","fil_ter":fil_ter,
+        "data":data,"kol_stranic":kol_stranic,"zap":zap,"page_size":page_size,"sstr":_str}
+        return render (request,'fraud_inspector/Fraud_inspector_test.html',context)
+
+    def post(self,request):
+        cont=[]
+        try:
+            save=request.POST["save"]
+            resolution= request.POST["resolution"]
+            blocked_unblocked(save,'UNBLOCKED')
+            FraudOrders.objects.filter(order_id=save).update(resolution=resolution)
+        except:
+            pass
+        try:
+            save=request.POST["save_1"]
+            blocked_unblocked(save,'UNBLOCKED')
+        except:
+            pass    
+        gorod=request.POST["gorod"]
+        end_time=request.POST["end_time"]
+        start_time=request.POST["start_time"]
+        page_size=request.POST["page_size"]
+        inset=request.POST["inset"]
+        if inset=='':
+            inset='tab_1'
+        head=fraud_inspector_head()
+        FraudOrder=filter_dan(gorod,start_time,end_time)
+        _str=[]
+        for i in range(0,len(peremen_fraud_ins._str)):
+            _str.append(int(request.POST[peremen_fraud_ins._str[i]]))
+        _list=[]
+        for i in range(0,len(peremen_fraud_ins._list)):
+            try:
+                _list.append(request.POST[peremen_fraud_ins._list[i]])
+            except:
+                _list.append(1) 
+        try:
+            fil_ter=request.POST["fil_ter"]
+            fil__ter=request.POST["fil__ter"]
+            FraudOrder_=FraudOrder.values_list()
+            dff=pd.DataFrame(FraudOrder_,columns=head)
+            if fil_ter.replace(" ", '')!='':
+#                dff=dff[(dff.values  == fil_ter)]
+                dff,cont=dff_fil(dff,fil__ter,fil_ter,cont)
+        except:
+            FraudOrder_=FraudOrder.values_list()
+            dff=pd.DataFrame(FraudOrder_,columns=head)
+               
+        page_size=request.POST["page_size"]
+        try:
+            keys=request.POST["key"]
+            key,nkey=keys.split('.')
+        except:
+            key="N"   
+            nkey="n0"
+        zap_cont(cont,"key",key)
+        zap_cont(cont,"nkey",nkey)
+        if nkey=='n1':
+            key,sort=key,1
+        elif nkey=='n2':
+            key,sort=key, 0
+        else:        
+            key,sort="N",1    
+        data,kol_stranic,zap=fraud_inspector_sc(dff,page_size,_str,_list,key,sort)
+        city=option_city.objects.all() 
+
+
+
+        try:
+            block=request.POST["block"]
+            state_zak=FraudOrders.objects.values_list('state', flat=True).filter(order_id=block)
+            state="BLOCKED"
+            if str(state_zak[0])==state:
+                msg="Заказ № "+block+" проверяет другой пользователь"
+                zap_cont(cont,"msg",msg)
+            else:
+                blocked_unblocked(block,state)
+                pattern=FraudOrders.objects.values_list('pattern_name', flat=True).filter(order_id=block)
+                pattern=pattern[0].split(",")
+                FraudOrder=FraudOrders.objects.filter(order_id=block)
+                driver_id,customer_id,drv_id=sqlvertica.sql_trip(block)
+                chek_box='yes'
+                cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
+                    sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
+                PRV="1"
+                zap_cont(cont,"order_id_zac",block)
+                zap_cont(cont,"pattern",pattern)
+                zap_cont(cont,"cus",cus)
+                zap_cont(cont,"PRV",PRV)
+                zap_cont(cont,"drv",drv)
+                zap_cont(cont,"svod_drv_cus_head",svod_drv_cus_head)
+                zap_cont(cont,"svod_drv_cus",svod_drv_cus)
+                zap_cont(cont,"svod_cus_head",svod_cus_head)
+                zap_cont(cont,"svod_cus",svod_cus)
+                zap_cont(cont,"time",time)
+                zap_cont(cont,"FraudOrder",FraudOrder)
+        except:
+            pass
+    
+        aa=["City",city,"gorod",gorod,"end_time",end_time,"start_time",start_time,"resol_name",peremen_fraud_ins.resol_name,
+        "head",peremen_fraud_ins.head,"inset_",inset,"resol",peremen_fraud_ins.resol,
+        "data",data,"kol_stranic",kol_stranic,"zap",zap,"page_size",page_size,"sstr",_str]
+        for i in aa:
+            cont.append(i)
+        context = {}
+        for i in range(0, len(cont)-1, 2):
+            context[cont[i]] = cont[i+1]
+        return render (request,'fraud_inspector/Fraud_inspector_test.html',context)
+
+
+
+class test_qwe (LoginRequiredMixin, View):
+    def get(self,request):
+        context={"msg":"qwe"}
+        return render (request,'fraud_inspector/test1.html',context)    
+    def post(self,request):
+        context={"msg":"qwe"}
+        return render (request,'fraud_inspector/test1.html',context)        

@@ -1,129 +1,154 @@
 {% extends "main_tabl.html" %}
 
 {% block title %}
-TEST
+Проверка треков на фрод
 {% endblock %}
  
 {% block content %}
 
-
+{% include "include/include_logout.html"%}  
  
-<form action="{% url 'test_url' %}"    method="POST" >
+ 
+
+
+<form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
     {% csrf_token %}
-        <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"   name="key" /> 
-        <input type="hidden"   value="{{sstr}}"          id="sstr"  name="sstr"/> 
-        <input type="hidden"   value="{{list}}"          id="list"  name="list"/> 
+    <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+        <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="gorod">
+            {% for i in City %}
+                {% if i.launch_region_id == gorod %}
+                    <option type="submit" selected value="{{i.launch_region_id}}" >{{i.city}}</option>
+                {% else %}
+                    <option value="{{i.launch_region_id}}" >{{i.city}}</option>
+                {% endif %} 
+            {% endfor %}
+            <input type="date" name="start_time" value="{{start_time}}">
+            <input type="date" name="end_time" value="{{end_time}}">
+           
+            <input type="hidden" name="sstr1" value="{{sstr.0}}">
+            <input type="hidden" name="sstr2" value="{{sstr.1}}">
+            <input type="hidden" name="sstr3" value="{{sstr.2}}">
+            <input type="hidden" name="page_size" value="{{page_size}}">
+            <input type="hidden" name="list1" value="{{sstr.0}}" >
+            <input type="hidden" name="list2" value="{{sstr.1}}" >
+            <input type="hidden" name="list3" value="{{sstr.2}}" >
+            <input type="hidden" name="inset" value="{{box_c}}" >
+
+        </select><input type="submit" value="Отправить"></p> 
+    </div> 
+</form> 
+
+<div style="width:100%;height:auto; margin-top: 3%; background:  rgb(202, 216, 237);">
+
+<form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div class="input-group mb-3" style="width:35%;" >
+        <input type="text" class="form-control" name="fil_ter" id="fil_ter"  aria-describedby="button-addon2">
+        <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">ПОИСК</button>
+        </div>
+    </div>
+            <input type="hidden" name="start_time" value="{{start_time}}">
+            <input type="hidden" name="end_time" value="{{end_time}}">
+            <input type="hidden" name="gorod" value="{{gorod}}">
+            <input type="hidden" name="sstr1" value="{{sstr.0}}">
+            <input type="hidden" name="sstr2" value="{{sstr.1}}">
+            <input type="hidden" name="sstr3" value="{{sstr.2}}">
+            <input type="hidden" name="page_size" value="{{page_size}}">  
+            <input type="hidden" name="list1" value="{{sstr.0}}" >
+            <input type="hidden" name="list2" value="{{sstr.1}}" >
+            <input type="hidden" name="list3" value="{{sstr.2}}" >  
+            <input type="hidden" name="inset" value="{{box_c}}" >
+</form> 
+
+<form action="{% url 'fraud_inspector_ver_2_url' %}"    method="POST" >
+    {% csrf_token %}
     <div class="btn-group" role="group" aria-label="Basic example">
+        <input   class="btn btn-secondary"  value="{{page_size}}"  id="page_size"  name="page_size" style="background-color:rgb(194, 194, 194);width:75px;" />
         <button type="submit" class="btn btn-secondary" name='page_size' value='10' > 10</button>
         <button type="submit" class="btn btn-secondary" name='page_size' value='25' > 25</button>
         <button type="submit" class="btn btn-secondary" name='page_size' value='50' > 50</button>  
         <button type="submit" class="btn btn-secondary" name='page_size' value='100'>100</button>
     </div>
+            <input type="hidden" name="start_time" value="{{start_time}}">
+            <input type="hidden" name="end_time" value="{{end_time}}">
+            <input type="hidden" name="gorod" value="{{gorod}}">
+            <input type="hidden" name="sstr1" value="{{sstr.0}}">
+            <input type="hidden" name="sstr2" value="{{sstr.1}}">
+            <input type="hidden" name="sstr3" value="{{sstr.2}}">
+            <input type="hidden" name="fil_ter" value="{{fil_ter}}">
+            <input type="hidden" name="list1" value="{{sstr.0}}" >
+            <input type="hidden" name="list2" value="{{sstr.1}}" >
+            <input type="hidden" name="list3" value="{{sstr.2}}" >
+            <input type="hidden" name="inset" value="{{box_c}}" >
 </form> 
- 
 
+
+<div class="tabs" >
+    {% if box_c == 'tab_1'%}
+        <input type="radio" name="inset" value="" id="tab_1" name="tab_1"  checked  />
+        <label for="tab_1" style="width:20%;">{{resol_name.0}} : {{zap.0}}</label>
+        <input type="radio" name="inset" value="" id="tab_2" name="tab_2"  />
+        <label for="tab_2" style="width:20%;">{{resol_name.1}} : {{zap.1}}</label>
+        <input type="radio" name="inset" value="" id="tab_3" name="tab_3"  />
+        <label for="tab_3" style="width:20%;">{{resol_name.2}} : {{zap.2}}</label>
+    {% elif box_c == 'tab_2'%}
+        <input type="radio" name="inset" value="" id="tab_1" name="tab_1"    />
+        <label for="tab_1" style="width:20%;">{{resol_name.0}} : {{zap.0}}</label>
+        <input type="radio" name="inset" value="" id="tab_2" name="tab_2"  checked />
+        <label for="tab_2" style="width:20%;">{{resol_name.1}} : {{zap.1}}</label>
+        <input type="radio" name="inset" value="" id="tab_3" name="tab_3"  />
+        <label for="tab_3" style="width:20%;">{{resol_name.2}} : {{zap.2}}</label>
+    {% elif box_c == 'tab_3'%}
+        <input type="radio" name="inset" value="" id="tab_1" name="tab_1"    />
+        <label for="tab_1" style="width:20%;">{{resol_name.0}} : {{zap.0}}</label>
+        <input type="radio" name="inset" value="" id="tab_2" name="tab_2"  />
+        <label for="tab_2" style="width:20%;">{{resol_name.1}} : {{zap.1}}</label>
+        <input type="radio" name="inset" value="" id="tab_3" name="tab_3"   checked />
+        <label for="tab_3" style="width:20%;">{{resol_name.2}} : {{zap.2}}</label>
+    {% endif %}
+
+
+<div id="txt_1">
+{% include "include/include_fraud_list1.html"%} 
+<div class="pricelist" id="pricelist">
+    <table >
+        {% include "include/include_fraud_head.html"%} 
+        {% for i in data.0%}
+            {% include "include/include_fraud_data.html"%} 
+        {% endfor %}
+    </table>
+</div>
+{% include "include/include_fraud_list1.html"%}   
+</div>
+
+
+<div id="txt_2">
+{% include "include/include_fraud_list2.html"%} 
 
 <div class="pricelist" id="pricelist">
     <table >
-        <thead><tr> 
-                {% for j in head %}
-                    {% if j == key %}
-                        {% if nkey == 'n1' %}
-                            <form action="{% url 'test_url' %}"    method="POST" >
-                            {% csrf_token %}
-                                <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
-                                <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
-                                <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
-                                <th  >  
-                                    <button type="submit"
-                                    style="background-color:#3f4d70; height:80px"
-                                    class="btn btn-secondary" name='key' value='{{j}}.n2'>{{j}}</button>
-                                </th> 
-                            </form> 
-                        {% elif nkey == 'n2' %}
-                            <form action="{% url 'test_url' %}"    method="POST" >
-                            {% csrf_token %}
-                                <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
-                                <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
-                                <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
-                                <th  >  
-                                    <button type="submit"
-                                    style="background-color:#54703f; height:80px"
-                                    class="btn btn-secondary" name='key' value='{{j}}.n0'>{{j}}</button>
-                                </th> 
-                            </form>
-                        {% elif nkey == 'n0' %}
-                            <form action="{% url 'test_url' %}"    method="POST" >
-                            {% csrf_token %}
-                                <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
-                                <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
-                                <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
-                                <th  >  
-                                    <button type="submit"  
-                                    style="height:80px"
-                                    class="btn btn-secondary" name='key' value='{{j}}.n1'>{{j}}</button>
-                                </th> 
-                            </form>                        
-                         {% endif %}   
-                    {% else %}
-                    <form action="{% url 'test_url' %}"    method="POST" >
-                    {% csrf_token %}
-                        <input type="hidden"   value="{{sstr}}"       id="sstr"       name="sstr"/> 
-                        <input type="hidden"   value="{{list}}"       id="list"       name="list"/> 
-                        <input type="hidden"   value="{{page_size}}"  id="page_size"  name="page_size"/> 
-                        <th  >  
-                            <button type="submit" 
-                            style="height:80px"
-                            class="btn btn-secondary" name='key' value='{{j}}.n1'>{{j}}</button>
-                        </th> 
-                    </form> 
-                    {% endif %}
-                {% endfor %}
-            </div></tr>
-          
-        </thead>
-<form action="{% url 'test_url' %}"    method="POST" >
-    {% csrf_token %}
-    <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"        name="key"/> 
-    <input type="hidden"   value="{{sstr}}"          id="sstr"       name="sstr"/> 
-    <input type="hidden"   value="{{page_size}}"     id="page_size"  name="page_size"/> 
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="submit" class="btn btn-secondary" name='list' value='start' > 1</button>
-        <button type="submit" class="btn btn-secondary" name='list' value='-1'    > {</button>
-        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{sstr}}"/> 
-        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{kol_stranic}}" /> 
-        <button type="submit" class="btn btn-secondary" name='list' value='+1' > }</button>  
-        <button type="submit" class="btn btn-secondary" name='list' value='end'>END</button>
-    </div>
-</form> 
-
-{% for i in data %}
-            <tr>
-                {% for q in i %}
-                    <td class="nowrap" 
-                    style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;font-size: 10pt;" >
-                    {{q}}
-                    </td>
-                {% endfor %}
-            </tr>    
-{% endfor %}
-</table>
+        {% include "include/include_fraud_head.html"%} 
+        {% for i in data.1%}
+            {% include "include/include_fraud_data.html"%} 
+        {% endfor %}
+    </table>
+</div>
+{% include "include/include_fraud_list2.html"%} 
 </div>
 
-<form action="{% url 'test_url' %}"    method="POST" >
-    {% csrf_token %}
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="submit" class="btn btn-secondary" name='list' value='start' > 1</button>
-        <button type="submit" class="btn btn-secondary" name='list' value='-1'    > {</button>
-        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{sstr}}"/> 
-        <input   class="btn btn-secondary" style='width:50px;' disabled="disabled" value="{{kol_stranic}}" /> 
-        <button type="submit" class="btn btn-secondary" name='list' value='+1'  > }</button>  
-        <button type="submit" class="btn btn-secondary" name='list' value='end' >END</button>
-    </div>
-    <input type="hidden"   value="{{key}}.{{nkey}}"  id="key"        name="key"/> 
-    <input type="hidden"   value="{{sstr}}"          id="sstr"       name="sstr"/> 
-    <input type="hidden"   value="{{page_size}}"     id="page_size"  name="page_size"/> 
-</form> 
- 
 
-{% endblock %}
+<div id="txt_3">
+{% include "include/include_fraud_list3.html"%} 
+<div class="pricelist" id="pricelist">
+    <table >
+        {% include "include/include_fraud_head.html"%} 
+        {% for i in data.2%}
+            {% include "include/include_fraud_data.html"%} 
+        {% endfor %}
+    </table>
+</div>
+{% include "include/include_fraud_list3.html"%} 
+</div>
+</div>
+{% endblock %}  
