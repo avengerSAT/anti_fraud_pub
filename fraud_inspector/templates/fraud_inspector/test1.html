@@ -10,18 +10,27 @@
 
    
 </head>
-<body  background="{% static 'img/fon.jpg' %}">
-
+<body >
+<style>
+element.style {
+    position: relative;
+    padding-bottom: 10.0%;
+    height: 100;
+    overflow: hidden;
+}
+</style>
+ 
  
 {% load plotly_dash %}
 
 
-
-	    <div class="{% plotly_class name='Fraf_dash_fols' %} card" style="width:100%; top: 0% ;height:100%;background-color:red">	 
-		<h1>qweqweq</h1>   
-          {% plotly_app name="Fraf_dash_fols" %}
+<h1>qweqweq</h1>  
+	    <div class="{% plotly_class name='Fraf_dash_fols' %} card" style="width:50%; top: 0% ;height:30%;background-color:red">	 
+		 
+          {% plotly_app name="Fraf_dash_fols" ratio=0.5 %}
+          
 	    </div>
-
+<h1>qweqweq</h1>
 </body>
 </html>    
 

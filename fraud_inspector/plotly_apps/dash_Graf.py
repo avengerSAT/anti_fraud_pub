@@ -51,10 +51,10 @@ class per_fraud_inspector():
 
 
 
-#labels = {'Point 1': (3.5,5), 'Point 2': (1.5,2), 'Point 3': (3.5,8)}
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+labels = {'Point 1': (3.5,5), 'Point 2': (1.5,2), 'Point 3': (3.5,8)}
+#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css','//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css']
 x_n,y_n,x_y,y_y=fraud_inspector_FraudOrders()
 app = DjangoDash('Fraf_dash_fols')
 

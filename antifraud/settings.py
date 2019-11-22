@@ -161,3 +161,19 @@ LOGIN_REDIRECT_URL = '/menu/'
 MEDIA_URL = '/media/'
 
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+
+PLOTLY_DASH = {
+    "ws_route" : "ws/channel",
+
+    "insert_demo_migrations" : True,  # Insert model instances used by the demo
+
+    "http_poke_enabled" : True, # Flag controlling availability of direct-to-messaging http endpoint
+
+    "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
+
+    "cache_arguments" : True, # True for cache, False for session-based argument propagation
+
+    #"serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
+
+    "stateless_loader" : "demo.scaffold.stateless_app_loader",
+    }
