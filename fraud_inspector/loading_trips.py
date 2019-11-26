@@ -36,11 +36,15 @@ def trips_with_surcharges (date_from, date_to, city_id):
                                     read_timeout=Con_vert.read_timeout)
                             ) as con:
         with open('./fraud_inspector/Sql/treck_dop.sql', 'r') as sql:
-            data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id])  
+            data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id])
+            data=data[['order_id','order_date','launch_region_id','driver_id','customer_id','pattern_name','state','resolution','compensation']] 
+            data = data.drop_duplicates() 
             test = (data.groupby(['order_id'])['pattern_name']
                         .apply(', '.join).reset_index(name='pattern_name'))
-            del data['pattern_name']
-            data = pd.merge(data, test, on='order_id', how='inner')
+            del data['pattern_name'] 
+            data = data.drop_duplicates()  
+            data = pd.merge(data, test, on='order_id')
+            data.to_csv('/home/vkondratev/anti_fraud/fraud_inspector/templates/123.csv')
             data = data.fillna(0)
             columns = data.columns.tolist()
             columns = columns[:6] + columns[-1:] + columns[6:-1]
@@ -91,7 +95,7 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                                 read_timeout=Con_vert.read_timeout)
                         ) as con:
 
-
+        
             with open('./fraud_inspector/Sql/zagr_treck_dop.sql', 'r') as sql:
                 data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id, drv_ids])  
                 test = (data.groupby(['order_id'])['pattern_name']
@@ -107,7 +111,6 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                 data = data.drop_duplicates()
                 data = data.values.tolist()
 
-        
         update_db_fraud_orders(data)            
         return 
     except:
@@ -131,7 +134,7 @@ def trips_affecting_the_bonus_plan (city_id,date_start,date_end,city_bonus_plan_
     for i in nedels:
         year=i[0]
         week=i[1]
-        date_from, date_to = Week(int(year), int(week)).monday().strftime('%Y%m%d'),Week(int(year),int(week)).sunday().strftime('%Y%m%d')
+        date_from, date_to = (Week(int(year), int(week)).monday().strftime('%Y%m%d')+' 00:00:01'),(Week(int(year),int(week)).sunday().strftime('%Y%m%d')+' 23:59:59')
         min_trips_for_bonus = city_bonus_plan_dict[-1][0]
         TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_bonus,city_bonus_plan_dict)
 

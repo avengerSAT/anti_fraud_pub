@@ -22,7 +22,7 @@ def load_data(date_from,date_to):
     with connect(**conn_info) as con:
         with open('./fraud_inspector/Sql/load_data-loaddata.sql', 'r') as load_data_sql:
             data = pd.read_sql_query(
-                load_data_sql.read(), con, params=[date_from,date_to])
+                load_data_sql.read(), con, params=[date_from,date_to])  
             test = (data.groupby(['order_id'])['pattern_name']
                         .apply(', '.join).reset_index(name='pattern_name'))
             del data['pattern_name']
