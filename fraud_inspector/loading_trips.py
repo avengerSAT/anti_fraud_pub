@@ -44,7 +44,6 @@ def trips_with_surcharges (date_from, date_to, city_id):
             del data['pattern_name'] 
             data = data.drop_duplicates()  
             data = pd.merge(data, test, on='order_id')
-            data.to_csv('/home/vkondratev/anti_fraud/fraud_inspector/templates/123.csv')
             data = data.fillna(0)
             columns = data.columns.tolist()
             columns = columns[:6] + columns[-1:] + columns[6:-1]

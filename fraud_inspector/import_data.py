@@ -65,6 +65,8 @@ def load_data_g(gorod,date_from,date_to):
 def update_db_fraud_orders(gorod,date_from,date_to):
     if gorod=="ALL":
         data = load_data(date_from,date_to)
+    elif gorod=="0":
+        data = load_data(date_from,date_to)        
     else:
         data = load_data_g(gorod,date_from,date_to)
         
