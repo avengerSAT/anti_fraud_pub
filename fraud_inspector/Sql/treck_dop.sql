@@ -31,5 +31,7 @@ LEFT JOIN (
 WHERE  (TO_TIMESTAMP(order_date) BETWEEN %s
 		AND %s )
 		AND fo.state='UNVERIFIED'
-		AND (oo.final_driver_cost-oo.final_customer_cost)>0
+		AND fop.order_id is not null 
+		AND (CASE  WHEN static_price_enabled = true THEN static_price_final_customer_cost
+     	ELSE final_customer_cost END - oo.final_driver_cost)<0
 		AND fo.launch_region_id = %s

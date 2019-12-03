@@ -95,7 +95,7 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
 
             
             with open('./fraud_inspector/Sql/zagr_treck_dop.sql', 'r') as sql:
-                data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id, drv_ids]) 
+#                data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id, drv_ids]) 
                 
                 data.to_csv('/home/vkondratev/anti_fraud/fraud_inspector/Sql/123.csv') 
                 test = (data.groupby(['order_id'])['pattern_name']
@@ -115,7 +115,6 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
         update_db_fraud_orders(data)            
         return 
     except:
-        print("!")
         return
 
 
