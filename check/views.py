@@ -275,15 +275,4 @@ def dash_ajax(request):
     trail="check/templates/csv"+request.user.username 
     return HttpResponse(dispatcher(request,trail),content_type='application/json')  
 
-class UnverifiedTripsCompensations(LoginRequiredMixin, View):
-    def get(self,request):                                                    
-        return render(request,'check/UnverifiedTripsCompensations.html')
-    def post(self,request):
-        load = request.POST['load']
-        if load != None:
-            head, data = sqlvertica.unverifiedtripscompensations_sql()
-        return render(request,'check/UnverifiedTripsCompensations.html',{
-                                                                    "j": head,
-                                                                    "data": data
-        })
 

@@ -68,7 +68,6 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
 
             with open('./fraud_inspector/Sql/TotalFraudTable.sql', 'r') as sql:
                 df = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id, week, year, min_trips_for_bonus])
-            
             df.loc[df['Успешных поездок'] >= city_bonus_plan_dict[0][0], 'Получен бонус план'] = city_bonus_plan_dict[0][1]
             for i in city_bonus_plan_dict:
                 df.loc[df['Успешных поездок'] < i[0],
@@ -80,7 +79,7 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                 df.loc[df['Успешных за вычетом фродовых'] < i[0],'К списанию'] = df['Получен бонус план'] - i[2]
             total_fraud_table = df.drop_duplicates(subset=['Длинный позывной', 'Короткий позывной'], keep='first')
         total_fraud_table=total_fraud_table.values.tolist()
-        drv_ids = ["0","0"]
+        drv_ids = []
         for i in total_fraud_table:
             if i[8] != 0:
                 if i[1] != 0:
@@ -94,13 +93,15 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                                 read_timeout=Con_vert.read_timeout)
                         ) as con:
 
-        
+            
             with open('./fraud_inspector/Sql/zagr_treck_dop.sql', 'r') as sql:
-                data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id, drv_ids])  
+                data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id, drv_ids]) 
+                
+                data.to_csv('/home/vkondratev/anti_fraud/fraud_inspector/Sql/123.csv') 
                 test = (data.groupby(['order_id'])['pattern_name']
                             .apply(', '.join).reset_index(name='pattern_name'))
                 del data['pattern_name']
-                data = pd.merge(data, test, on='order_id', how='inner')
+                data = pd.merge(data, test, on='order_id')
                 data = data.fillna(0)
                 columns = data.columns.tolist()
                 columns = columns[:6] + columns[-1:] + columns[6:-1]
@@ -108,11 +109,13 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                 data[['driver_id', 'compensation']] = \
                 data[['driver_id', 'compensation']].astype(int).astype(str)
                 data = data.drop_duplicates()
+                data.to_csv('/home/vkondratev/anti_fraud/fraud_inspector/Sql/123.csv')
                 data = data.values.tolist()
-
+                
         update_db_fraud_orders(data)            
         return 
     except:
+        print("!")
         return
 
 
@@ -133,7 +136,7 @@ def trips_affecting_the_bonus_plan (city_id,date_start,date_end,city_bonus_plan_
     for i in nedels:
         year=i[0]
         week=i[1]
-        date_from, date_to = (Week(int(year), int(week)).monday().strftime('%Y%m%d')+' 00:00:01'),(Week(int(year),int(week)).sunday().strftime('%Y%m%d')+' 23:59:59')
+        date_from, date_to = (Week(int(year), int(week)).monday().strftime('%Y%m%d')),(Week(int(year),int(week+1)).monday().strftime('%Y%m%d'))
         min_trips_for_bonus = city_bonus_plan_dict[-1][0]
         TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_bonus,city_bonus_plan_dict)
 
