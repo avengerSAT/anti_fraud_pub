@@ -42,11 +42,7 @@ def fraud_inspector_option_city():
     option_citys=apps.get_model('fraud_inspector','option_city')
     option_city=option_citys.objects.all()
     option_city=option_city.values_list()
-    city=[]
-    for i in option_city:
-        a={'label': i[1], 'value': i[2]}
-        city.append(a)
-    return city
+    return option_city
 
 
 
@@ -64,10 +60,12 @@ app = DjangoDash('Fraf_dash_fols')
 
 
 app.layout = html.Div([
-    dcc.Dropdown(id='city',options=fraud_inspector_option_city(),multi=True,value='0'),
+    dcc.Dropdown(id='city',
+    options=[{'label': i[1], 'value': i[2]} for i in fraud_inspector_option_city()]
+    ,multi=True,value='0'),
     dcc.DatePickerRange(id='input1',display_format='Y-M-D',start_date=(datetime.now()- timedelta(days=30)).strftime('%Y-%m-%d'),
     end_date=datetime.now().strftime('%Y-%m-%d'),clearable=True,with_portal=True,),    
-    html.Button('Submit', id='button'),
+    html.Button('Загрузка', id='button',style={'height': 47}),
     html.Div(id='output-container-button',
              children='Enter a value and press submit')
 ])
