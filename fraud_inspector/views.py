@@ -661,8 +661,6 @@ class fraud_inspector_ver_2(LoginRequiredMixin, View):
 
 class test_qwe (LoginRequiredMixin, View):
     def get(self,request):
-        context={"msg":"qwe"}
-        return render (request,'fraud_inspector/test1.html',context)    
+        return render (request,'fraud_inspector/graf_prover.html')    
     def post(self,request):
-        context={"msg":"qwe"}
-        return render (request,'fraud_inspector/test1.html',context)        
+        return render (request,'fraud_inspector/graf_prover.html')        
