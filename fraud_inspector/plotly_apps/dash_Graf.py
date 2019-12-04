@@ -131,5 +131,3 @@ def update_output(n_clicks,city ,start_date,end_date):
         ],style={'height': 800})   
 
 
-if __name__ == '__main__':
-    app.run_server()
