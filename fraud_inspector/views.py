@@ -20,6 +20,7 @@ from .loading_trips import trips_affecting_the_bonus_plan ,trips_with_surcharges
 import pandas as pd
 import os
 from datetime import datetime,timedelta
+import sys
 
 
 
@@ -127,6 +128,8 @@ def frod_prov(request):
     cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
         sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
     PRV="1"
+    del cus_head
+    del drv_hed
     return render (request,'fraud_inspector/Fraud_inspector.html',{"gorod":gorod,
                                                             "resol":resol,
                                                             "pattern":pattern,
@@ -627,6 +630,8 @@ class fraud_inspector_ver_2(LoginRequiredMixin, View):
                 chek_box='yes'
                 cus_head, cus, drv_hed, drv, svod_cus_head, svod_cus, svod_drv_cus_head, svod_drv_cus, time =\
                     sqlvertica.sql_prov(customer_id, driver_id, drv_id, chek_box)
+                del cus_head
+                del drv_hed
                 PRV="1"
                 zap_cont(cont,"order_id_zac",block)
                 zap_cont(cont,"pattern",pattern)
@@ -656,8 +661,6 @@ class fraud_inspector_ver_2(LoginRequiredMixin, View):
 
 class test_qwe (LoginRequiredMixin, View):
     def get(self,request):
-        context={"msg":"qwe"}
-        return render (request,'fraud_inspector/test1.html',context)    
+        return render (request,'fraud_inspector/graf_prover.html')    
     def post(self,request):
-        context={"msg":"qwe"}
-        return render (request,'fraud_inspector/test1.html',context)        
+        return render (request,'fraud_inspector/graf_prover.html')        

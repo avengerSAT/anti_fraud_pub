@@ -21,12 +21,12 @@ LEFT JOIN (
 		, SUM(transaction_amount) / 100 AS margin
 	FROM facts.FS_Drivers_balance_transaction
 	WHERE 
-		transaction_type IN ('Compensation', 'Order Refund', 'Promocode discount')
+		transaction_type NOT IN ('Fix Fare', 'Percent Fare')
 		AND order_id IS NOT NULL
 	GROUP BY order_id
 	) margin
 	ON fo.id = margin.order_id
-WHERE  TO_TIMESTAMP(order_date) BETWEEN %s
+WHERE  (TO_TIMESTAMP(order_date) BETWEEN %s
 		AND  %s )
 		AND fo.state='UNVERIFIED' 
 		AND fo.launch_region_id = %s

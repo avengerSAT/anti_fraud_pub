@@ -1,0 +1,28 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+                ФРОД/НЕ ФРОД
+{% endblock %}
+ 
+{% block content %}
+
+
+
+ 
+
+{% load plotly_dash %}
+
+
+
+	    <div class="{% plotly_class name='Fraf_dash_fols' %} card" style="width:100%; top: 0% ;height:100%;">	 
+		 
+          {% plotly_app name="Fraf_dash_fols" ratio=1 %}
+          
+	    </div>
+
+{% endblock %}
+
+
+
+
+ 

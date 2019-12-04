@@ -21,16 +21,17 @@ LEFT JOIN (
 	SELECT
 		order_id
 		, SUM(transaction_amount) / 100 AS margin
-		, transaction_amount
 	FROM facts.FS_Drivers_balance_transaction
 	WHERE 
-		transaction_type IN ('Compensation', 'Order Refund', 'Promocode discount')
+		transaction_type NOT IN ('Fix Fare', 'Percent Fare')
 		AND order_id IS NOT NULL
-	GROUP BY order_id ,transaction_amount
+	GROUP BY order_id 
 	) margin
 	ON fo.id = margin.order_id
 WHERE  (TO_TIMESTAMP(order_date) BETWEEN %s
 		AND %s )
 		AND fo.state='UNVERIFIED'
-		AND (oo.final_driver_cost-oo.final_customer_cost)>0
+		AND fop.order_id is not null 
+		AND (CASE  WHEN static_price_enabled = true THEN static_price_final_customer_cost
+     	ELSE final_customer_cost END - oo.final_driver_cost)<0
 		AND fo.launch_region_id = %s
