@@ -260,23 +260,4 @@ def sql_drv_id(driver_id):
         return
 
 
-def unverifiedtripscompensations_sql():
-    conn_info = {
-        'host': Con_vert.host,
-        'port': Con_vert.port,
-        'user': Con_vert.user,
-        'password': Con_vert.password
-    }
 
-    with connect(**conn_info) as con:
-        with open('./check/Sql/unverifiedtripscompensations_sql.sql', 'r') as unverifiedtripscompensations_sql:
-            df_test = pd.read_sql_query(
-                unverifiedtripscompensations_sql.read(), con)
-            df_test['Дата'] = df_test['Дата'].astype(str)
-            df_test[['driver_id','Доплата']] = df_test[['driver_id','Доплата']].astype(int)
-            df_test['index2'] = df_test.index
-
-
-            head, data = df_test.columns.tolist(), df_test.values.tolist()
-
-    return head, data
