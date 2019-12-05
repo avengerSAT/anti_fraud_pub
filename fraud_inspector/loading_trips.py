@@ -5,7 +5,7 @@ from isoweek import Week
 from vertica_python import connect
 from .con import Con_vert
 from contextlib import closing
-from fraud_inspector.models import *
+from fraud_inspector.models import FraudOrders
 
 def update_db_fraud_orders(data):
     for row in data:
