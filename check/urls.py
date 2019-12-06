@@ -13,6 +13,7 @@ urlpatterns = [
     path('Driver',views.Driver.as_view(),name='Driver_url'),
     path('rez_prover',views.rez_prover.as_view(),name='rez_prover_url'),
     path('brend',views.brend.as_view(),name='brend_url'),
+    path('otchet_kursk',views.otchet_kursk.as_view(),name='otchet_kursk_url'),
     path('svod_doplat',views.svod_doplat.as_view(),name='svod_doplat_url'),
     url(r'^Driver/1/',views.drvr,name='DRV_URL'),
 

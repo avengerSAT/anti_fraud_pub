@@ -25,7 +25,9 @@ from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
                                           requires_csrf_token)
 from isoweek import Week
 
-
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from  django.apps  import apps
 from . import import_bd, import_csv, sqlvertica
 from .models import City
 from .templates.dash_.dash_1 import dispatcher 
@@ -276,3 +278,74 @@ def dash_ajax(request):
     return HttpResponse(dispatcher(request,trail),content_type='application/json')  
 
 
+class otchet_kursk(LoginRequiredMixin, View):
+    def get (self,request):
+        week=datetime.now().isocalendar()[1]
+        now = datetime.now().strftime('%Y')
+        now = now + '-W'+str(week)
+        return render(request,'check/kursk.html',{"now":now}) 
+    def post (self,request):  
+        time_week= request.POST["time_week"]
+        year,week=time_week.split("-W")
+        start_date,end_date = Week(int(year), int(week)).monday().strftime('%Y-%m-%d'),Week(int(year),int(week)+1).monday().strftime('%Y-%m-%d')
+        FraudOrders=apps.get_model('fraud_inspector','FraudOrders')
+        FraudOrder=FraudOrders.objects.filter(launch_region_id=4712,order_date__range=(start_date,end_date)).values_list()
+        head=[]
+        for e in FraudOrders._meta.get_fields():
+            head.append((str(e)).replace("fraud_inspector.FraudOrders.", ''))
+        
+        data=sqlvertica.sql_kursk(start_date, end_date)
+        FraudOrder=pd.DataFrame(FraudOrder,columns=head)
+        FraudOrder=FraudOrder[['order_id','resolution']]
+        FraudOrder = pd.merge(data, FraudOrder,how='left', on='order_id')
+        otchet=FraudOrder[['driver_id','d_driver_id','count_orders']]
+        otchet=otchet.drop_duplicates() 
+        df=FraudOrder[['driver_id','comp']]
+        dff = df.groupby(['driver_id']).size().reset_index(name='count')
+        df=df.groupby(['driver_id']).sum()
+        df_sp=FraudOrder[['driver_id','spis']]
+        df_sp=df_sp.groupby(['driver_id']).sum()
+        otchet = pd.merge(otchet, dff,how='left', on='driver_id')
+        otchet = pd.merge(otchet, df, on='driver_id')
+        otchet = pd.merge(otchet, df_sp, on='driver_id')
+        FRAUD_YES=FraudOrder[['driver_id','resolution']]
+        FRAUD_YES=FRAUD_YES[(FRAUD_YES['resolution']=='FRAUD YES')]
+        FRAUD_YES = FRAUD_YES.groupby(['driver_id']).size().reset_index(name='FRAUD_YES')
+        FraudOrder = pd.merge(otchet, FRAUD_YES,how='left', on='driver_id') 
+        FraudOrder=FraudOrder.fillna(0)      
+        FraudOrder=FraudOrder.values.tolist()
+        google_kursk(year,week,FraudOrder)
+        head=['Ид водителя короткий','Ид водителя короткий','Общее количество order_completed по водителю','Поездок отобранных на фрод','Размер всех доплат в фрод-заказах','Всего списано по фродовым поездкам','Количество подтвержденных фрод поездок']
+        Context={"FraudOrder":FraudOrder,"head":head}
+        return render(request,'check/kursk.html',Context)  
+
+
+def google_kursk(year,week,FraudOrder):
+    credentials = 'templates/js/client_secret.json' 
+    scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials, scope)
+    gc = gspread.authorize(credentials)
+    wks=gc.open_by_key("1eYS1QbeYS3E_zV3uagBjvIt25xYLWsLbztl8sd9uG5w") 
+    date_from, date_to = Week(int(year), int(week)).monday().strftime('%Y%m%d'),Week(int(year),int(week)).sunday().strftime('%Y%m%d')
+    name_sheet = date_from[:4] + '.' + date_from[4:6] + '.' + date_from[6:] + ' - ' + date_to[:4] + '.' + date_to[4:6] + '.' + date_to[6:] 
+    check_worksheet_name = 0
+    for i in wks.worksheets():
+        if i.title != name_sheet:
+            pass
+        else:
+            check_worksheet_name = 1
+
+    if check_worksheet_name == 1:
+        pass
+    else:
+        wks.duplicate_sheet(wks.worksheet('шаблон').id,
+                            new_sheet_name=name_sheet) 
+    wks.values_update(
+    name_sheet + '!A4',
+    params={
+        'valueInputOption': 'USER_ENTERED'
+    },
+    body={
+        'values': FraudOrder
+    }
+                        )     

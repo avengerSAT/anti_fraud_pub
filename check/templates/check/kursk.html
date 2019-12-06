@@ -1,0 +1,49 @@
+{% extends "main_tabl.html" %}
+{% block title %}
+Отчет Курск
+{% endblock %}
+{% block content %}
+{% include "include/include_logout.html"%}   
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Загрузка отчета Курск</h1>
+    <p class="lead">{{msg}}</p>
+    <form action="{% url 'otchet_kursk_url' %}"    method="POST" >
+        {% csrf_token %}
+        <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+            <input type="week" style="width:50%; top: 0%;" name = "time_week" value="{{now}}"/>
+            <input type="submit" value="Отправить">
+        </div> 
+    </form> 
+  </div>
+</div>
+
+<div style="background:rgb(255, 255, 255);margin-top:4%;">
+    <div class="pricelist" id="pricelist">
+            <table id="pricetable-drv" class="table-autosort:2"> 
+                <thead>
+                    {% for j in head %}
+        
+                        <th class=" filterable sortable table-sortable:numeric" style="padding: 3px;border: 1px solid black;">{{j}}</th>
+        
+                    {% endfor %}
+                </thead>
+                {% for i in FraudOrder %}
+                    <tr  >
+                        {% for q in i %}
+        
+                        <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;" >{{q}}</td>
+            
+                        {% endfor %}
+                    </tr>
+        
+                {% endfor %}
+    </div>
+</div>
+    <script>
+        $(document).ready( function () {
+        $('#pricetable-drv').DataTable();
+        } );
+    </script> 
+{% endblock %}    

@@ -5,7 +5,7 @@ SELECT DISTINCT
     END  "Имя водителя"
     , COUNT(oo.driver_id) AS Дуэт
     , CAST(((COUNT(oo.driver_id)/temp.cust_trips)*100) AS NUMERIC(6,0)) "Доля совместных поездок"
-    , (MAX(to_timestamp(order_start_date)))::varchar AS "Время последней поездки"
+    , (MAX(to_timestamp(order_start_date+10800)))::varchar AS "Время последней поездки"
     , ISNULL(CAST(SUM(сумма_доплаты)AS NUMERIC(8,0)), 0) "Сумма доплат"
 FROM facts.FS_Orders oo  
 LEFT JOIN facts.FS_Drivers drv

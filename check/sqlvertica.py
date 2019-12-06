@@ -3,6 +3,7 @@ import datetime as dt
 import os
 from csv import writer
 
+from contextlib import closing
 import pandas as pd
 import vertica_python
 from vertica_python import connect
@@ -260,4 +261,15 @@ def sql_drv_id(driver_id):
         return
 
 
+def sql_kursk(start_date, end_date):
 
+    with closing(connect(host=Con_vert.host,
+                                    port=Con_vert.port,
+                                    user=Con_vert.user,
+                                    password=Con_vert.password)
+                            ) as con:
+        with open('./check/Sql/sql_kursk.sql', 'r') as sql:
+            data = pd.read_sql_query(sql.read(), con, params=[start_date, end_date,start_date, end_date]) 
+            data = data.drop_duplicates() 
+
+    return data
