@@ -11,8 +11,8 @@ FROM (
         1=1
         AND sub_state = 'ORDER_COMPLETED'
         AND driver_id = %s
-        AND to_timestamp(oo.order_end_date)::date >=%s
-        AND to_timestamp(oo.order_end_date)::date <=%s
+        AND to_timestamp(oo.order_end_date+10800)::date >=%s
+        AND to_timestamp(oo.order_end_date+10800)::date <=%s
     GROUP BY driver_id) gr 
 LEFT JOIN (
     SELECT
@@ -37,8 +37,8 @@ LEFT JOIN (
 WHERE
     fr.resolution='YES'
     AND o.driver_id=%s
-    AND to_timestamp(fo.order_date)::date >=%s
-    AND to_timestamp(fo.order_date)::date <=%s
+    AND to_timestamp(fo.order_date+10800)::date >=%s
+    AND to_timestamp(fo.order_date+10800)::date <=%s
 GROUP BY o.driver_id
     ) gr_1
     ON gr_1.driver_id =gr.driver_id

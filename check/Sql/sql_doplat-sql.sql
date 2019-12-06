@@ -1,6 +1,6 @@
 SELECT DISTINCT
     region_id AS "ИД региона"
-    ,(to_timestamp(oo.order_start_date)::date)::varchar As "Дата проверки"
+    ,(to_timestamp(oo.order_start_date+10800)::date)::varchar As "Дата проверки"
     ,COUNT(dt.order_id) AS "Количество поездок с компенсацией"
     ,CAST(SUM(transaction_amount/100)AS DECIMAL(14,0)) AS "Сумма компенсации"
     ,CAST(SUM(CASE WHEN qwe.Сумма_списаний_за_поездку IS NULL THEN '0' ELSE qwe.Сумма_списаний_за_поездку END) AS DECIMAL(14,0)) AS "Сумма списаний"
@@ -41,6 +41,6 @@ LEFT JOIN (
 WHERE 1=1
  	 AND transaction_type='Compensation'
  	 AND to_timestamp(oo.order_start_date)::date IS NOT NULL
- 	 AND to_timestamp(oo.order_start_date)::date >= %s
- 	 AND to_timestamp(oo.order_start_date)::date <= %s
+ 	 AND to_timestamp(oo.order_start_date+10800)::date >= %s
+ 	 AND to_timestamp(oo.order_start_date+10800)::date <= %s
 GROUP BY "ИД региона", "Дата проверки"
