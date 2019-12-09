@@ -294,9 +294,15 @@ class otchet_kursk(LoginRequiredMixin, View):
         for e in FraudOrders._meta.get_fields():
             head.append((str(e)).replace("fraud_inspector.FraudOrders.", ''))
         
-        data=sqlvertica.sql_kursk(start_date, end_date)
+        
         FraudOrder=pd.DataFrame(FraudOrder,columns=head)
         FraudOrder=FraudOrder[['order_id','resolution']]
+        orders=FraudOrder.values.tolist()
+        orders_id=[]
+        for order in orders:
+            orders_id.append(order[0])
+        orders_id=tuple(orders_id)
+        data=sqlvertica.sql_kursk(orders_id,start_date, end_date)
         FraudOrder = pd.merge(data, FraudOrder,how='left', on='order_id')
         otchet=FraudOrder[['driver_id','d_driver_id','count_orders']]
         otchet=otchet.drop_duplicates() 

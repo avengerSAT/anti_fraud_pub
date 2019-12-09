@@ -261,7 +261,7 @@ def sql_drv_id(driver_id):
         return
 
 
-def sql_kursk(start_date, end_date):
+def sql_kursk(orders_id,start_date, end_date):
 
     with closing(connect(host=Con_vert.host,
                                     port=Con_vert.port,
@@ -269,7 +269,7 @@ def sql_kursk(start_date, end_date):
                                     password=Con_vert.password)
                             ) as con:
         with open('./check/Sql/sql_kursk.sql', 'r') as sql:
-            data = pd.read_sql_query(sql.read(), con, params=[start_date, end_date,start_date, end_date]) 
+            data = pd.read_sql_query(sql.read(), con, params=[start_date, end_date,orders_id]) 
             data = data.drop_duplicates() 
 
     return data
