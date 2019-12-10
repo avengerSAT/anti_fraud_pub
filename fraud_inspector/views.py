@@ -163,12 +163,14 @@ def option_city_trips(gorod, start_time,end_time):
             city_all.append(gorod[2])  
         for city_id in city_all: 
             j_slov=option_city.objects.filter(launch_region_id=city_id).values().first() ####!!!
-            if j_slov['loading_trips_with_surcharges'] !=0:
+            if str(j_slov['loading_trips_with_surcharges']) !='0' :
+                print("!!")
                 trips_with_surcharges (start_time,end_time,city_id)
-            if j_slov['loading_trips_affecting_the_bonus_plan']!=0:  
+            if str(j_slov['loading_trips_affecting_the_bonus_plan'])!='0':  
+                print("!")
                 city_bonus_plan_dict=City_table_bonus_plan_dict(city_id)
                 trips_affecting_the_bonus_plan (city_id,start_time,end_time,city_bonus_plan_dict)
-            if j_slov['loading_trips_trips_without_surcharges']!=0:
+            if str(j_slov['loading_trips_trips_without_surcharges'])!='0':
                 update_db_fraud_orders(city_id,start_time,end_time)      
         return 
 
