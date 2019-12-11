@@ -21,6 +21,7 @@ def update_db_fraud_orders(data):
             post.resolution = row[7]
             post.compensation = row[8]
             post.save()
+            print(row)
         except:
             pass            
     return 
@@ -37,6 +38,7 @@ def trips_with_surcharges (date_from, date_to, city_id):
                             ) as con:
         with open('./fraud_inspector/Sql/treck_dop.sql', 'r') as sql:
             data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id])
+            
             data=data[['order_id','order_date','launch_region_id','driver_id','customer_id','pattern_name','state','resolution','compensation']] 
             data = data.drop_duplicates() 
             test = (data.groupby(['order_id'])['pattern_name']
