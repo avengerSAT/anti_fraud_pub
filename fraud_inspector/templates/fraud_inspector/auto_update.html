@@ -1,0 +1,23 @@
+{% extends "main_tabl.html" %}
+
+{% block title %}
+Настройка параметров города
+{% endblock %}
+ 
+{% block content %}
+{% include "include/include_logout.html"%}  
+
+
+
+
+<form  action="{% url 'auto_update_test_url' %}"    method="POST" >
+    {% csrf_token %}  
+    {% if msg == "yes" %}
+    <input type="submit" disabled="disabled" value="ПОИСК ПО ГОРОДАМ">  
+    {% else %}
+    <input type="submit"  value="ПОИСК ПО ГОРОДАМ">  
+    {% endif %}
+</form> 
+
+      
+{% endblock %}

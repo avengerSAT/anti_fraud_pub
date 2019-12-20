@@ -6,10 +6,13 @@ from vertica_python import connect
 from .con import Con_vert
 from contextlib import closing
 from fraud_inspector.models import FraudOrders
+import csv
+from csv import writer
 
 def update_db_fraud_orders(data):
     for row in data:
         try:
+            now = dt.now().strftime('%Y-%m-%d %H:%M:%S')
             post = FraudOrders()
             post.order_id = row[0]
             post.order_date = row[1]
@@ -21,7 +24,11 @@ def update_db_fraud_orders(data):
             post.resolution = row[7]
             post.compensation = row[8]
             post.save()
+            row.append(now)
             print(row)
+            with open("templates/logs.csv", "a", newline='') as csv_file:
+                csv_writer = writer(csv_file, delimiter=',')
+                csv_writer.writerow(row)
         except:
             pass            
     return 

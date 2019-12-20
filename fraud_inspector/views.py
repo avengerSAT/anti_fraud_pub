@@ -18,9 +18,10 @@ from .main import Update
 from .loading_trips import trips_affecting_the_bonus_plan ,trips_with_surcharges
 
 import pandas as pd
-import os
 from datetime import datetime,timedelta
-import sys
+import sys,time,platform,os 
+from subprocess import Popen
+
 
 
 
@@ -664,3 +665,26 @@ class test_qwe (LoginRequiredMixin, View):
         return render (request,'fraud_inspector/graf_prover.html')    
     def post(self,request):
         return render (request,'fraud_inspector/graf_prover.html')        
+
+class auto_update_test (LoginRequiredMixin, View): 
+    def get(self,request):
+        msg="not"  
+        context={'msg':msg}  
+        return render (request,'fraud_inspector/auto_update.html',context)     
+    def post(self,request):
+        if platform.system() == "Windows":
+            new_window_command = "cmd.exe /c start".split()
+        else:  
+            new_window_command = "x-terminal-emulator -e".split()
+
+        echo = [sys.executable, "-c",randomFunction()]
+        processes = [Popen(new_window_command + echo )]
+
+        for proc in processes:
+            proc.wait()
+        msg="yes"  
+        context={'msg':msg} 
+        return render (request,'fraud_inspector/auto_update.html',context)  
+def randomFunction():
+    print ("!!!")
+    return "import sys;from qq import prescript; prescript(1)"             
