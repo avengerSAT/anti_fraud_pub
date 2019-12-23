@@ -5,7 +5,7 @@ SELECT
     , CASE WHEN oo.driver_last_name is not NULL THEN (oo.driver_first_name::varchar)||' '||(oo.driver_last_name ::varchar)
     ELSE oo.driver_first_name
     END drv_name
-    , TO_TIMESTAMP(order_start_date+10800)::varchar start_date
+    , TO_TIMESTAMP(order_start_date)::varchar start_date
     FROM facts.FS_Orders oo
     WHERE oo.customer_id = %s
     )

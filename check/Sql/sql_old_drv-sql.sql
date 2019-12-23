@@ -1,9 +1,9 @@
 SELECT DISTINCT
     gr.trip_number AS Дуэт
     , (to_timestamp(oo.arrive_time)-to_timestamp(oo.accept_time))::varchar AS  Подача
-    , to_timestamp(oo.order_start_date+10800) AS "Старт поездки"
+    , to_timestamp(oo.order_start_date) AS "Старт поездки"
     , oo.order_src_address AS "Адрес подачи"
-    , to_timestamp(oo.order_END_date+10800) AS "Время окончания поездки"
+    , to_timestamp(oo.order_END_date) AS "Время окончания поездки"
     , oo.order_dst_address AS "Конечный адрес"
     , oo.promo_code_description AS Промо
     , oo.promo_code_dIScount/100 AS "Номинал промокода"

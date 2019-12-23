@@ -28,7 +28,7 @@ driver_id,
 COUNT(id) as count_orders
 from facts.FS_Orders
 WHERE sub_state in ('ORDER_COMPLETED')
-	AND (TO_TIMESTAMP(order_end_date+10800) BETWEEN %s AND %s )
+	AND (TO_TIMESTAMP(order_end_date) BETWEEN %s AND %s )
 GROUP BY driver_id) gr
 on gr.driver_id=fo.driver_id
 WHERE fo.id in %s

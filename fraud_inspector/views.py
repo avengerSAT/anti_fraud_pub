@@ -686,5 +686,4 @@ class auto_update_test (LoginRequiredMixin, View):
         context={'msg':msg} 
         return render (request,'fraud_inspector/auto_update.html',context)  
 def randomFunction():
-    print ("!!!")
     return "import sys;from qq import prescript; prescript(1)"             

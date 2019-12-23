@@ -117,7 +117,6 @@ def TotalFraudTable_ned(date_from, date_to, city_id, week, year, min_trips_for_b
                 data[['driver_id', 'compensation']] = \
                 data[['driver_id', 'compensation']].astype(int).astype(str)
                 data = data.drop_duplicates()
-                data.to_csv('/home/vkondratev/anti_fraud/fraud_inspector/Sql/123.csv')
                 data = data.values.tolist()
                 
         update_db_fraud_orders(data)            

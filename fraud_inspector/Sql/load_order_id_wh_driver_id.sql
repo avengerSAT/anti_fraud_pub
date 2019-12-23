@@ -1,6 +1,6 @@
 SELECT
 	oo.id AS order_id
-	, TO_TIMESTAMP(oo.order_start_date+10800) AS order_date
+	, TO_TIMESTAMP(oo.order_start_date) AS order_date
 	, oo.launch_region_id
 	, oo.driver_id
 	, oo.customer_id AS customer_id
@@ -20,8 +20,8 @@ LEFT JOIN (
 	GROUP BY order_id
 	) margin
 	ON oo.id = margin.order_id
-WHERE TO_TIMESTAMP (oo.order_start_date+10800) => %s 
-	AND TO_TIMESTAMP(oo.order_start_date+10800) =< %s 
+WHERE TO_TIMESTAMP (oo.order_start_date) => %s 
+	AND TO_TIMESTAMP(oo.order_start_date) =< %s 
 	AND launch_region_id = %s , 
 	AND driver_id IN %s
 
