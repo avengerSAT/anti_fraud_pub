@@ -19,8 +19,9 @@ from .loading_trips import trips_affecting_the_bonus_plan ,trips_with_surcharges
 
 import pandas as pd
 from datetime import datetime,timedelta
-import sys,time,platform,os 
+import sys,time,platform,os,threading
 from subprocess import Popen
+from .auto_update import auto_update
 
 
 
@@ -672,18 +673,10 @@ class auto_update_test (LoginRequiredMixin, View):
         context={'msg':msg}  
         return render (request,'fraud_inspector/auto_update.html',context)     
     def post(self,request):
-        if platform.system() == "Windows":
-            new_window_command = "cmd.exe /c start".split()
-        else:  
-            new_window_command = "x-terminal-emulator -e".split()
+        x = threading.Thread(target=auto_update)
+        x.start()
 
-        echo = [sys.executable, "-c",randomFunction()]
-        processes = [Popen(new_window_command + echo )]
-
-        for proc in processes:
-            proc.wait()
         msg="yes"  
         context={'msg':msg} 
         return render (request,'fraud_inspector/auto_update.html',context)  
-def randomFunction():
-    return "import sys;from qq import prescript; prescript(1)"             
+          

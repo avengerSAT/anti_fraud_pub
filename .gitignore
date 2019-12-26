@@ -7,8 +7,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-client_secret.json
-*client_secret.json
+templates/js/client_secret.json
 db.sqlite3
 *.pyc
 .vscode/*

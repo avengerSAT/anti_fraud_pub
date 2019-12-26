@@ -6,6 +6,7 @@ from .import_data import update_db_fraud_orders
 
 def auto_update():
     while 1:
+        print("!")
         all_city=option_city.objects.values_list()
         end_time,start_time= (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d'),(datetime.now()- timedelta(days=2)).strftime('%Y-%m-%d')
         all_city=option_city.objects.values_list()
@@ -28,5 +29,5 @@ def auto_update():
                 trips_affecting_the_bonus_plan(city_id,start_time,end_time,city_bonus_plan_dict)
             if str(j_slov['loading_trips_trips_without_surcharges'])!='0':
                 update_db_fraud_orders(city_id,start_time,end_time)      
-        time.sleep(50)
+        time.sleep(3600*3)
  
