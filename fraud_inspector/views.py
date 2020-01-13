@@ -676,7 +676,25 @@ class auto_update_test (LoginRequiredMixin, View):
         x = threading.Thread(target=auto_update)
         x.start()
 
+
+
+#
+#        if platform.system() == "Windows":
+#            new_window_command = "cmd.exe /c start".split()
+#        else:  #XXX this can be made more portable
+#            new_window_command = "x-terminal-emulator -e".split()
+#
+#        # open new consoles, display messages
+#        echo = [sys.executable, "-c",randomFunction()]
+#        processes = [Popen(new_window_command + echo )]
+#
+#        # wait for the windows to be closed
+#        for proc in processes:
+#            proc.wait()
         msg="yes"  
         context={'msg':msg} 
         return render (request,'fraud_inspector/auto_update.html',context)  
-          
+def randomFunction():
+    return "import sys;from fraud_inspector.auto_update import auto_update; auto_update()" 
+
+#   return "import sys;from fraud_inspector.test import prescript; prescript(1)"          

@@ -22,7 +22,7 @@ LEFT JOIN (
 	ON oo.id = margin.order_id
 WHERE TO_TIMESTAMP (oo.order_start_date) => %s 
 	AND TO_TIMESTAMP(oo.order_start_date) =< %s 
-	AND launch_region_id = %s , 
+	AND launch_region_id = %s  
 	AND driver_id IN %s
 
 

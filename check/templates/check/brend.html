@@ -20,7 +20,7 @@
     </form>
     <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="driver_id:{{drv_id}}   Период:{{start_date}} - {{end_date}}">    
 </div> 
-
+<div style="background-color: rgb(255, 255, 255)" >
 {% if msg %}
     <h4>{{msg}}</h4>
 {% endif %}
@@ -56,6 +56,7 @@
     
         </table>
     </div>
+</div>    
     <script>
         $(document).ready( function () {
         $('#pricetable-drv').DataTable();

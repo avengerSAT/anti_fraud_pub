@@ -1,10 +1,11 @@
-from datetime import datetime,timedelta
-import time
-from .models import FraudOrders,google_sheet,option_city
-from .loading_trips import trips_affecting_the_bonus_plan ,trips_with_surcharges
-from .import_data import update_db_fraud_orders
+
 
 def auto_update():
+    from datetime import datetime,timedelta
+    import time
+    from .models import FraudOrders,google_sheet,option_city
+    from .loading_trips import trips_affecting_the_bonus_plan ,trips_with_surcharges
+    from .import_data import update_db_fraud_orders
     while 1:
         print("!")
         all_city=option_city.objects.values_list()
@@ -28,6 +29,16 @@ def auto_update():
                     city_bonus_plan_dict.append([i[4],i[5],i[6]])  
                 trips_affecting_the_bonus_plan(city_id,start_time,end_time,city_bonus_plan_dict)
             if str(j_slov['loading_trips_trips_without_surcharges'])!='0':
-                update_db_fraud_orders(city_id,start_time,end_time)      
-        time.sleep(3600*3)
- 
+                update_db_fraud_orders(city_id,start_time,end_time)  
+        time.sleep(3600/6)            
+    #   time.sleep(3600*3)
+    
+
+def auto_update_1(a):
+    print("!!!!")
+    import time
+    a=1
+    while 1:
+        print(a)
+        a+=1
+        time.sleep(1)

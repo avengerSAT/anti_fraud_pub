@@ -134,7 +134,7 @@ def trips_affecting_the_bonus_plan (city_id,date_start,date_end,city_bonus_plan_
     b = dt.strptime(date_end, date_format)
     delta = b - a
 
-    for i in  range(delta.days+1):
+    for i in range(delta.days+1):
         year, month, day=((dt.strptime(date_start, date_format)+ timedelta(days=i)).strftime(date_format)).split('-')
         nedel=datetime.date(int(year), int(month), int(day)).isocalendar()[1]
         if [year,nedel] not in  nedels:
