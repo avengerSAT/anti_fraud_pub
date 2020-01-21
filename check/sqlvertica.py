@@ -190,6 +190,23 @@ def sql_doplat(start_date, end_date):
     return head, data
 
 
+def sql_LM_brend(city,driver_id,start_date,end_date):
+    conn_info = {'host': Con_vert.host,
+                 'port': Con_vert.port,
+                 'user': Con_vert.user,
+                 'password': Con_vert.password}
+
+    
+    with connect(**conn_info) as con:
+        with con.cursor() as cur:
+
+            with open('./check/Sql/sql_LM_brend.sql', 'r') as sql:
+                cur.execute(sql.read(), (city,driver_id,start_date,end_date))
+                data = cur.fetchall()
+                head = cur.description
+                head, data = peremen(data, head)
+    return head, data
+
 def sql_old_drv(drv_id, trail):
     try:
         with connect(

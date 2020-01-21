@@ -7,7 +7,7 @@ SELECT
 	, ('UNBLOCKED') AS state
 	, pattern_name
 	, ('UNVERIFIED') AS resolution
-	, margin AS compensation
+	, CAST(margin AS DECIMAL(10,0)) compensation
 FROM facts.FS_Fraud_orders fo
 LEFT JOIN (SELECT *
 	FROM facts.FS_Fraud_orders_pattern fop

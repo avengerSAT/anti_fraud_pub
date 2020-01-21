@@ -235,38 +235,77 @@ class rez_prover(LoginRequiredMixin, View):
 
 
 class brend(LoginRequiredMixin, View):
-    def get(self,request):                                                    
-        return render(request,'check/brend.html')
-    def post(self,request): 
+    def get(self,request):       
+        brend = "fasten"                                             
+        return render(request,'check/brend_1.html',{"brend":brend
+                                                    })
+    def post(self,request):
+        brend=request.POST["brend_1"] 
         try:
-            start_date = request.POST["start_date"]
-            end_date = request.POST["end_date"]  
-            driver_id = request.POST["driver_id"] 
-            dr_dl=len(driver_id)
-            if dr_dl > 9:
-                driver_id=sqlvertica.sql_drv_id(driver_id)
-            FraudOrders=fraud_inspector_FraudOrders()
-            Count=FraudOrders.filter(driver_id=driver_id,order_date__range=(start_date,end_date),resolution='FRAUD YES') 
-            Count=Count.count() 
-            head,data=sqlvertica.sql_drv_poezd(driver_id,start_date,end_date)
-            try:
-                if data[0][1] is None :
-                    data[0][1]=0
-                    data[0][2]=data[0][0]
-                data[0][1]=int(data[0][1])+int(Count)
-                data[0][2]=int(data[0][2])-int(Count)
-            except:
-                data=[[0,0,0]]  
-            return render(request,'check/brend.html',{"start_date":start_date
-                                                        ,"end_date":end_date
-                                                        ,"drv_id":driver_id
-                                                        ,"head":head
-                                                        ,"data":data
+            if brend == 'fasten':
+                start_date = request.POST["start_date"]
+                end_date = request.POST["end_date"]  
+                driver_id = request.POST["driver_id"] 
+                dr_dl=len(driver_id)
+                if dr_dl > 9:
+                    driver_id=sqlvertica.sql_drv_id(driver_id)
+                FraudOrders=fraud_inspector_FraudOrders()
+                Count=FraudOrders.filter(driver_id=driver_id,order_date__range=(start_date,end_date),resolution='FRAUD YES') 
+                Count=Count.count() 
+                head,data=sqlvertica.sql_drv_poezd(driver_id,start_date,end_date)
+                try:
+                    if data[0][1] is None :
+                        data[0][1]=0
+                        data[0][2]=data[0][0]
+                    data[0][1]=int(data[0][1])+int(Count)
+                    data[0][2]=int(data[0][2])-int(Count)
+                except:
+                    data=[[0,0,0]]  
+                with open('check/lime_city.csv') as csvfile:
+                    rows = csv.reader(csvfile)
+                    City = list(rows)      
+                return render(request,'check/brend_1.html',{"start_date":start_date
+                                                            ,"brend":brend
+                                                            ,"City":City
+                                                            ,"end_date":end_date
+                                                            ,"drv_id":driver_id
+                                                            ,"head":head
+                                                            ,"data":data
+                                                            })  
 
-                                                        })  
-        except:   
+            else:
+                with open('check/lime_city.csv') as csvfile:
+                    rows = csv.reader(csvfile)
+                    City = list(rows) 
+                start_date = request.POST["start_date_1"]
+                end_date = request.POST["end_date_1"]  
+                driver_id = request.POST["driver_id_1"] 
+                city = request.POST["city"] 
+                start_date_1=start_date.replace("-", '')
+                end_date_1=int(end_date.replace("-", ''))+1
+                head,data=sqlvertica.sql_LM_brend(city,driver_id,start_date_1,end_date_1) 
+                return render(request,'check/brend_1.html',{"start_date_1":start_date
+                                            ,"brend":brend
+                                            ,"city":city
+                                            ,"City":City
+                                            ,"end_date_1":end_date
+                                            ,"driver_id_1":driver_id
+                                            ,"head_1":head
+                                            ,"data_1":data
+                                            })                                               
+        except:
+            try: 
+                city = request.POST["city"] 
+            except:
+                pass     
+            with open('check/lime_city.csv') as csvfile:
+                rows = csv.reader(csvfile)
+                City = list(rows)             
             msg="Проверьте правильность вводимых данных"                                             
-            return render(request,'check/brend.html',{"msg":msg})           
+            return render(request,'check/brend_1.html',{"msg":msg
+                                                        ,"city":city
+                                                        ,"City":City
+                                                        })           
             
                                    
 def dash(request,**kwargs):

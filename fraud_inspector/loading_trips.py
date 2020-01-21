@@ -25,7 +25,6 @@ def update_db_fraud_orders(data):
             post.compensation = row[8]
             post.save()
             row.append(now)
-            print(row)
             with open("templates/logs.csv", "a", newline='') as csv_file:
                 csv_writer = writer(csv_file, delimiter=',')
                 csv_writer.writerow(row)
