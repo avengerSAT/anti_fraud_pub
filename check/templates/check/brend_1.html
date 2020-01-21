@@ -9,7 +9,11 @@
         <link rel="stylesheet" href="{% static 'css/one_php_1.css' %}" type="text/css">
 
 </head>
-<body >
+<body background="{% static 'img/fon.jpg' %}">
+<div>
+{% include "include/include_logout.html"%}  
+</div>
+<div style="margin-top: 4%">
 <form action="{% url 'brend_url' %}"    method="POST" >
     {% csrf_token %}
     <div class="tabs">
@@ -153,6 +157,7 @@
 </form>
 
 
+</div>
 
 
 
