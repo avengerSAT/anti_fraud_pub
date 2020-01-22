@@ -3,7 +3,9 @@
     <meta charset="UTF-8">
 
     <title>
-                заголовок
+{% block title %}
+Информация о поездках водителя
+{% endblock %}
     </title>
     {% load static%} 
         <link rel="stylesheet" href="{% static 'css/one_php_1.css' %}" type="text/css">
