@@ -45,10 +45,9 @@ def trips_with_surcharges (date_from, date_to, city_id):
         with open('./fraud_inspector/Sql/treck_dop.sql', 'r') as sql:
             data = pd.read_sql_query(sql.read(), con, params=[date_from, date_to, city_id])
             
-            data=data[['order_id','order_date','launch_region_id','driver_id','customer_id','pattern_name','state','resolution','compensation']] 
+            data=data[['order_id','order_date','launch_region_id','driver_id','customer_id','pattern_name','state','resolution','compensation']]
             data = data.drop_duplicates() 
-            test = (data.groupby(['order_id'])['pattern_name']
-                        .apply(', '.join).reset_index(name='pattern_name'))
+            test = (data.groupby(['order_id'])['pattern_name'].apply(','.join).reset_index(name='pattern_name'))
             del data['pattern_name'] 
             data = data.drop_duplicates()  
             data = pd.merge(data, test, on='order_id')
