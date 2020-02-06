@@ -18,9 +18,11 @@ from .main import Update
 from .loading_trips import trips_affecting_the_bonus_plan ,trips_with_surcharges
 
 import pandas as pd
-import os
 from datetime import datetime,timedelta
-import sys
+import sys,time,platform,os,threading
+from subprocess import Popen
+from .auto_update import auto_update
+
 
 
 
@@ -163,12 +165,12 @@ def option_city_trips(gorod, start_time,end_time):
             city_all.append(gorod[2])  
         for city_id in city_all: 
             j_slov=option_city.objects.filter(launch_region_id=city_id).values().first() ####!!!
-            if j_slov['loading_trips_with_surcharges'] !=0:
+            if str(j_slov['loading_trips_with_surcharges']) !='0' :
                 trips_with_surcharges (start_time,end_time,city_id)
-            if j_slov['loading_trips_affecting_the_bonus_plan']!=0:  
+            if str(j_slov['loading_trips_affecting_the_bonus_plan'])!='0':  
                 city_bonus_plan_dict=City_table_bonus_plan_dict(city_id)
                 trips_affecting_the_bonus_plan (city_id,start_time,end_time,city_bonus_plan_dict)
-            if j_slov['loading_trips_trips_without_surcharges']!=0:
+            if str(j_slov['loading_trips_trips_without_surcharges'])!='0':
                 update_db_fraud_orders(city_id,start_time,end_time)      
         return 
 
@@ -457,7 +459,7 @@ class peremen_fraud_ins():
     data=["data1","data2","data3"]
     kol_stranic=["kol_stranic1","kol_stranic2","kol_stranic3"]
     
-    head=['N','order_id','order_date','launch_region_id','driver_id','pattern_name','compensation','state']
+    head=['N','order_id','order_date','launch_region_id','driver_id','customer_id','pattern_name','compensation','state']
 
 def fraud_inspector_sc(dff,page_size,_str,_list,key,sor_t):
     for i in range(len(peremen_fraud_ins.resol)):
@@ -664,3 +666,35 @@ class test_qwe (LoginRequiredMixin, View):
         return render (request,'fraud_inspector/graf_prover.html')    
     def post(self,request):
         return render (request,'fraud_inspector/graf_prover.html')        
+
+class auto_update_test (LoginRequiredMixin, View): 
+    def get(self,request):
+        msg="not"  
+        context={'msg':msg}  
+        return render (request,'fraud_inspector/auto_update.html',context)     
+    def post(self,request):
+        x = threading.Thread(target=auto_update)
+        x.start()
+
+
+
+#
+#        if platform.system() == "Windows":
+#            new_window_command = "cmd.exe /c start".split()
+#        else:  #XXX this can be made more portable
+#            new_window_command = "x-terminal-emulator -e".split()
+#
+#        # open new consoles, display messages
+#        echo = [sys.executable, "-c",randomFunction()]
+#        processes = [Popen(new_window_command + echo )]
+#
+#        # wait for the windows to be closed
+#        for proc in processes:
+#            proc.wait()
+        msg="yes"  
+        context={'msg':msg} 
+        return render (request,'fraud_inspector/auto_update.html',context)  
+def randomFunction():
+    return "import sys;from fraud_inspector.auto_update import auto_update; auto_update()" 
+
+#   return "import sys;from fraud_inspector.test import prescript; prescript(1)"          

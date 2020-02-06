@@ -1,0 +1,167 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+
+    <title>
+{% block title %}
+Информация о поездках водителя
+{% endblock %}
+    </title>
+    {% load static%} 
+        <link rel="stylesheet" href="{% static 'css/one_php_1.css' %}" type="text/css">
+
+</head>
+<body background="{% static 'img/fon.jpg' %}">
+<div>
+{% include "include/include_logout.html"%}  
+</div>
+<div style="margin-top: 4%">
+<form action="{% url 'brend_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div class="tabs">
+                {% if brend == "fasten" %}
+                    <input type="radio" name="brend_1" value="fasten" id="tab_1" checked>
+                    <label for="tab_1">   fasten   </label>
+                    <input type="radio" name="brend_1" value="lime" id="tab_2">
+                    <label for="tab_2">    lime    </label>
+                {% else %}
+                    <input type="radio" name="brend_1" value="fasten" id="tab_1" >
+                    <label for="tab_1">   fasten   </label>
+                    <input type="radio" name="brend_1" value="lime" id="tab_2" checked>
+                    <label for="tab_2">    lime    </label>
+                {% endif %} 
+
+
+
+
+    <div id="txt_1">
+        <input type="text" disabled='disabled' style="width:15%;background-color: rgb(255, 255, 255) " value="Введите driver_id :">
+        <input type="text" class="form-control" id="driver_id"  name="driver_id"/>
+        <input type="text" disabled='disabled' style="width:8%;background-color: rgb(255, 255, 255) " value="Период с">
+        <input type="date" id="start_date" name="start_date" value="{{start_date}}">
+        <input type="text" disabled='disabled'  style="width:3%; background-color: rgb(250, 250, 250)" value="по">
+        <input type="date" id="end_date" name="end_date" value="{{end_date}}">
+        <button  type="submit" >ОТПРАВИТЬ</button>
+        <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="driver_id:{{drv_id}}   Период:{{start_date}} - {{end_date}}"> 
+
+
+        <div style="background-color: rgb(255, 255, 255)" >
+        {% if msg %}
+            <h4>{{msg}}</h4>
+        {% endif %}
+
+        <div class="pricelist" id="pricelist">
+                <table id="pricetable-drv" class="table-autosort:2"> 
+                    <colgroup>
+                        <col class="name" class="name"></col>
+            
+                        <col class="last_col "></col>
+                    </colgroup>
+            
+                    <thead>
+                        {% for j in head %}
+            
+                            <th class=" filterable sortable table-sortable:numeric" style="padding: 3px;border: 1px solid black;">{{j}}</th>
+            
+                        {% endfor %}
+                    </thead>
+            
+            
+            
+                    {% for i in data %}
+                        <tr  >
+                            {% for q in i %}
+            
+                            <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;" >{{q}}</td>
+                
+                            {% endfor %}
+                        </tr>
+            
+                    {% endfor %}
+            
+                </table>
+            </div>
+        </div>    
+        <script>
+            $(document).ready( function () {
+            $('#pricetable-drv').DataTable();
+            } );
+        </script> 
+    </div>
+    <div id="txt_2">
+ 
+
+
+        <select type="submit" style="width:25%;"   name="city">
+ 
+                {% for i in City %}
+                    {% if i.0 == city %}
+                        <option type="submit" selected value="{{i.0}}">{{i.1}}</option>
+                    {% else %}
+                        <option value="{{i.0}}">{{i.1}}</option>
+                    {% endif %} 
+                {% endfor %}
+
+        </select>
+        <input type="text" disabled='disabled' style="width:7%;background-color: rgb(255, 255, 255) " value="Введите driver_id :">
+        <input type="text" class="form-control" style="width:20%;"  id="driver_id_1"  name="driver_id_1"/>
+        <input type="text" disabled='disabled' style="width:5%;background-color: rgb(255, 255, 255) " value="Период с">
+        <input type="date" id="start_date" style="width:15%;" name="start_date_1" value="{{start_date_1}}">
+        <input type="text" disabled='disabled'  style="width:3%; background-color: rgb(250, 250, 250)" value="по">
+        <input type="date" id="end_date" style="width:15%;" name="end_date_1" value="{{end_date_1}}">
+        <button  type="submit" >ОТПРАВИТЬ</button>
+        <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="gorod: {% for i in City %}{% if i.0 == city %}{{i.1}}{% endif %}{% endfor %} driver_id: {{driver_id_1}}   Период: {{start_date_1}} - {{end_date_1}}"> 
+
+        <div style="background-color: rgb(255, 255, 255)" >
+        {% if msg %}
+            <h4>{{msg}}</h4>
+        {% endif %}
+
+        <div class="pricelist" id="pricelist">
+                <table id="pricetable-drv" class="table-autosort:2"> 
+                    <colgroup>
+                        <col class="name" class="name"></col>
+            
+                        <col class="last_col "></col>
+                    </colgroup>
+            
+                    <thead>
+                        {% for j in head_1 %}
+            
+                            <th class=" filterable sortable table-sortable:numeric" style="padding: 3px;border: 1px solid black;">{{j}}</th>
+            
+                        {% endfor %}
+                    </thead>
+            
+            
+            
+                    {% for i in data_1 %}
+                        <tr  >
+                            {% for q in i %}
+            
+                            <td class="nowrap" style="background-color:rgb(179, 179, 179);;padding: 3px;border: 1px solid black;" >{{q}}</td>
+                
+                            {% endfor %}
+                        </tr>
+            
+                    {% endfor %}
+            
+                </table>
+            </div>
+        </div>    
+    <script>
+        $(document).ready( function () {
+        $('#pricetable-drv').DataTable();
+        } );
+    </script> 
+
+    </div>
+</form>
+
+
+</div>
+
+
+
+</body>
+</html>    

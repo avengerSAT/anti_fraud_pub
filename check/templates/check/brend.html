@@ -1,26 +1,70 @@
 {% extends "main_tabl.html" %}
 {% block title %}
-Информация о движении денежных средств
+Информация о поездках водителя
 {% endblock %}
 {% block content %}
-{% include "include/include_logout.html"%}   
-<div style="width: 50%;margin-top:0%; top:0%">
-    <form action="{% url 'brend_url' %}"  method="POST" >
-                    {% csrf_token %}
-        <div class="input-group mb-3"  >
-            
-            <input type="text" disabled='disabled' style="width:15%;background-color: rgb(255, 255, 255) " value="Введите driver_id :">
-            <input type="text" class="form-control" id="driver_id"  name="driver_id"/>
-            <input type="text" disabled='disabled' style="width:8%;background-color: rgb(255, 255, 255) " value="Период с">
-            <input type="date" id="start_date" name="start_date" value="{{start_date}}">
-            <input type="text" disabled='disabled'  style="width:3%; background-color: rgb(250, 250, 250)" value="по">
-            <input type="date" id="end_date" name="end_date" value="{{end_date}}">
-            <button  type="submit" >ОТПРАВИТЬ</button>
-        </div>
-    </form>
-    <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="driver_id:{{drv_id}}   Период:{{start_date}} - {{end_date}}">    
-</div> 
+{% include "include/include_logout.html"%}  
 
+
+<div style="width: 50%;margin-top:0%; top:0%">
+<form action="{% url 'brend_url' %}"    method="POST" >
+    {% csrf_token %}
+    <div  style="width:50%; top: 0%;height:30px ;margin-top: 0%;">
+        <select type="submit" style="width:33%; top: 0% ;height:30px ; "   name="brend_1">
+                {% if brend == "fasten" %}
+                    <option type="submit" selected value="fasten" >fasten</option>
+                    <option value="lime" >lime</option>
+                {% else %}
+                    <option type="submit" selected value="lime" >lime</option>
+                    <option value="fasten" >fasten</option>
+                {% endif %} 
+
+        </select>
+    </div> </p> 
+
+
+   </div> 
+
+
+
+ {% if brend == fasten %}
+    <div style="width: 50%;margin-top:0%; top:0%">
+
+            <div class="input-group mb-3"  >             
+                <input type="text" disabled='disabled' style="width:15%;background-color: rgb(255, 255, 255) " value="Введите driver_id :">
+                <input type="text" class="form-control" id="driver_id"  name="driver_id"/>
+                <input type="text" disabled='disabled' style="width:8%;background-color: rgb(255, 255, 255) " value="Период с">
+                <input type="date" id="start_date" name="start_date" value="{{start_date}}">
+                <input type="text" disabled='disabled'  style="width:3%; background-color: rgb(250, 250, 250)" value="по">
+                <input type="date" id="end_date" name="end_date" value="{{end_date}}">
+                <button  type="submit" >ОТПРАВИТЬ</button>
+            </div>
+      
+        <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="driver_id:{{drv_id}}   Период:{{start_date}} - {{end_date}}">    
+    </div> 
+ {% else %}
+    <div style="width: 50%;margin-top:0%; top:0%">
+        <form action="{% url 'brend_url' %}"  method="POST" >
+                        {% csrf_token %}
+            <div class="input-group mb-3"  >
+                
+                <input type="text" disabled='disabled' style="width:15%;background-color: rgb(255, 255, 255) " value="Введите driver_id :">
+                <input type="text" class="form-control" id="driver_id"  name="driver_id"/>
+                <input type="text" disabled='disabled' style="width:8%;background-color: rgb(255, 255, 255) " value="Период с">
+                <input type="date" id="start_date" name="start_date" value="{{start_date}}">
+                <input type="text" disabled='disabled'  style="width:3%; background-color: rgb(250, 250, 250)" value="по">
+                <input type="date" id="end_date" name="end_date" value="{{end_date}}">
+                <button  type="submit" >ОТПРАВИТЬ</button>
+            </div>
+        </form>
+        <input type="text" disabled='disabled' style="width:45%;background-color: rgb(255, 255, 255) " value="driver_id:{{drv_id}}   Период:{{start_date}} - {{end_date}}">    
+    </div> 
+
+
+{% endif %} 
+
+
+<div style="background-color: rgb(255, 255, 255)" >
 {% if msg %}
     <h4>{{msg}}</h4>
 {% endif %}
@@ -56,6 +100,7 @@
     
         </table>
     </div>
+</div>    
     <script>
         $(document).ready( function () {
         $('#pricetable-drv').DataTable();

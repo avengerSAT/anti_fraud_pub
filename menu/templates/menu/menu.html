@@ -16,12 +16,12 @@
     {% csrf_token %}
 <button class="btn btn-secondary btn-lg btn-block" type="submit">Проверка водитель</button>
 </form>
-
+<!--
 <form action="{% url 'svod_doplat_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
     {% csrf_token %}
 <button class="btn btn-secondary btn-lg btn-block" title="информация о движении денежных средств (компенсации, списания доплаты, корректировка стоимости поездки)"
  type="submit">Отчет о списании доплат </button>
-</form>
+</form>-->
 <form action="{% url 'brend_url' %}"  style="margin-top: 0%;  top: 0%;margin-bottom:0; "  method="GET" >
         {% csrf_token %}
     <button class="btn btn-secondary btn-lg btn-block" title=""

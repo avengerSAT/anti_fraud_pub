@@ -28,7 +28,7 @@ LEFT JOIN (
 	GROUP BY order_id 
 	) margin
 	ON fo.id = margin.order_id
-WHERE  (TO_TIMESTAMP(order_date+10800) BETWEEN %s
+WHERE  (TO_TIMESTAMP(order_date) BETWEEN %s
 		AND %s )
 		AND fo.state='UNVERIFIED'
 		AND fop.order_id is not null 

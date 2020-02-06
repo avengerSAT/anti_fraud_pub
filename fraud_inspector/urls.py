@@ -20,6 +20,7 @@ urlpatterns = [
     path('city_option',views.city_option.as_view(),name='city_option_url'),
     path('fraud_inspector_ver_2',views.fraud_inspector_ver_2.as_view(),name='fraud_inspector_ver_2_url'),
     path('Fraud_inspector',views.Fraud_inspector.as_view(),name='Fraud_inspector_url'),
+    path('auto_update_test',views.auto_update_test.as_view(),name='auto_update_test_url'),
     url(r'^frod_prov/',views.frod_prov,name='frod_prov_URL'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
