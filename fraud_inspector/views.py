@@ -459,7 +459,7 @@ class peremen_fraud_ins():
     data=["data1","data2","data3"]
     kol_stranic=["kol_stranic1","kol_stranic2","kol_stranic3"]
     
-    head=['N','order_id','order_date','launch_region_id','driver_id','pattern_name','compensation','state']
+    head=['N','order_id','order_date','launch_region_id','driver_id','customer_id','pattern_name','compensation','state']
 
 def fraud_inspector_sc(dff,page_size,_str,_list,key,sor_t):
     for i in range(len(peremen_fraud_ins.resol)):
